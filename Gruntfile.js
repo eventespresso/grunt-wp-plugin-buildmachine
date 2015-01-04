@@ -7,7 +7,8 @@
  *
  * 1. Clone the ee plugin you want to use this with into a directory called "src" in the directory this file is in.
  * 2. Make sure the ee plugin has a info.json file in its top-level directory that contains json describing what's outlined in the "defaultParams" object (see below).
- * 3. That's it!  Commands you can run are seen as registered as a grunt task (example "grunt bumprc" will bump the rc version for the plugin).
+ * 3. Run "npm install" to make sure grunt and all its dependencies are installed
+ * 4. That's it!  Commands you can run are seen as registered as a grunt task (example "grunt bumprc" will bump the rc version for the plugin).
  *
  * NOTE: This is still a work in progress and is by no means complete.  Use at your own risk!
  */
