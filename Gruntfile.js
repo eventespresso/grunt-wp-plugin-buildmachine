@@ -29,9 +29,10 @@ module.exports = function(grunt) {
 
 	var defaultParams = {
 		"versionFile" : "",
-		"slug" : ""
-		"releaseFilesRemove" : "",
-		"decafFilesRemove" : ""
+		"repo" : "",
+		"slug" : "",
+		"releaseFilesRemove" : [],
+		"decafFilesRemove" : []
 	};
 
 	//project config.
@@ -78,6 +79,14 @@ module.exports = function(grunt) {
 		},
 
 		//git commands
+		gitclone: {
+			init : {
+				options: {
+					repository: eeParams.repo,
+					directory: 'src'
+				}
+			}
+		}
 		gitcommit: {
 			//commit version bump.
 			version: {
