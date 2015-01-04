@@ -30,6 +30,8 @@ module.exports = function(grunt) {
 	var defaultParams = {
 		"versionFile" : "",
 		"slug" : ""
+		"releaseFilesRemove" : "",
+		"decafFilesRemove" : ""
 	};
 
 	//project config.
@@ -168,19 +170,8 @@ module.exports = function(grunt) {
 
 		//rm tests and stuff we don't bundle for releases.
 		rm: {
-			release: [
-				'src/tests/**',
-				'src/info.json',
-				'src/circle.yml',
-				'src/screenshot*.jpg'
-			],
-			decaf: [
-				'src/tests/**',
-				'src/info.json',
-				'src/circle.yml',
-				'src/screenshot*.jpg',
-				'src/caffeinated/**'
-			]
+			release: eeParams.releaseFilesRemove,
+			decaf: eeParams.decafFilesRemove
 		}
 
 	});
