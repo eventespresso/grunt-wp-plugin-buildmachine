@@ -122,7 +122,7 @@ module.exports = function(grunt) {
 			remove_folders_decaf: {
 				notify: '<%= eeParams.releaseFilesRemove.length %> folders and files removed in prep for decaf release.',
 				command: rm_prepare_folders( eeParams.decafFilesRemove ).join('&&')
-			}
+			},
 			shareBuild : {
 				notify: 'Archive folder has been made available and can be retreived from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
