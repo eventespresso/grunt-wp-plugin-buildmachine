@@ -73,7 +73,7 @@ module.exports = function(grunt) {
 			bump_rc: {
 				notify: 'Bump Version task completed.  Version bumped to <%= new_version %>',
 				command: [
-					'export EE_VERSION_BUMP_TYPE="rc"',
+					'export EE_VERSION_BUMP_TYPE="<%=eeParams.versionType %>"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
 					'php version-bump.php'
 					].join('&&'),
@@ -312,6 +312,7 @@ module.exports = function(grunt) {
 		var msg = grunt.config.get( 'notificationMessage' );
 
 		if ( this.args[0] == 'init' ) {
+			/** @todo Set a background colour property for notifications dynamically depending on the task alias that is running.  So rc version bumps could be purple, HOTFIX could be yellow, and RELEASE could be green?  */
 			msg = '<b>GruntBOT activity Report:</b><br>';
 			msg += 'Task Group Run: <b>' + this.args[1] + '</b><br><br>';
 			msg += 'Notification Messages:<br>';
