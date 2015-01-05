@@ -14,30 +14,49 @@
  */
 
 module.exports = function(grunt) {
-	var new_version = '';
 
 	function setNewVersion( err, stdout, stderr, cb ) {
-		new_version = stdout;
+		grunt.config.set('new_version', stdout);
 		grunt.log.writeln();
-		grunt.log.ok('Version bumped to ' + new_version);
-		if ( new_version != '0' ) {
+		grunt.log.ok('Version bumped to ' + stdout);
+		if ( stdout != '0' ) {
 			cb();
 		} else {
 			grunt.fail.warn( 'Something went wrong with setting the version' );
 		}
-	}
+	};
+
+	function rm_prepare_folders( folders_to_remove ) {
+		var folders = [];
+		for ( var i = 0; i < folders_to_remove.length; i++ ) {
+			folders[i] = 'rm -rf ' + folders_to_remove[i];
+		}
+		return folders;
+	};
 
 	var defaultParams = {
 		"versionFile" : "",
 		"slug" : "",
+		"awsbucket" : "",
+		"awsregion" : "",
 		"releaseFilesRemove" : [],
-		"decafFilesRemove" : []
+		"decafFilesRemove" : [],
+		"branch_to_update" : "test"
 	};
+
+	var defaultaws = {
+		"accessKeyId" : "",
+		"secretAccessKey" : ""
+	};
+
+	var eeParams = grunt.file.exists( 'src/info.json' ) ? grunt.file.readJSON( 'src/info.json' ) : defaultParams;
 
 	//project config.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON( 'package.json' ),
-		eeParams: grunt.file.exists( 'src/info.json' ) ? grunt.file.readJSON( 'src/info.json' ) : defaultParams,
+		aws: grunt.file.exists( 'aws.json' ) ? grunt.file.readJSON( 'aws.json' ) : defaultaws,
+		eeParams: eeParams,
+		new_version: '',
 
 		//shell commands
 		shell: {
@@ -75,23 +94,44 @@ module.exports = function(grunt) {
 					stdout: false
 				}
 			},
+			remove_folders_release: {
+				command: rm_prepare_folders( eeParams.releaseFilesRemove ).join('&&'),
+			},
+			remove_folders_decaf: {
+				command: rm_prepare_folders( eeParams.decafFilesRemove ).join('&&')
+			}
 		},
 
 		//git commands
+		gitadd: {
+			version: {
+				options: {
+					cwd: 'src',
+					all: true
+				}
+			}
+		},
 
 		gitcommit: {
 			//commit version bump.
 			version: {
 				options: {
 					cwd: 'src',
-					message: 'Bumping version to <%= new_version =>'
+					message: 'Bumping version to <%= new_version %>'
 				},
 			},
 			//releasebump
 			release: {
 				options: {
 					cwd: 'src',
-					message: 'Bumping version to <%= new_version => and prepped for release'
+					message: 'Bumping version to <%= new_version %> and prepped for release'
+				}
+			},
+
+			releaseSansFiles: {
+				options: {
+					cwd: 'src',
+					message: 'Prepping release minus folders/files not included with production.'
 				}
 			}
 		},
@@ -100,15 +140,15 @@ module.exports = function(grunt) {
 			releaseAll: {
 				options: {
 					cwd: 'src',
-					tag: new_version,
-					message: 'Tagging for <%= new_version => with all files.'
+					tag: '<%= new_version %>',
+					message: 'Tagging for <%= new_version %> with all files.'
 				}
 			},
 			release: {
 				options: {
 					cwd: 'src',
-					tag: new_version,
-					message: 'Tagging for <%= new_version => for production.'
+					tag: '<%= new_version %>-sans-tests-tag',
+					message: 'Tagging for <%= new_version %> for production.'
 				}
 			}
 		},
@@ -126,6 +166,21 @@ module.exports = function(grunt) {
 				options: {
 					cwd: 'src',
 					branch: 'master'
+				}
+			},
+
+			testingSetup: {
+				options: {
+					cwd: 'src',
+					branch: 'testing_auto_updates',
+					overwrite: true
+				}
+			},
+
+			testing: {
+				options: {
+					cwd : 'src',
+					branch: 'testing_auto_updates',
 				}
 			}
 		},
@@ -153,6 +208,14 @@ module.exports = function(grunt) {
 					cwd: 'src',
 					branch: 'master'
 				}
+			},
+
+			testing: {
+				options: {
+					cwd: 'src',
+					branch: 'testing_auto_updates',
+					tags: false
+				}
 			}
 		},
 
@@ -163,25 +226,44 @@ module.exports = function(grunt) {
 					treeIsh: 'release_prep',
 					format: 'zip',
 					prefix: '<%= eeParams.slug %>/',
-					output: '/build/<%= eeParams.slug %>.zip'
+					output: '../build/<%= eeParams.slug %>.zip'
 				}
 			}
 		},
 
 
-		//rm tests and stuff we don't bundle for releases.
-		rm: {
-			release: eeParams.releaseFilesRemove,
-			decaf: eeParams.decafFilesRemove
-		}
+		//awss3stuff
+		aws_s3: {
+			options: {
+				accessKeyId: '<%= aws.accessKeyId %>',
+				secretAccessKey: '<%= aws.secretAccessKey %>',
+				region: '<%= eeParams.awsregion %>',
+				bucket: '<%= eeParams.awsbucket %>'
+			},
 
+			release: {
+				files: [{
+					cwd: 'build/',
+					src: ['<%= eeParams.slug %>.zip']
+				}]
+			}
+		}
 	});
 
 	//load plugins providing the task.
 	grunt.loadNpmTasks( 'grunt-shell' );
+	grunt.loadNpmTasks( 'grunt-git' );
 
-	//register Tasks
-	grunt.registerTask( 'bumprc', ['shell:bump_rc'] );
-	grunt.registerTask( 'hotfix', ['shell:bump_minor'] );
-	grunt.registerTask( 'release', ['shell:bump_major'] );
+
+	//bumping rc version
+	//grunt.registerTask( 'bumprc', ['gitcheckout:master', 'shell:bump_rc', 'gitadd:version', 'gitcommit:version', 'gitpush:bump'] );
+	grunt.registerTask( 'testingbumprc', ['gitcheckout:testingSetup', 'shell:bump_rc', 'gitadd:version', 'gitcommit:version', 'gitpush:testing'])
+
+	//bumping minor version and releasing hotfix
+	//grunt.registerTask( 'hotfix', ['gitcheckout:master','shell:bump_minor', 'gitadd:version', 'gitcommit:release', 'gitcheckout:release', 'gittag:releaseAll', 'shell:remove_folders_release', 'gitadd:version', 'gitcommit:release', 'gittag:release', 'gitarchive:release', 'gitcheckout:master', 'shell:bump_rc', 'gitadd:version', 'gitcommit:version' 'gitpush:release' ] );
+	grunt.registerTask( 'testinghotfix', ['gitcheckout:testingSetup','shell:bump_minor', 'gitadd:version', 'gitcommit:release', 'gitcheckout:release', 'gittag:releaseAll', 'shell:remove_folders_release', 'gitadd:version', 'gitcommit:release', 'gittag:release', 'gitarchive:release', 'gitcheckout:testing', 'shell:bump_rc', 'gitadd:version', 'gitcommit:version','gitpush:testing' ] );
+
+	//bumping major versions and releasing.
+	//grunt.registerTask( 'release', ['gitcheckout:master','shell:bump_major', 'gitadd:version', 'gitcommit:release', 'gitcheckout:release', 'gittag:releaseAll', 'shell:remove_folders_release', 'gittag:release', 'gitarchive:release', 'gitcheckout:master', 'shell:bump_rc', 'gitpush:release' ] );
+	grunt.registerTask( 'testingrelease', ['gitcheckout:testingSetup','shell:bump_major', 'gitadd:version', 'gitcommit:release', 'gitcheckout:release', 'gittag:releaseAll', 'shell:remove_folders_release', 'gitadd:version', 'gitcommit:release', 'gittag:release', 'gitarchive:release', 'gitcheckout:testing', 'shell:bump_rc', 'gitadd:version', 'gitcommit:version', 'gitpush:testing' ] );
 }
