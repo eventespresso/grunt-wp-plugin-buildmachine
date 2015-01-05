@@ -22,6 +22,8 @@ $version_split = explode( '.', $orig_version);
 
 switch( $type ) {
 	case 'rc' :
+	case 'alpha' :
+	case 'beta' :
 		//if we have something like 4.5.6.rc.001, then we're already on dev version so let's just bump the last string.
 		if ( count( $version_split ) == 5 ) {
 			$last_num = (int) $version_split[4];
@@ -38,7 +40,7 @@ switch( $type ) {
 			$last_num = (int) $version_split[$index];
 			$last_num++;
 			$version_split[$index] = $last_num;
-			$version_split[$index+1] = 'rc';
+			$version_split[$index+1] = $type;
 			$version_split[$index+2] = '000';
 		}
 		break;
