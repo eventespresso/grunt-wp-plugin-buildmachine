@@ -49,19 +49,29 @@ module.exports = function(grunt) {
 		"secretAccessKey" : ""
 	};
 
+	var defaulthipchat = {
+		"authToken" : "",
+		"roomID" : ""
+	};
+
 	var eeParams = grunt.file.exists( 'src/info.json' ) ? grunt.file.readJSON( 'src/info.json' ) : defaultParams;
 
 	//project config.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON( 'package.json' ),
 		aws: grunt.file.exists( 'aws.json' ) ? grunt.file.readJSON( 'aws.json' ) : defaultaws,
+		hipchat: grunt.file.exists( 'hipchat.json' ) ? grunt.file.readJSON( 'hipchat.json' ): defaulthipchat,
 		eeParams: eeParams,
 		new_version: '',
+		taskCount: 0,
+		taskCompleted: 0,
+		notificationMessage: '',
 
 		//shell commands
 		shell: {
 			//bump dev version.
 			bump_rc: {
+				notify: 'Bump Version task completed.  Version bumped to <%= new_version %>',
 				command: [
 					'export EE_VERSION_BUMP_TYPE="rc"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
@@ -73,6 +83,7 @@ module.exports = function(grunt) {
 				}
 			},
 			bump_minor: {
+				notify: 'Bump Version task completed.  Version bumped to <%= new_version %>',
 				command: [
 					'export EE_VERSION_BUMP_TYPE="minor"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
@@ -84,6 +95,7 @@ module.exports = function(grunt) {
 				}
 			},
 			bump_major: {
+				notify: 'Bump Version task completed.  Version bumped to <%= new_version %>',
 				command: [
 					'export EE_VERSION_BUMP_TYPE="major"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
@@ -95,9 +107,11 @@ module.exports = function(grunt) {
 				}
 			},
 			remove_folders_release: {
+				notify: '<%= eeParams.releaseFilesRemove.length %> folders and files removed in prep for release.',
 				command: rm_prepare_folders( eeParams.releaseFilesRemove ).join('&&'),
 			},
 			remove_folders_decaf: {
+				notify: '<%= eeParams.releaseFilesRemove.length %> folders and files removed in prep for decaf release.',
 				command: rm_prepare_folders( eeParams.decafFilesRemove ).join('&&')
 			}
 		},
@@ -105,6 +119,7 @@ module.exports = function(grunt) {
 		//git commands
 		gitadd: {
 			version: {
+				notify: 'Staged changes for commit.',
 				options: {
 					cwd: 'src',
 					all: true
@@ -115,6 +130,7 @@ module.exports = function(grunt) {
 		gitcommit: {
 			//commit version bump.
 			version: {
+				notify: 'Commited rc version bump.',
 				options: {
 					cwd: 'src',
 					message: 'Bumping version to <%= new_version %>'
@@ -122,6 +138,7 @@ module.exports = function(grunt) {
 			},
 			//releasebump
 			release: {
+				notify: 'Commited release version bump.',
 				options: {
 					cwd: 'src',
 					message: 'Bumping version to <%= new_version %> and prepped for release'
@@ -129,6 +146,7 @@ module.exports = function(grunt) {
 			},
 
 			releaseSansFiles: {
+				notify: 'Commited release minus folders/files not included with production bump.',
 				options: {
 					cwd: 'src',
 					message: 'Prepping release minus folders/files not included with production.'
@@ -138,6 +156,7 @@ module.exports = function(grunt) {
 
 		gittag: {
 			releaseAll: {
+				notify: 'Tagged for <%= new_version %> with all files.',
 				options: {
 					cwd: 'src',
 					tag: '<%= new_version %>',
@@ -145,6 +164,7 @@ module.exports = function(grunt) {
 				}
 			},
 			release: {
+				notify: 'Tagged for <%= new_version %> with all files except those not included with release.',
 				options: {
 					cwd: 'src',
 					tag: '<%= new_version %>-sans-tests-tag',
@@ -154,7 +174,9 @@ module.exports = function(grunt) {
 		},
 
 		gitcheckout: {
+
 			release: {
+				notify: 'Checking out release preparation branch.',
 				options: {
 					cwd: 'src',
 					branch: 'release_prep',
@@ -163,6 +185,7 @@ module.exports = function(grunt) {
 			},
 
 			master: {
+				notify: 'Checking out master branch.',
 				options: {
 					cwd: 'src',
 					branch: 'master'
@@ -170,6 +193,7 @@ module.exports = function(grunt) {
 			},
 
 			testingSetup: {
+				notify: 'Checking out testing branch and ensuring its created and mirroring originating branch.  (This branch is used for non-destructive testing of grunt tasks).',
 				options: {
 					cwd: 'src',
 					branch: 'testing_auto_updates',
@@ -178,6 +202,7 @@ module.exports = function(grunt) {
 			},
 
 			testing: {
+				notify: 'Checking out testing branch.  (This branch is used for non-destructive testing of grunt tasks).',
 				options: {
 					cwd : 'src',
 					branch: 'testing_auto_updates',
@@ -187,6 +212,7 @@ module.exports = function(grunt) {
 
 		gitpull: {
 			master: {
+				notify: 'Pulling master branch from remote (make sure all up to date!.',
 				options: {
 					cwd: 'src',
 					branch: 'master'
@@ -196,6 +222,7 @@ module.exports = function(grunt) {
 
 		gitpush: {
 			release: {
+				notify: 'Pushing master branch to remote along with all tags (for releases).',
 				options: {
 					cwd: 'src',
 					branch: 'master',
@@ -204,6 +231,7 @@ module.exports = function(grunt) {
 			},
 
 			bump: {
+				notify: 'Pushing master branch to remote.',
 				options: {
 					cwd: 'src',
 					branch: 'master'
@@ -211,6 +239,7 @@ module.exports = function(grunt) {
 			},
 
 			testing: {
+				notify: 'Pushing testing branch to remote (used for testing git grunt tasks non-destructively)',
 				options: {
 					cwd: 'src',
 					branch: 'testing_auto_updates',
@@ -221,6 +250,7 @@ module.exports = function(grunt) {
 
 		gitarchive: {
 			release: {
+				notify: 'Archiving zip build for release.',
 				options: {
 					cwd: 'src',
 					treeIsh: 'release_prep',
@@ -242,10 +272,27 @@ module.exports = function(grunt) {
 			},
 
 			release: {
+				notify: 'Uploaded archive file to s3 account.',
 				files: [{
 					cwd: 'build/',
 					src: ['<%= eeParams.slug %>.zip']
 				}]
+			}
+		},
+
+		hipchat_notifier : {
+			options: {
+				authToken: '<%= hipchat.authToken %>',
+				roomId: '<%= hipchat.roomID %>'
+			},
+
+			notify_team: {
+				options: {
+					message: '<%= notificationMessage %>',
+					from: "GruntBot",
+					color: "purple",
+					message_format: "html"
+				}
 			}
 		}
 	});
@@ -253,15 +300,48 @@ module.exports = function(grunt) {
 	//load plugins providing the task.
 	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-git' );
+	grunt.loadNpmTasks('grunt-hipchat-notifier');
 
+	grunt.registerTask( 'setNotifications', 'Testing what is available for custom grunt tasks', function setNotifications() {
+		//grab what notification we're running.
+		//grab message.
+		var nameregex = new RegExp( this.name + '\\.', 'g' );
+		var options_string = this.nameArgs.replace(/:/g, '.');
+		var task_name = options_string.replace(nameregex, '');
+		var task_notification = task_name + '.notify';
+		var msg = grunt.config.get( 'notificationMessage' );
+
+		if ( this.args[0] == 'init' ) {
+			msg = '<b>GruntBOT activity Report:</b><br>';
+			msg += 'Task Group Run: <b>' + this.args[1] + '</b><br><br>';
+			msg += 'Notification Messages:<br>';
+			msg += '<ul>';
+			grunt.config.set( 'notificationMessage', msg );
+			grunt.log.ok( 'Messages initialized for notifications successfully.' );
+			return true;
+		} else if ( this.args[0] == 'end' ) {
+			msg += '</ul>';
+			grunt.config.set( 'notificationMessage', msg );
+			return true;
+		}
+
+		//grab any notify message for the given action.
+		var notification_message = grunt.config.get( task_notification );
+		if ( notification_message !== null ) {
+			msg += '<li>' + notification_message + '</li>';
+			grunt.log.ok( notification_message );
+			grunt.config.set( 'notificationMessage', msg );
+		}
+		return true;
+	});
 
 	//bumping rc version
-	//grunt.registerTask( 'bumprc', ['gitcheckout:master', 'shell:bump_rc', 'gitadd:version', 'gitcommit:version', 'gitpush:bump'] );
-	grunt.registerTask( 'testingbumprc', ['gitcheckout:testingSetup', 'shell:bump_rc', 'gitadd:version', 'gitcommit:version', 'gitpush:testing'])
+	//grunt.registerTask( 'bumprc', ['setNotifications:init:bumprc', 'gitcheckout:master', 'setNotifications:gitcheckout:master',  'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotificationsgitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version', 'gitpush:bump', 'setNotifications:gitpush:bump', 'setNotifications:end'] );
+	grunt.registerTask( 'testingbumprc', ['setNotifications:init:testingbumprc', 'gitcheckout:testingSetup', 'setNotifications:gitcheckout:testingSetup', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version',  'gitpush:testing', 'setNotifications:gitpush:testing', 'setNotifications:end', 'hipchat_notifier:notify_team'] );
 
 	//bumping minor version and releasing hotfix
-	//grunt.registerTask( 'hotfix', ['gitcheckout:master','shell:bump_minor', 'gitadd:version', 'gitcommit:release', 'gitcheckout:release', 'gittag:releaseAll', 'shell:remove_folders_release', 'gitadd:version', 'gitcommit:release', 'gittag:release', 'gitarchive:release', 'gitcheckout:master', 'shell:bump_rc', 'gitadd:version', 'gitcommit:version' 'gitpush:release' ] );
-	grunt.registerTask( 'testinghotfix', ['gitcheckout:testingSetup','shell:bump_minor', 'gitadd:version', 'gitcommit:release', 'gitcheckout:release', 'gittag:releaseAll', 'shell:remove_folders_release', 'gitadd:version', 'gitcommit:release', 'gittag:release', 'gitarchive:release', 'gitcheckout:testing', 'shell:bump_rc', 'gitadd:version', 'gitcommit:version','gitpush:testing' ] );
+	//grunt.registerTask( 'hotfix', ['setNotifications:init:hotfix', 'gitcheckout:master', 'setNotifications:gitcheckout:master', 'shell:bump_minor', 'setNotificationsshell:bump_minor', 'gitadd:version', setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gitcheckout:release', 'setNotifications:gitcheckout:release', 'gittag:releaseAll', 'setNotifications:gittag:releaseAll', 'shell:remove_folders_release', 'setNotifications:shell:remove_folders_release', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gittag:release', 'setNotifications:gittag:release', 'gitarchive:release', 'setNotifications:gitarchive:release', 'gitcheckout:master', 'setNotifications:gitcheckout:master', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version', 'gitpush:release','setNotifications:gitpush:release', 'setNotifications:end'] );
+	grunt.registerTask( 'testinghotfix', ['setNotifications:init:testinghotfix', 'gitcheckout:testingSetup', 'setNotifications:gitcheckout:testingSetup', 'shell:bump_minor', 'setNotifications:shell:bump_minor', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gitcheckout:release', 'setNotifications:gitcheckout:release', 'gittag:releaseAll', 'setNotifications:gittag:releaseAll', 'shell:remove_folders_release', 'setNotifications:shell:remove_folders_release', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gittag:release', 'setNotifications:gittag:release', 'gitarchive:release', 'setNotifications:gitarchive:release', 'gitcheckout:testing', 'setNotifications:gitcheckout:testing', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version', 'gitpush:testing', 'setNotifications:gitpush:testing', 'setNotifications:end' ] );
 
 	//bumping major versions and releasing.
 	//grunt.registerTask( 'release', ['gitcheckout:master','shell:bump_major', 'gitadd:version', 'gitcommit:release', 'gitcheckout:release', 'gittag:releaseAll', 'shell:remove_folders_release', 'gittag:release', 'gitarchive:release', 'gitcheckout:master', 'shell:bump_rc', 'gitpush:release' ] );
