@@ -69,7 +69,7 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON( 'package.json' ),
 		aws: grunt.file.exists( 'aws.json' ) ? grunt.file.readJSON( 'aws.json' ) : defaultaws,
 		hipchat: grunt.file.exists( 'hipchat.json' ) ? grunt.file.readJSON( 'hipchat.json' ): defaulthipchat,
-		privateParams: grunt.file.exsts( 'private.json' ) ? grunt.file.readJSON( 'private.json' ) : defaultPrivate,
+		privateParams: grunt.file.exists( 'private.json' ) ? grunt.file.readJSON( 'private.json' ) : defaultPrivate,
 		eeParams: eeParams,
 		new_version: '',
 		taskCount: 0,
