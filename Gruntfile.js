@@ -36,7 +36,10 @@ module.exports = function(grunt) {
 
 	var defaultParams = {
 		"versionFile" : "",
+		"versionType" : "rc",
 		"slug" : "",
+		"archiveBaseUrl" : "",
+		"archiveBasePath" : "",
 		"awsbucket" : "",
 		"awsregion" : "",
 		"releaseFilesRemove" : [],
@@ -54,6 +57,11 @@ module.exports = function(grunt) {
 		"roomID" : ""
 	};
 
+	var defaultPrivate = {
+		"archiveUser" : "",
+		"archivePass" : ""
+	};
+
 	var eeParams = grunt.file.exists( 'src/info.json' ) ? grunt.file.readJSON( 'src/info.json' ) : defaultParams;
 
 	//project config.
@@ -61,6 +69,7 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON( 'package.json' ),
 		aws: grunt.file.exists( 'aws.json' ) ? grunt.file.readJSON( 'aws.json' ) : defaultaws,
 		hipchat: grunt.file.exists( 'hipchat.json' ) ? grunt.file.readJSON( 'hipchat.json' ): defaulthipchat,
+		privateParams: grunt.file.exsts( 'private.json' ) ? grunt.file.readJSON( 'private.json' ) : defaultPrivate,
 		eeParams: eeParams,
 		new_version: '',
 		taskCount: 0,
@@ -113,6 +122,10 @@ module.exports = function(grunt) {
 			remove_folders_decaf: {
 				notify: '<%= eeParams.releaseFilesRemove.length %> folders and files removed in prep for decaf release.',
 				command: rm_prepare_folders( eeParams.decafFilesRemove ).join('&&')
+			}
+			shareBuild : {
+				notify: 'Archive folder has been made available and can be retreived from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
+				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
 			}
 		},
 
