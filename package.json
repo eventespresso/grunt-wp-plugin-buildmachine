@@ -1,5 +1,5 @@
 {
-  "name": "event-espresso-releaser",
+  "name": "event-espresso-build-machine",
   "version": "0.1.0",
   "devDependencies": {
     "grunt": "~0.4.5",
