@@ -1,6 +1,7 @@
 <?php
 /**
  * Version bumping utility for our files.
+ * Version 1.0.0 (just an arbitrary version because this is a version bump file after all :) )
  */
 $type = getenv( 'EE_VERSION_BUMP_TYPE' );
 $file = getenv( 'EE_VERSION_FILE' );
