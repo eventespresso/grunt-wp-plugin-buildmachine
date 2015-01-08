@@ -428,7 +428,7 @@ module.exports = function(grunt) {
 			grunt.config.set( 'notificationMessage', msg );
 			grunt.log.ok( 'Messages initialized for notifications successfully.' );
 
-			grunt.log.writeln( console.log(this.args) );
+			grunt.verbose.writeln( console.log(this.args) );
 
 			//set background color for chat client:
 			if ( typeof this.args[2] !== 'undefined' && this.args[2] !== null ) {
@@ -489,7 +489,7 @@ module.exports = function(grunt) {
 					break;
 			}
 			msg += '<li>' + notification_message + '</li>';
-			grunt.log.ok( notification_message );
+			grunt.verbose.ok( notification_message );
 			grunt.config.set( 'notificationMessage', msg );
 		}
 		return true;
