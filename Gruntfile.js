@@ -359,6 +359,19 @@ module.exports = function(grunt) {
 					message_format: "html"
 				}
 			}
+		},
+
+		//css minification
+		cssmin : {
+			minify: {
+				files: [{
+					expand: true,
+					cwd: 'src',
+					src: ['*.css', '!*.min.css'],
+					dest: 'src',
+					ext: '.min.css'
+				}]
+			}
 		}
 	});
 
@@ -366,6 +379,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-git' );
 	grunt.loadNpmTasks('grunt-hipchat-notifier');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
 
 	function postnewTopic( roomInfo, hipchat, done ) {
 		var roomID = '424398';
@@ -527,4 +541,8 @@ module.exports = function(grunt) {
 	//bumping major versions and releasing.
 	grunt.registerTask( 'release', ['setNotifications:init:release:green', 'gitcheckout:master', 'setNotifications:gitcheckout:master', 'gitpull:master', 'seteeParams', 'setNotifications:gitpull:master', 'shell:bump_major','setNotifications:shell:bump_major', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gitcheckout:release', 'setNotifications:gitcheckout:release', 'gittag:releaseAll', 'setNotifications:gittag:releaseAll', 'shell:remove_folders_release', 'setNotifications:shell:remove_folders_release', 'gittag:release', 'setNotifications:gittag:release', 'gitarchive:release', 'setNotifications:gitarchive:release', 'gitcheckout:master', 'setNotifications:gitcheckout:master', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitpush:release', 'setNotifications:gitpush:release', 'shell:shareBuild', 'setNotifications:shell:shareBuild', 'setNotifications:end', 'hipchat_notifier:notify_team' ] );
 	grunt.registerTask( 'testingrelease', ['setNotifications:init:testingrelease:green', 'gitcheckout:testingSetup', 'setNotifications:gitcheckout:testingSetup', 'seteeParams', 'shell:bump_major', 'setNotifications:shell:bump_major', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gitcheckout:release', 'setNotifications:gitcheckout:release', 'gittag:releaseAll', 'setNotifications:gittag:releaseAll', 'shell:remove_folders_release', 'setNotifications:shell:remove_folders_release', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gittag:release', 'setNotifications:gittag:release', 'gitarchive:release', 'setNotifications:gitarchive:release', 'gitcheckout:testing', 'setNotifications:gitcheckout:testing', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version', 'gitpush:testing', 'setNotifications:gitpush:testing', 'shell:shareBuild', 'setNotifications:shell:shareBuild', 'setNotifications:end', 'hipchat_notifier:notify_team' ] );
+
+
+	//other testing things
+	grunt.registerTask( 'testingcssmin', ['seteeParams', 'gitcheckout:testingSetup', 'cssmin:minify'] );
 }
