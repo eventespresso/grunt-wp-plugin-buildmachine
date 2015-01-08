@@ -71,6 +71,9 @@ module.exports = function(grunt) {
 		privateParams: grunt.file.exists( 'private.json' ) ? grunt.file.readJSON( 'private.json' ) : defaultPrivate,
 		eeParams: defaultParams,
 		new_version: '',
+		rc_version: null,
+		minor_version: null,
+		major_version: null,
 		taskCount: 0,
 		taskCompleted: 0,
 		notificationMessage: '',
@@ -364,6 +367,50 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks( 'grunt-git' );
 	grunt.loadNpmTasks('grunt-hipchat-notifier');
 
+	function postnewTopic( roomInfo, hipchat, done ) {
+		var roomID = '424398';
+		var authToken = grunt.config.get( 'hipchat_notifier.options.authToken' );
+		grunt.verbose.writeln( console.log( roomInfo ) );
+		var currentTopic = roomInfo.room.topic;
+		grunt.verbose.writeln( console.log( currentTopic ) );
+
+		//let's parse and replace elements of the topic.
+		var versions = {
+			rc : grunt.config.get( 'rc_version' ),
+			minor : grunt.config.get( 'minor_version' ),
+			major: grunt.config.get( 'major_version' ),
+			vrtype: grunt.config.get( 'eeParams.versionType')
+		}
+		grunt.verbose.ok( console.log(versions) );
+		if ( versions.rc !== null ) {
+			if ( versions.vrtype == 'rc' ) {
+				currentTopic = currentTopic.replace( /MASTR\:*.[0-9]\.[0-9]\.[0-9]\.rc\.[0-9]{3}/g, 'MASTR: ' + versions.rc );
+			} else if ( versions.vrtype == 'alpha' ) {
+				currentTopic = currentTopic.replace( /ALPHA\:*.[0-9]\.[0-9]\.[0-9]\.alpha\.[0-9]{3}/g, 'ALPHA: ' + versions.rc );
+			} else if ( versions.vrtype == 'beta' ) {
+				currentTopic = currentTopic.replace( /BETA\:*.[0-9]\.[0-9]\.[0-9]\.beta\.[0-9]{3}/g, 'BETA: ' + versions.rc );
+			}
+		}
+
+		if ( versions.minor !== null  ) {
+			currentTopic = currentTopic.replace( /REL\:*.[0-9]\.[0-9]\.[0-9]\.p/, 'REL: ' + versions.minor );
+		}
+
+		if ( versions.major !== null ) {
+			currentTopic = currentTopic.replace( /REL\:*.[0-9]\.[0-9]\.[0-9]\.p/, 'REL: ' + versions.major );
+		}
+		//SET new topic
+		hipchat.api.rooms.topic( { room_id: roomID, topic: currentTopic, from: 'gruntBOT' }, function( err, res ) {
+			if ( err ) { throw err; }
+			grunt.log.ok( 'Topic changed for hipchat' );
+			var msg = grunt.config.get( 'notificationMessage' );
+			msg += '<li>HipChat topic changed for Main Chat room.</li>'
+			msg += '</ul>';
+			grunt.config.set( 'notificationMessage', msg );
+			done();
+		} );
+	};
+
 	grunt.registerTask( 'setNotifications', 'Testing what is available for custom grunt tasks', function setNotifications() {
 		//grab what notification we're running.
 		//grab message.
@@ -374,7 +421,6 @@ module.exports = function(grunt) {
 		var msg = grunt.config.get( 'notificationMessage' );
 
 		if ( this.args[0] == 'init' ) {
-			/** @todo Set a background colour property for notifications dynamically depending on the task alias that is running.  So rc version bumps could be purple, HOTFIX could be yellow, and RELEASE could be green?  */
 			msg = '<b>GruntBOT activity Report:</b><br>';
 			msg += 'Task Group Run: <b>' + this.args[1] + '</b><br><br>';
 			msg += 'Notification Messages:<br>';
@@ -391,14 +437,57 @@ module.exports = function(grunt) {
 
 			return true;
 		} else if ( this.args[0] == 'end' ) {
-			msg += '</ul>';
-			grunt.config.set( 'notificationMessage', msg );
+
+
+
+			/**
+			 * update topic in hipchat room! BUT only if updating event-espresso-core
+			 */
+			if ( grunt.config.get( 'eeParams.slug' ) == 'event-espresso-core' ) {
+				var HipchatClient, hipchat;
+				HipchatClient = require('hipchat-client');
+				var roomID = '424398';
+				var authToken = grunt.config.get( 'hipchat_notifier.options.authToken' );
+				var done = this.async();
+				hipchat = new HipchatClient( authToken );
+				//get current topic
+				var currentRoom;
+				try {
+					hipchat.api.rooms.show( {room_id: roomID }, function(err, res) {
+						if ( err ) { throw err; }
+						postnewTopic( res, hipchat, done );
+					});
+
+				} catch(err) {
+					grunt.verbose.writeln( console.log( err ) );
+					msg += '</ul>';
+					grunt.config.set( 'notificationMessage', msg );
+				}
+			} else {
+				msg += '</ul>';
+				grunt.config.set( 'notificationMessage', msg );
+			}
+
 			return true;
 		}
 
 		//grab any notify message for the given action.
 		var notification_message = grunt.config.get( task_notification );
+		var new_version = grunt.config.get( 'new_version' );
+		grunt.verbose.ok( task_name );
+		grunt.verbose.ok( new_version );
 		if ( notification_message !== null ) {
+			switch ( task_name ) {
+				case 'shell.bump_rc' :
+					grunt.config.set( 'rc_version', new_version );
+					break;
+				case 'shell.bump_minor' :
+					grunt.config.set( 'minor_version', new_version );
+					break;
+				case 'shell.bump_major' :
+					grunt.config.set( 'major_version', new_version );
+					break;
+			}
 			msg += '<li>' + notification_message + '</li>';
 			grunt.log.ok( notification_message );
 			grunt.config.set( 'notificationMessage', msg );
