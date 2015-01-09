@@ -384,9 +384,9 @@ module.exports = function(grunt) {
 	function postnewTopic( roomInfo, hipchat, done ) {
 		var roomID = '424398';
 		var authToken = grunt.config.get( 'hipchat_notifier.options.authToken' );
-		grunt.verbose.writeln( console.log( roomInfo ) );
+		/*grunt.verbose.writeln( console.log( roomInfo ) );*/
 		var currentTopic = roomInfo.room.topic;
-		grunt.verbose.writeln( console.log( currentTopic ) );
+		/*grunt.verbose.writeln( console.log( currentTopic ) );*/
 
 		//let's parse and replace elements of the topic.
 		var versions = {
@@ -395,7 +395,7 @@ module.exports = function(grunt) {
 			major: grunt.config.get( 'major_version' ),
 			vrtype: grunt.config.get( 'eeParams.versionType')
 		}
-		grunt.verbose.ok( console.log(versions) );
+		/*grunt.verbose.ok( console.log(versions) );*/
 		if ( versions.rc !== null ) {
 			if ( versions.vrtype == 'rc' ) {
 				currentTopic = currentTopic.replace( /MASTR\:*.[0-9]\.[0-9]\.[0-9]\.rc\.[0-9]{3}/g, 'MASTR: ' + versions.rc );
@@ -473,11 +473,12 @@ module.exports = function(grunt) {
 						postnewTopic( res, hipchat, done );
 					});
 
-				} catch(err) {
-					grunt.verbose.writeln( console.log( err ) );
+				} catch(e) {
+					grunt.verbose.or.write('error with posting topic').error().error(e.message );
 					msg += '</ul>';
 					msg += '<strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 					grunt.config.set( 'notificationMessage', msg );
+					return;
 				}
 			} else {
 				msg += '</ul>';
