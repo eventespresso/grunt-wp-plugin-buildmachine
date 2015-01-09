@@ -122,7 +122,7 @@ module.exports = function(grunt) {
 				notify: 'Version changed for pr (adding beta prefix). Version changed to <%= new_version %>',
 				command: [
 					'export EE_VERSION_BUMP_TYPE="pre_release"',
-					'export EE_VERSION_FILE=src/<%= eeParams.versionFile %>"',
+					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
 					'php version-bump.php'
 				].join('&&'),
 				options: {
