@@ -194,7 +194,14 @@ module.exports = function(grunt) {
 					cwd: 'src',
 					message: 'Prepping release minus folders/files not included with production.'
 				}
-			}
+			},
+			prRelease: {
+				notify: 'Commited release version change for pr.',
+				options: {
+					cwd: 'src',
+					message: 'Changed version to <%= new_version %> and prepped for pre release'
+				}
+			},
 		},
 
 		gittag: {
@@ -599,10 +606,12 @@ module.exports = function(grunt) {
 		'setNotifications:shell:prVersion',
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
+		'gitadd:version',
+		'setNotifications:gitadd:version',
+		'gitcommit:prRelease',
+		'setNotifications:gitcommit:prRelease',
 		'gitarchive:prRelease',
-		'setNotifications:gitacrhive:prRelease',
-		'gitreset:clean',
-		'setNotifications:getreset:clean',
+		'setNotifications:gitarchive:prRelease',
 		'shell:shareBuildpr',
 		'setNotifications:shell:shareBuildpr',
 		'setNotifications:end',
@@ -621,9 +630,12 @@ module.exports = function(grunt) {
 		'setNotifications:shell:prVersion',
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
+		'gitadd:version',
+		'setNotifications:gitadd:version',
+		'gitcommit:prRelease',
+		'setNotifications:gitcommit:prRelease',
 		'gitarchive:prRelease',
-		'setNotifications:gitacrhive:prRelease',
-		'gitreset:clean',
+		'setNotifications:gitarchive:prRelease',
 		'setNotifications:getreset:clean',
 		'shell:shareBuildpr',
 		'setNotifications:shell:shareBuildpr',
@@ -643,9 +655,12 @@ module.exports = function(grunt) {
 		'setNotifications:shell:prVersion',
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
+		'gitadd:version',
+		'setNotifications:gitadd:version',
+		'gitcommit:prRelease',
+		'setNotifications:gitcommit:prRelease',
 		'gitarchive:prRelease',
-		'setNotifications:gitacrhive:prRelease',
-		'gitreset:clean',
+		'setNotifications:gitarchive:prRelease',
 		'setNotifications:getreset:clean',
 		'shell:shareBuildpr',
 		'setNotifications:shell:shareBuildpr',
