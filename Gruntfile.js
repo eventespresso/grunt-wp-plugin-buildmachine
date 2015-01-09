@@ -159,6 +159,16 @@ module.exports = function(grunt) {
 			}
 		},
 
+		gitreset: {
+			clean: {
+				notify: 'Reset to latest commit (HEAD).',
+				options: {
+					mode: 'hard',
+					commit: 'HEAD'
+				}
+			}
+		},
+
 		gitcommit: {
 			//commit version bump.
 			version: {
@@ -590,6 +600,8 @@ module.exports = function(grunt) {
 		'setNotifications:shell:remove_folders_release',
 		'gitarchive:prRelease',
 		'setNotifications:gitacrhive:prRelease',
+		'gitreset:clean',
+		'setNotifications:getreset:clean',
 		'shell:shareBuildpr',
 		'setNotifications:shell:shareBuildpr',
 		'setNotifications:end',
@@ -610,6 +622,8 @@ module.exports = function(grunt) {
 		'setNotifications:shell:remove_folders_release',
 		'gitarchive:prRelease',
 		'setNotifications:gitacrhive:prRelease',
+		'gitreset:clean',
+		'setNotifications:getreset:clean',
 		'shell:shareBuildpr',
 		'setNotifications:shell:shareBuildpr',
 		'setNotifications:end',
@@ -630,6 +644,8 @@ module.exports = function(grunt) {
 		'setNotifications:shell:remove_folders_release',
 		'gitarchive:prRelease',
 		'setNotifications:gitacrhive:prRelease',
+		'gitreset:clean',
+		'setNotifications:getreset:clean',
 		'shell:shareBuildpr',
 		'setNotifications:shell:shareBuildpr',
 		'setNotifications:end',
