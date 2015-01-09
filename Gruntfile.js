@@ -457,7 +457,7 @@ module.exports = function(grunt) {
 			/**
 			 * update topic in hipchat room! BUT only if updating event-espresso-core
 			 */
-			if ( grunt.config.get( 'eeParams.slug' ) == 'event-espresso-core' ) {
+			if ( grunt.config.get( 'eeParams.slug' ) == 'event-espresso-core-reg' ) {
 				var HipchatClient, hipchat;
 				HipchatClient = require('hipchat-client');
 				var roomID = '424398';
