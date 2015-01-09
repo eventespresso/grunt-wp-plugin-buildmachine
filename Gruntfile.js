@@ -163,6 +163,7 @@ module.exports = function(grunt) {
 			clean: {
 				notify: 'Reset to latest commit (HEAD).',
 				options: {
+					cwd: 'src',
 					mode: 'hard',
 					commit: 'HEAD'
 				}
