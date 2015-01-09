@@ -22,6 +22,11 @@ if ( empty( $orig_version ) ) {
 $version_split = explode( '.', $orig_version);
 
 switch( $type ) {
+	case 'pre_release' :
+		//we're not bumping just replacing whatever string is in the version string with 'beta', since pre-releases are ONLY built on top of rc/alpha/beta builds, then we just replace the second from last array index
+		$version_split[3] = 'beta';
+		break;
+
 	case 'rc' :
 	case 'alpha' :
 	case 'beta' :

@@ -118,6 +118,18 @@ module.exports = function(grunt) {
 					stdout: false
 				}
 			},
+			prVersion: {
+				notify: 'Version changed for pr (adding beta prefix). Version changed to <%= new_version %>',
+				command: [
+					'export EE_VERSION_BUMP_TYPE="pre_release"',
+					'export EE_VERSION_FILE=src/<%= eeParams.versionFile %>"',
+					'php version-bump.php'
+				].join('&&'),
+				options: {
+					callback: setNewVersion,
+					stdout: false
+				}
+			},
 			remove_folders_release: {
 				notify: '<%= eeParams.releaseFilesRemove.length %> folders and files removed in prep for release.',
 				command: '',
@@ -129,7 +141,11 @@ module.exports = function(grunt) {
 			shareBuild : {
 				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
-			}
+			},
+			shareBuildpr : {
+				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
+				command: 'mv build/<%= eeParams.slug %>-pr.zip <%= eeParams.archiveBasePath %>'
+			},
 		},
 
 		//git commands
@@ -322,6 +338,16 @@ module.exports = function(grunt) {
 					format: 'zip',
 					prefix: '<%= eeParams.slug %>/',
 					output: '../build/<%= eeParams.slug %>.zip'
+				}
+			},
+			prRelease: {
+				notify: 'Archiving zip build for pre release channel.',
+				options: {
+					cwd: 'src',
+					treeIsh: 'release_prep',
+					format: 'zip',
+					prefix: '<%= eeParams.slug %>/',
+					output: '../build/<%= eeParams.slug %>-pr.zip'
 				}
 			}
 		},
@@ -545,6 +571,70 @@ module.exports = function(grunt) {
 	//bumping major versions and releasing.
 	grunt.registerTask( 'release', ['setNotifications:init:release:green', 'gitcheckout:master', 'setNotifications:gitcheckout:master', 'gitpull:master', 'seteeParams', 'setNotifications:gitpull:master', 'shell:bump_major','setNotifications:shell:bump_major', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gitcheckout:release', 'setNotifications:gitcheckout:release', 'gittag:releaseAll', 'setNotifications:gittag:releaseAll', 'shell:remove_folders_release', 'setNotifications:shell:remove_folders_release', 'gittag:release', 'setNotifications:gittag:release', 'gitarchive:release', 'setNotifications:gitarchive:release', 'gitcheckout:master', 'setNotifications:gitcheckout:master', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitpush:release', 'setNotifications:gitpush:release', 'shell:shareBuild', 'setNotifications:shell:shareBuild', 'setNotifications:end', 'hipchat_notifier:notify_team' ] );
 	grunt.registerTask( 'testingrelease', ['setNotifications:init:testingrelease:green', 'gitcheckout:testingSetup', 'setNotifications:gitcheckout:testingSetup', 'seteeParams', 'shell:bump_major', 'setNotifications:shell:bump_major', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gitcheckout:release', 'setNotifications:gitcheckout:release', 'gittag:releaseAll', 'setNotifications:gittag:releaseAll', 'shell:remove_folders_release', 'setNotifications:shell:remove_folders_release', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gittag:release', 'setNotifications:gittag:release', 'gitarchive:release', 'setNotifications:gitarchive:release', 'gitcheckout:testing', 'setNotifications:gitcheckout:testing', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version', 'gitpush:testing', 'setNotifications:gitpush:testing', 'shell:shareBuild', 'setNotifications:shell:shareBuild', 'setNotifications:end', 'hipchat_notifier:notify_team' ] );
+
+
+
+	//building pre-releases
+	grunt.registerTask( 'pr_alpha', [
+		'setNotifications:init:release:green',
+		'gitcheckout:alpha',
+		'setNotifications:gitcheckout:alpha',
+		'gitpull:alpha',
+		'seteeParams',
+		'setNotifications:gitpull:alpha',
+		'gitcheckout:release',
+		'setNotifications:gitcheckout:release',
+		'shell:prVersion',
+		'setNotifications:shell:prVersion',
+		'shell:remove_folders_release',
+		'setNotifications:shell:remove_folders_release',
+		'gitarchive:prRelease',
+		'setNotifications:gitacrhive:prRelease',
+		'shell:shareBuildpr',
+		'setNotifications:shell:shareBuildpr',
+		'setNotifications:end',
+		'hipchat_notifier:notify_team'
+		]);
+	grunt.registerTask( 'pr_beta', [
+		'setNotifications:init:release:green',
+		'gitcheckout:beta',
+		'setNotifications:gitcheckout:beta',
+		'gitpull:beta',
+		'seteeParams',
+		'setNotifications:gitpull:beta',
+		'gitcheckout:release',
+		'setNotifications:gitcheckout:release',
+		'shell:prVersion',
+		'setNotifications:shell:prVersion',
+		'shell:remove_folders_release',
+		'setNotifications:shell:remove_folders_release',
+		'gitarchive:prRelease',
+		'setNotifications:gitacrhive:prRelease',
+		'shell:shareBuildpr',
+		'setNotifications:shell:shareBuildpr',
+		'setNotifications:end',
+		'hipchat_notifier:notify_team'
+		]);
+	grunt.registerTask( 'pr', [
+		'setNotifications:init:release:green',
+		'gitcheckout:master',
+		'setNotifications:gitcheckout:master',
+		'gitpull:master',
+		'seteeParams',
+		'setNotifications:gitpull:master',
+		'gitcheckout:release',
+		'setNotifications:gitcheckout:release',
+		'shell:prVersion',
+		'setNotifications:shell:prVersion',
+		'shell:remove_folders_release',
+		'setNotifications:shell:remove_folders_release',
+		'gitarchive:prRelease',
+		'setNotifications:gitacrhive:prRelease',
+		'shell:shareBuildpr',
+		'setNotifications:shell:shareBuildpr',
+		'setNotifications:end',
+		'hipchat_notifier:notify_team'
+		]);
 
 
 	//other testing things
