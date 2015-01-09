@@ -143,7 +143,7 @@ module.exports = function(grunt) {
 				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
 			},
 			shareBuildpr : {
-				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
+				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>-pr.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 				command: 'mv build/<%= eeParams.slug %>-pr.zip <%= eeParams.archiveBasePath %>'
 			},
 		},
