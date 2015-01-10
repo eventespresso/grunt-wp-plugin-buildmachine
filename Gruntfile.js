@@ -195,20 +195,6 @@ module.exports = function(grunt) {
 		gitinfo : {
 			options: {
 				cwd: 'src'
-			},
-			local : {
-				branch: {
-					current : {
-						SHA               : "Current HEAD SHA",
-						shortSHA          : "Current HEAD short SHA",
-						name              : "Current branch name",
-						currentUser       : "Current git user" ,
-						lastCommitTime    : "Last commit time",
-						lastCommitMessage : "Last commit message",
-						lastCommitAuthor  : "Last commit author",
-						lastCommitNumber  : "Last commit number"
-					}
-				}
 			}
 		},
 
@@ -679,7 +665,7 @@ module.exports = function(grunt) {
 
 	grunt.registerTask( 'maybeRun', 'Checks to see if grunt should run tasks basied on the last commit in the gitlog', function maybeRun() {
 		var gitinfo = grunt.config.get( 'gitinfo' );
-		grunt.log.writeln( console.log( gitinfo ) );
+		grunt.log.writeln( console.log( gitinfo.local.branch.current ) );
 	});
 
 	grunt.registerTask( 'testinggitinfo', ['gitcheckout:alpha', 'maybeRun'] );
