@@ -638,7 +638,7 @@ module.exports = function(grunt) {
 		}
 
 		if ( msg !== null ) {
-			grunt.config.set(msg);
+			grunt.config.set('mainChatMessage', msg );
 			grunt.config.set( 'mainChatColor', 'purple' );
 			grunt.task.run( 'hipchat_notifier:notify_main_chat' );
 		}
