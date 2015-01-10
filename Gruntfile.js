@@ -154,7 +154,6 @@ module.exports = function(grunt) {
 				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>-pr.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 				command: 'mv build/<%= eeParams.slug %>-pr.zip <%= eeParams.archiveBasePath %>'
 			},
-
 			SandboxPull: {
 				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
 				command: [
@@ -162,9 +161,7 @@ module.exports = function(grunt) {
 					'git checkout <%= eeParams.branch %>',
 					'git pull origin <%= eeParams.branch %>'
 					].join('&&')
-				}
 			},
-
 			decafSandboxPull: {
 				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
 				command: [
@@ -173,7 +170,6 @@ module.exports = function(grunt) {
 					'git pull origin <%= eeParams.branch %>'
 				].join('&&')
 			},
-
 			githubPush: {
 				notify: "Pushed <%= eeParams.branch %> branch to github repo.",
 				command: [
@@ -625,23 +621,24 @@ module.exports = function(grunt) {
 	//deciding whether to do sandbox and github pushes dependent on params set in the repo info.json file.
 	grunt.registerTask( 'SandboxGithub', 'Do sandbox and github pushes?', function SandboxGithub() {
 		var params = grunt.config.get( 'eeParams' );
+		var msg = null;
 		if ( params.sandboxsite !== null ) {
 			grunt.task.run('shell:SandboxPull', 'setNotifications:shell:SandboxPull' );
-			grunt.config.set( 'mainChatMessage', '<%= eeParams.branch %> for <%= eeParams.name %> has been updated on <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>.');
-			grunt.config.set( 'mainChatColor', 'purple' );
-			grunt.task.run( 'hipchat_notifier:notify_main_chat' );
+			msg +=  '<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>.';
 		}
 
 		if ( params.sandboxdecafsite !== null ) {
 			grunt.task.run( 'shell:decafSandboxPull', 'setNotifications:shell:decafSandboxPull' );
-			grunt.config.set( 'mainChatMessage', '<%= eeParams.branch %> has been updated for for <%= eeParams.name %> on <a href="http://<%= eeParams.sandboxdecafUrl %>"><%= eeParams.sandboxdecafUrl %></a>.');
-			grunt.config.set( 'mainChatColor', 'purple' );
-			grunt.task.run( 'hipchat_notifier:notify_main_chat' );
+			msg += '<br><%= eeParams.branch %>branch has been updated for <%= eeParams.name %> on <a href="http://<%= eeParams.sandboxdecafUrl %>"><%= eeParams.sandboxdecafUrl %></a>.');
 		}
 
 		if ( params.github ) {
 			grunt.task.run( 'shell:githubPush', 'setNotifications:shell:githubPush' );
-			grunt.config.set( 'mainChatMessage', '<%= eeParams.branch %> for for <%= eeParams.name %> has been pushed to github.');
+			msg += '<br><%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.');
+		}
+
+		if ( msg !== null ) {
+			grunt.config.set(msg);
 			grunt.config.set( 'mainChatColor', 'purple' );
 			grunt.task.run( 'hipchat_notifier:notify_main_chat' );
 		}
