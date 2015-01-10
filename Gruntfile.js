@@ -689,7 +689,7 @@ module.exports = function(grunt) {
 		'SandboxGithub'
 		]);
 
-	grunt.registerTask( 'updateSandbox_master', [
+	grunt.registerTask( 'updateSandbox_beta', [
 		'gitcheckout:beta',
 		'gitpull:beta',
 		'seteeParams',
