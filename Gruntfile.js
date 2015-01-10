@@ -173,7 +173,7 @@ module.exports = function(grunt) {
 					'cp -r src/wp-assets/* build/wp-org-assets'
 					].join(';')
 			},
-			prepWPbuild : {
+			prepWPBuild : {
 				notify: 'Copying contents of plugin into wp-org build directory to prep for deploy to wordpress.org. This task also renamed the main file to match the wporg plugin slug.',
 				command: [
 					'rm -rf build/wp-org',
