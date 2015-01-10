@@ -159,10 +159,10 @@ module.exports = function(grunt) {
 				command: ''
 			},
 			checkoutTag : {
-				notify: 'Checking out <%= eeParams.wpOrgRelease =%> version to be packaged for wordpress.org release.',
+				notify: 'Checking out <%= eeParams.wpOrgRelease %> version to be packaged for wordpress.org release.',
 				command: [
 					'cd src',
-					'git checkout <%= eeParams.wpOrgRelease =%> -B release_prep'
+					'git checkout <%= eeParams.wpOrgRelease %> -B release_prep'
 				].join('&&')
 			},
 			prepWPassets : {
