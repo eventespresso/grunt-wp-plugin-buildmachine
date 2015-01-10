@@ -38,6 +38,8 @@ module.exports = function(grunt) {
 		"versionFile" : "",
 		"versionType" : "rc",
 		"slug" : "",
+		"wpOrgSlug" : "",
+		"wpOrgUser" : "",
 		"name" : "",
 		"archiveBaseUrl" : "",
 		"archiveBasePath" : "",
@@ -127,6 +129,14 @@ module.exports = function(grunt) {
 					stdout: false
 				}
 			},
+			decafVersion: {
+				notify: 'Decaf version task completed. Version changed to <%= new_version %>',
+				command: [
+					'export EE_VERSION_BUMP_TYPE="decaf"',
+					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
+					'php version-bump.php'
+				].join('&&'),
+			},
 			prVersion: {
 				notify: 'Version changed for pr (adding beta prefix). Version changed to <%= new_version %>',
 				command: [
@@ -147,6 +157,23 @@ module.exports = function(grunt) {
 				notify: '<%= eeParams.releaseFilesRemove.length %> folders and files removed in prep for decaf release.',
 				command: ''
 			},
+			prepWPassets : {
+				notify: 'Moving contents of wp-assets into correct directory.',
+				command: [
+					'rm -rf build/wp-org-assets',
+					'mkdir build/wp-org-assets',
+					'cp -r src/wp-assets/* build/wp-org-assets'
+					].join(';')
+			},
+			prepWPbuild : {
+				notify: 'Copying contents of plugin into wp-org build directory to prep for deploy to wordpress.org. This task also renamed the main file to match the wporg plugin slug.',
+				command: [
+					'rm -rf build/wp-org',
+					'mkdir build/wp-org',
+					'cp -r src/* build/wp-org',
+					'mv build/wp-org/<%= eeParams.versionFile %> build/wp-org/<%= eeParams.wpOrgSlug %>.php'
+					].join(';')
+			},
 			shareBuild : {
 				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
@@ -154,6 +181,10 @@ module.exports = function(grunt) {
 			shareBuildpr : {
 				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>-pr.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 				command: 'mv build/<%= eeParams.slug %>-pr.zip <%= eeParams.archiveBasePath %>'
+			},
+			shareBuildWP : {
+				notify: 'Archive folder for WP deploy has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.wpOrgSlug %>-wp.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
+				command: 'mv build/<%= eeParams.wpOrgSlug %>-wp.zip <%= eeParams.archiveBasePath %>'
 			},
 			SandboxPull: {
 				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
@@ -246,6 +277,15 @@ module.exports = function(grunt) {
 					message: 'Prepping release minus folders/files not included with production.'
 				}
 			},
+
+			releaseWP: {
+				notify: 'Commited WP Release.',
+				options: {
+					cwd: 'src',
+					message: 'Prepping wp release minus folders/files not included with wp org releases.'
+				}
+			},
+
 			prRelease: {
 				notify: 'Commited release version change for pr.',
 				options: {
@@ -420,6 +460,16 @@ module.exports = function(grunt) {
 					prefix: '<%= eeParams.slug %>/',
 					output: '../build/<%= eeParams.slug %>-pr.zip'
 				}
+			},
+			wpRelease: {
+				notify: 'Archiving zip build for wp org channel.',
+				options: {
+					cwd: 'src',
+					treeIsh: 'release_prep',
+					format: 'zip',
+					prefix: '<%= eeParams.wpOrgSlug %>/',
+					output: '../build/<%= eeParams.wpOrgSlug %>-wp.zip'
+				}
 			}
 		},
 
@@ -479,6 +529,20 @@ module.exports = function(grunt) {
 					ext: '.min.css'
 				}]
 			}
+		},
+
+
+		//deploy to wordpress.org
+		wp_deploy: {
+			deploy: {
+				notify: 'Deployed to WordPress.org!',
+				options: {
+					plugin_slug: '<%= eeParams.wpOrgSlug %>',
+					svn_user: '<%= eeParams.wpOrgUser %>',
+					build_dir: 'build/wp-org',
+					assets_dir: 'build/wp-org-assets'
+				}
+			}
 		}
 	});
 
@@ -488,6 +552,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-hipchat-notifier');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-gitinfo');
+	grunt.loadNpmTasks('grunt-wp-deploy');
 
 	function postnewTopic( roomInfo, hipchat, done ) {
 		var roomID = '424398';
@@ -896,6 +961,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:prRelease',
 		'gitarchive:prRelease',
 		'setNotifications:gitarchive:prRelease',
+		''
 		'shell:shareBuildpr',
 		'setNotifications:shell:shareBuildpr',
 		'setNotifications:end',
@@ -921,7 +987,6 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:prRelease',
 		'gitarchive:prRelease',
 		'setNotifications:gitarchive:prRelease',
-		'setNotifications:getreset:clean',
 		'shell:shareBuildpr',
 		'setNotifications:shell:shareBuildpr',
 		'setNotifications:end',
@@ -947,9 +1012,67 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:prRelease',
 		'gitarchive:prRelease',
 		'setNotifications:gitarchive:prRelease',
-		'setNotifications:getreset:clean',
 		'shell:shareBuildpr',
 		'setNotifications:shell:shareBuildpr',
+		'setNotifications:end',
+		'hipchat_notifier:notify_team'
+		]);
+
+	//wporg builds
+	grunt.registerTask( 'wpdeploy', [
+		'setNotifications:init:release:green',
+		'gitcheckout:master',
+		'setNotifications:gitcheckout:master',
+		'gitpull:master',
+		'setNotifications:gitpull:master',
+		'gitinfo',
+		'seteeParams',
+		'gitcheckout:release',
+		'setNotifications:gitcheckout:release',
+		'shell:decafVersion',
+		'setNotifications:shell:decafVersion',
+		'shell:prepWPassets',
+		'setNotifications:shell:prepWPassets',
+		'shell:remove_folders_decaf',
+		'setNotifications:shell:remove_folders_decaf',
+		'shell:prepWPBuild',
+		'setNotifications:shell:prepWPBuild',
+		'gitadd:version',
+		'gitcommit:releaseWP',
+		'gitarchive:wpRelease',
+		'setNotifications:gitarchive:wpRelease',
+		'shell:shareBuildWP',
+		'setNotifications:shell:shareBuildWP',
+		'wp_deploy:deploy',
+		'setNotifications:wp_deploy:deploy',
+		'setNotifications:end',
+		'hipchat_notifier:notify_team'
+		]);
+
+	grunt.registerTask( 'wpdeploy_ziponly', [
+		'setNotifications:init:release:green',
+		'gitcheckout:master',
+		'setNotifications:gitcheckout:master',
+		'gitpull:master',
+		'setNotifications:gitpull:master',
+		'gitinfo',
+		'seteeParams',
+		'gitcheckout:release',
+		'setNotifications:gitcheckout:release',
+		'shell:decafVersion',
+		'setNotifications:shell:decafVersion',
+		'shell:prepWPassets',
+		'setNotifications:shell:prepWPassets',
+		'shell:remove_folders_decaf',
+		'setNotifications:shell:remove_folders_decaf',
+		'shell:prepWPBuild',
+		'setNotifications:shell:prepWPBuild',
+		'gitadd:version',
+		'gitcommit:releaseWP',
+		'gitarchive:wpRelease',
+		'setNotifications:gitarchive:wpRelease',
+		'shell:shareBuildWP',
+		'setNotifications:shell:shareBuildWP',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		]);
