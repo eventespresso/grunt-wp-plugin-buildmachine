@@ -486,6 +486,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks( 'grunt-git' );
 	grunt.loadNpmTasks('grunt-hipchat-notifier');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-gitinfo');
 
 	function postnewTopic( roomInfo, hipchat, done ) {
 		var roomID = '424398';
@@ -665,10 +666,14 @@ module.exports = function(grunt) {
 
 	grunt.registerTask( 'maybeRun', 'Checks to see if grunt should run tasks basied on the last commit in the gitlog', function maybeRun() {
 		var gitinfo = grunt.config.get( 'gitinfo' );
-		grunt.log.writeln( console.log( gitinfo.local.branch.current ) );
+		grunt.verbose.writeln( gitinfo.local.branch.current.lastCommitAuthor );
+		var authorToCheck = 'EE DevBox Server';
+		if ( gitinfo.local.branch.current.lastCommitAuthor.indexOf( authorToCheck ) > -1 ) {
+			grunt.fail.warn( 'Will not continue tasks because last commit was the grunt commit!' );
+		}
 	});
 
-	grunt.registerTask( 'testinggitinfo', ['gitcheckout:alpha', 'maybeRun'] );
+	grunt.registerTask( 'testinggitinfo', ['gitcheckout:alpha', 'gitinfo', 'maybeRun'] );
 
 
 	//bumping rc version
@@ -678,6 +683,8 @@ module.exports = function(grunt) {
 		'setNotifications:gitcheckout:master',
 		'gitpull:master', 'seteeParams',
 		'setNotifications:gitpull:master',
+		'gitinfo',
+		'maybeRun',
 		'shell:bump_rc',
 		'setNotifications:shell:bump_rc',
 		'gitadd:version',
@@ -697,6 +704,8 @@ module.exports = function(grunt) {
 		'setNotifications:gitcheckout:alpha',
 		'gitpull:alpha', 'seteeParams',
 		'setNotifications:gitpull:alpha',
+		'gitinfo',
+		'maybeRun',
 		'shell:bump_rc',
 		'setNotifications:shell:bump_rc',
 		'gitadd:version',
@@ -717,6 +726,8 @@ module.exports = function(grunt) {
 		'setNotifications:gitcheckout:beta',
 		'gitpull:beta',
 		'seteeParams',
+		'gitinfo',
+		'maybeRun',
 		'setNotifications:gitpull:beta',
 		'shell:bump_rc',
 		'setNotifications:shell:bump_rc',
@@ -739,6 +750,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcheckout:master',
 		'gitpull:master', 'seteeParams',
 		'setNotifications:gitpull:master',
+		'gitinfo'
 		'shell:bump_minor',
 		'setNotificationsshell:bump_minor',
 		'gitadd:version',
@@ -784,6 +796,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
 		'seteeParams',
+		'gitinfo'
 		'setNotifications:gitpull:master',
 		'shell:bump_major',
 		'setNotifications:shell:bump_major',
@@ -823,6 +836,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcheckout:alpha',
 		'gitpull:alpha',
 		'seteeParams',
+		'gitinfo',
 		'setNotifications:gitpull:alpha',
 		'gitcheckout:release',
 		'setNotifications:gitcheckout:release',
@@ -846,6 +860,7 @@ module.exports = function(grunt) {
 		'gitcheckout:beta',
 		'setNotifications:gitcheckout:beta',
 		'gitpull:beta',
+		'gitinfo',
 		'seteeParams',
 		'setNotifications:gitpull:beta',
 		'gitcheckout:release',
@@ -871,6 +886,7 @@ module.exports = function(grunt) {
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
+		'gitinfo',
 		'seteeParams',
 		'setNotifications:gitpull:master',
 		'gitcheckout:release',
