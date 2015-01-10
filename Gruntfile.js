@@ -575,20 +575,142 @@ module.exports = function(grunt) {
 
 
 	//bumping rc version
-	grunt.registerTask( 'bumprc_master', ['setNotifications:init:bumprc:purple', 'gitcheckout:master', 'setNotifications:gitcheckout:master', 'gitpull:master', 'seteeParams', 'setNotifications:gitpull:master',  'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version', 'gitpush:bump', 'setNotifications:gitpush:bump', 'setNotifications:end', 'hipchat_notifier:notify_team'] );
-	grunt.registerTask( 'testingbumprc_master', ['setNotifications:init:testingbumprc:purple', 'gitcheckout:testingSetup', 'setNotifications:gitcheckout:testingSetup', 'seteeParams', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version',  'gitpush:testing', 'setNotifications:gitpush:testing', 'setNotifications:end', 'hipchat_notifier:notify_team'] );
-	grunt.registerTask( 'bumprc_alpha', ['setNotifications:init:bumprc:purple', 'gitcheckout:alpha', 'setNotifications:gitcheckout:alpha', 'gitpull:alpha', 'seteeParams', 'setNotifications:gitpull:alpha', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version', 'gitpush:bump_alpha', 'setNotifications:gitpush:bump_alpha', 'setNotifications:end', 'hipchat_notifier:notify_team'] );
-	grunt.registerTask( 'testingbumprc_alpha', ['setNotifications:init:testingbumprc:purple', 'gitcheckout:testingSetup', 'seteeParams', 'setNotifications:gitcheckout:testingSetup', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version',  'gitpush:testing', 'setNotifications:gitpush:testing', 'setNotifications:end', 'hipchat_notifier:notify_team'] );
-	grunt.registerTask( 'bumprc_beta', ['setNotifications:init:bumprc:purple', 'gitcheckout:beta', 'setNotifications:gitcheckout:beta', 'gitpull:beta', 'seteeParams', 'setNotifications:gitpull:beta', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version', 'gitpush:bump_beta', 'setNotifications:gitpush:bump_beta', 'setNotifications:end', 'hipchat_notifier:notify_team'] );
-	grunt.registerTask( 'testingbumprc_beta', ['setNotifications:init:testingbumprc:purple', 'gitcheckout:testingSetup', 'seteeParams', 'setNotifications:gitcheckout:testingSetup', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version',  'gitpush:testing', 'setNotifications:gitpush:testing', 'setNotifications:end', 'hipchat_notifier:notify_team'] );
+	grunt.registerTask( 'bumprc_master', [
+		'setNotifications:init:bumprc:purple',
+		'gitcheckout:master',
+		'setNotifications:gitcheckout:master',
+		'gitpull:master', 'seteeParams',
+		'setNotifications:gitpull:master',
+		'shell:bump_rc',
+		'setNotifications:shell:bump_rc',
+		'gitadd:version',
+		'setNotifications:gitadd:version',
+		'gitcommit:version',
+		'setNotifications:gitcommit:version',
+		'gitpush:bump',
+		'setNotifications:gitpush:bump',
+		'setNotifications:end',
+		'hipchat_notifier:notify_team'
+		] );
+
+	grunt.registerTask( 'bumprc_alpha', [
+		'setNotifications:init:bumprc:purple',
+		'gitcheckout:alpha',
+		'setNotifications:gitcheckout:alpha',
+		'gitpull:alpha', 'seteeParams',
+		'setNotifications:gitpull:alpha',
+		'shell:bump_rc',
+		'setNotifications:shell:bump_rc',
+		'gitadd:version',
+		'setNotifications:gitadd:version',
+		'gitcommit:version',
+		'setNotifications:gitcommit:version',
+		'gitpush:bump_alpha',
+		'setNotifications:gitpush:bump_alpha',
+		'setNotifications:end',
+		'hipchat_notifier:notify_team'
+		] );
+
+
+	grunt.registerTask( 'bumprc_beta', [
+		'setNotifications:init:bumprc:purple',
+		'gitcheckout:beta',
+		'setNotifications:gitcheckout:beta',
+		'gitpull:beta',
+		'seteeParams',
+		'setNotifications:gitpull:beta',
+		'shell:bump_rc',
+		'setNotifications:shell:bump_rc',
+		'gitadd:version',
+		'setNotifications:gitadd:version',
+		'gitcommit:version',
+		'setNotifications:gitcommit:version',
+		'gitpush:bump_beta',
+		'setNotifications:gitpush:bump_beta',
+		'setNotifications:end',
+		'hipchat_notifier:notify_team'
+		] );
+
 
 	//bumping minor version and releasing hotfix
-	grunt.registerTask( 'hotfix', ['setNotifications:init:hotfix:yellow', 'gitcheckout:master', 'setNotifications:gitcheckout:master', 'gitpull:master', 'seteeParams', 'setNotifications:gitpull:master',  'shell:bump_minor', 'setNotificationsshell:bump_minor', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gitcheckout:release', 'setNotifications:gitcheckout:release', 'gittag:releaseAll', 'setNotifications:gittag:releaseAll', 'shell:remove_folders_release', 'setNotifications:shell:remove_folders_release', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gittag:release', 'setNotifications:gittag:release', 'gitarchive:release', 'setNotifications:gitarchive:release', 'gitcheckout:master', 'setNotifications:gitcheckout:master', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version', 'gitpush:release','setNotifications:gitpush:release', 'shell:shareBuild', 'setNotifications:shell:shareBuild', 'setNotifications:end', 'hipchat_notifier:notify_team'] );
-	grunt.registerTask( 'testinghotfix', ['setNotifications:init:testinghotfix:yellow', 'gitcheckout:testingSetup', 'setNotifications:gitcheckout:testingSetup', 'seteeParams', 'shell:bump_minor', 'setNotifications:shell:bump_minor', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gitcheckout:release', 'setNotifications:gitcheckout:release', 'gittag:releaseAll', 'setNotifications:gittag:releaseAll', 'shell:remove_folders_release', 'setNotifications:shell:remove_folders_release', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gittag:release', 'setNotifications:gittag:release', 'gitarchive:release', 'setNotifications:gitarchive:release', 'gitcheckout:testing', 'setNotifications:gitcheckout:testing', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version', 'gitpush:testing', 'setNotifications:gitpush:testing', 'shell:shareBuild', 'setNotifications:shell:shareBuild','setNotifications:end', 'hipchat_notifier:notify_team'] );
+	grunt.registerTask( 'hotfix', [
+		'setNotifications:init:hotfix:yellow',
+		'gitcheckout:master',
+		'setNotifications:gitcheckout:master',
+		'gitpull:master', 'seteeParams',
+		'setNotifications:gitpull:master',
+		'shell:bump_minor',
+		'setNotificationsshell:bump_minor',
+		'gitadd:version',
+		'setNotifications:gitadd:version',
+		'gitcommit:release',
+		'setNotifications:gitcommit:release',
+		'gitcheckout:release',
+		'setNotifications:gitcheckout:release',
+		'gittag:releaseAll',
+		'setNotifications:gittag:releaseAll',
+		'shell:remove_folders_release',
+		'setNotifications:shell:remove_folders_release',
+		'gitadd:version',
+		'setNotifications:gitadd:version',
+		'gitcommit:release',
+		'setNotifications:gitcommit:release',
+		'gittag:release',
+		'setNotifications:gittag:release',
+		'gitarchive:release',
+		'setNotifications:gitarchive:release',
+		'gitcheckout:master',
+		'setNotifications:gitcheckout:master',
+		'shell:bump_rc',
+		'setNotifications:shell:bump_rc',
+		'gitadd:version',
+		'setNotifications:gitadd:version',
+		'gitcommit:version',
+		'setNotifications:gitcommit:version',
+		'gitpush:release',
+		'setNotifications:gitpush:release',
+		'shell:shareBuild',
+		'setNotifications:shell:shareBuild',
+		'setNotifications:end',
+		'hipchat_notifier:notify_team'
+		] );
+
 
 	//bumping major versions and releasing.
-	grunt.registerTask( 'release', ['setNotifications:init:release:green', 'gitcheckout:master', 'setNotifications:gitcheckout:master', 'gitpull:master', 'seteeParams', 'setNotifications:gitpull:master', 'shell:bump_major','setNotifications:shell:bump_major', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gitcheckout:release', 'setNotifications:gitcheckout:release', 'gittag:releaseAll', 'setNotifications:gittag:releaseAll', 'shell:remove_folders_release', 'setNotifications:shell:remove_folders_release', 'gittag:release', 'setNotifications:gittag:release', 'gitarchive:release', 'setNotifications:gitarchive:release', 'gitcheckout:master', 'setNotifications:gitcheckout:master', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitpush:release', 'setNotifications:gitpush:release', 'shell:shareBuild', 'setNotifications:shell:shareBuild', 'setNotifications:end', 'hipchat_notifier:notify_team' ] );
-	grunt.registerTask( 'testingrelease', ['setNotifications:init:testingrelease:green', 'gitcheckout:testingSetup', 'setNotifications:gitcheckout:testingSetup', 'seteeParams', 'shell:bump_major', 'setNotifications:shell:bump_major', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gitcheckout:release', 'setNotifications:gitcheckout:release', 'gittag:releaseAll', 'setNotifications:gittag:releaseAll', 'shell:remove_folders_release', 'setNotifications:shell:remove_folders_release', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:release', 'setNotifications:gitcommit:release', 'gittag:release', 'setNotifications:gittag:release', 'gitarchive:release', 'setNotifications:gitarchive:release', 'gitcheckout:testing', 'setNotifications:gitcheckout:testing', 'shell:bump_rc', 'setNotifications:shell:bump_rc', 'gitadd:version', 'setNotifications:gitadd:version', 'gitcommit:version', 'setNotifications:gitcommit:version', 'gitpush:testing', 'setNotifications:gitpush:testing', 'shell:shareBuild', 'setNotifications:shell:shareBuild', 'setNotifications:end', 'hipchat_notifier:notify_team' ] );
+	grunt.registerTask( 'release', [
+		'setNotifications:init:release:green',
+		'gitcheckout:master',
+		'setNotifications:gitcheckout:master',
+		'gitpull:master',
+		'seteeParams',
+		'setNotifications:gitpull:master',
+		'shell:bump_major',
+		'setNotifications:shell:bump_major',
+		'gitadd:version',
+		'setNotifications:gitadd:version',
+		'gitcommit:release',
+		'setNotifications:gitcommit:release',
+		'gitcheckout:release',
+		'setNotifications:gitcheckout:release',
+		'gittag:releaseAll',
+		'setNotifications:gittag:releaseAll',
+		'shell:remove_folders_release',
+		'setNotifications:shell:remove_folders_release',
+		'gittag:release',
+		'setNotifications:gittag:release',
+		'gitarchive:release',
+		'setNotifications:gitarchive:release',
+		'gitcheckout:master',
+		'setNotifications:gitcheckout:master',
+		'shell:bump_rc',
+		'setNotifications:shell:bump_rc',
+		'gitpush:release',
+		'setNotifications:gitpush:release',
+		'shell:shareBuild',
+		'setNotifications:shell:shareBuild',
+		'setNotifications:end',
+		'hipchat_notifier:notify_team'
+		] );
 
 
 
