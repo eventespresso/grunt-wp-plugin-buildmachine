@@ -675,13 +675,34 @@ module.exports = function(grunt) {
 
 	grunt.registerTask( 'testinggitinfo', ['gitcheckout:alpha', 'gitinfo', 'maybeRun'] );
 
+	grunt.registerTask( 'updateSandbox_master', [
+		'gitcheckout:master',
+		'gitpull:master',
+		'seteeParams',
+		'SandboxGithub'
+		]);
+
+	grunt.registerTask( 'updateSandbox_alpha', [
+		'gitcheckout:alpha',
+		'gitpull:alpha',
+		'seteeParams',
+		'SandboxGithub'
+		]);
+
+	grunt.registerTask( 'updateSandbox_master', [
+		'gitcheckout:beta',
+		'gitpull:beta',
+		'seteeParams',
+		'SandboxGithub'
+		]);
 
 	//bumping rc version
 	grunt.registerTask( 'bumprc_master', [
 		'setNotifications:init:bumprc:purple',
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
-		'gitpull:master', 'seteeParams',
+		'gitpull:master',
+		'seteeParams',
 		'setNotifications:gitpull:master',
 		'gitinfo',
 		'maybeRun',
@@ -693,7 +714,6 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:version',
 		'gitpush:bump',
 		'setNotifications:gitpush:bump',
-		'SandboxGithub',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		] );
@@ -702,7 +722,8 @@ module.exports = function(grunt) {
 		'setNotifications:init:bumprc:purple',
 		'gitcheckout:alpha',
 		'setNotifications:gitcheckout:alpha',
-		'gitpull:alpha', 'seteeParams',
+		'gitpull:alpha',
+		'seteeParams',
 		'setNotifications:gitpull:alpha',
 		'gitinfo',
 		'maybeRun',
@@ -714,7 +735,6 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:version',
 		'gitpush:bump_alpha',
 		'setNotifications:gitpush:bump_alpha',
-		'SandboxGithub',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		] );
@@ -737,7 +757,6 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:version',
 		'gitpush:bump_beta',
 		'setNotifications:gitpush:bump_beta',
-		'SandboxGithub',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		] );
@@ -781,7 +800,6 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:version',
 		'gitpush:release',
 		'setNotifications:gitpush:release',
-		'SandboxGithub',
 		'shell:shareBuild',
 		'setNotifications:shell:shareBuild',
 		'setNotifications:end',
@@ -820,7 +838,6 @@ module.exports = function(grunt) {
 		'setNotifications:shell:bump_rc',
 		'gitpush:release',
 		'setNotifications:gitpush:release',
-		'SandboxGithub',
 		'shell:shareBuild',
 		'setNotifications:shell:shareBuild',
 		'setNotifications:end',
