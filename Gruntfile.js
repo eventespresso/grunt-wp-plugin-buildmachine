@@ -49,7 +49,7 @@ module.exports = function(grunt) {
 		"sandboxsite" : null,
 		"sandboxdecafsite" : null,
 		"sandboxUrl" : "",
-		"sandboxdecafUrl" : ""
+		"sandboxdecafUrl" : "",
 		"github" : false
 	};
 
