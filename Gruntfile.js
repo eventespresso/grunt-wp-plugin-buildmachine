@@ -629,6 +629,25 @@ module.exports = function(grunt) {
 			grunt.fail.warn('The repo must have a valid info.json file in it with params for the remaining tasks');
 		}
 		grunt.log.ok( 'eeParams in config successfully retrieved from info.json');
+
+		var gitinfo = grunt.config.get( 'gitinfo' );
+		if ( typeof gitinfo.local === 'undefined' ) {
+			grunt.fail.warn( 'git info did not appear to work. It is needed to be able to complete tasks. So aborting.' );
+		}
+
+		//let's setup certain environment variables based on the git info we've received.
+		if ( gitinfo.local.branch.current.name == 'master' ) {
+			params.versionType = 'rc';
+			params.branch = 'master';
+		} else {
+			params.versionType = params.branch = gitinfo.local.branch.current.name;
+		}
+
+		params.sandboxsite = params['sites'][params.branch]['sandboxsite']  !== 'undefined' : params['sites'][params.branch]['sandboxsite'] : null;
+		params.sandboxdecafsite =  params['sites'][params.branch]['sandboxdecafsite']  !== 'undefined' : params['sites'][params.branch]['sandboxdecafsite'] : null;;
+		params.sandboxUrl =  params['sites'][params.branch]['sandboxUrl']  !== 'undefined' : params['sites'][params.branch]['sandboxUrl'] : null;;
+		params.sandboxdecafUrl =  params['sites'][params.branch]['sandboxdecafUrl']  !== 'undefined' : params['sites'][params.branch]['sandboxdecafUrl'] : null;;
+
 		grunt.config.set( 'eeParams', params );
 
 		//set commands for shell rm task
@@ -667,8 +686,7 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'maybeRun', 'Checks to see if grunt should run tasks basied on the last commit in the gitlog', function maybeRun() {
 		var gitinfo = grunt.config.get( 'gitinfo' );
 		if ( typeof gitinfo.local === 'undefined' ) {
-			grunt.verbose.warn( 'git info did not appear to work' );
-			return;
+			grunt.log.warn( 'git info did not appear to work. Needed to be able to complete tasks.' );
 		}
 		grunt.verbose.writeln( gitinfo.local.branch.current.lastCommitAuthor );
 		var authorToCheck = 'EE DevBox Server';
@@ -682,13 +700,16 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'updateSandbox_master', [
 		'gitcheckout:master',
 		'gitpull:master',
+		'gitinfo',
 		'seteeParams',
+		'maybeRun',
 		'SandboxGithub'
 		]);
 
 	grunt.registerTask( 'updateSandbox_alpha', [
 		'gitcheckout:alpha',
 		'gitpull:alpha',
+		'gitinfo',
 		'seteeParams',
 		'SandboxGithub'
 		]);
@@ -696,6 +717,7 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'updateSandbox_beta', [
 		'gitcheckout:beta',
 		'gitpull:beta',
+		'gitinfo',
 		'seteeParams',
 		'SandboxGithub'
 		]);
@@ -706,9 +728,9 @@ module.exports = function(grunt) {
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
-		'seteeParams',
 		'setNotifications:gitpull:master',
-		'gitinfo',
+		'gitinfo'
+		'seteeParams',
 		'maybeRun',
 		'shell:bump_rc',
 		'setNotifications:shell:bump_rc',
@@ -727,9 +749,9 @@ module.exports = function(grunt) {
 		'gitcheckout:alpha',
 		'setNotifications:gitcheckout:alpha',
 		'gitpull:alpha',
-		'seteeParams',
 		'setNotifications:gitpull:alpha',
-		'gitinfo',
+		'gitinfo'
+		'seteeParams',
 		'maybeRun',
 		'shell:bump_rc',
 		'setNotifications:shell:bump_rc',
@@ -749,10 +771,10 @@ module.exports = function(grunt) {
 		'gitcheckout:beta',
 		'setNotifications:gitcheckout:beta',
 		'gitpull:beta',
-		'seteeParams',
-		'gitinfo',
-		'maybeRun',
 		'setNotifications:gitpull:beta',
+		'gitinfo',
+		'seteeParams',
+		'maybeRun',
 		'shell:bump_rc',
 		'setNotifications:shell:bump_rc',
 		'gitadd:version',
@@ -771,9 +793,10 @@ module.exports = function(grunt) {
 		'setNotifications:init:hotfix:yellow',
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
-		'gitpull:master', 'seteeParams',
+		'gitpull:master',
 		'setNotifications:gitpull:master',
 		'gitinfo',
+		'seteeParams',
 		'shell:bump_minor',
 		'setNotificationsshell:bump_minor',
 		'gitadd:version',
@@ -817,9 +840,9 @@ module.exports = function(grunt) {
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
-		'seteeParams',
-		'gitinfo',
 		'setNotifications:gitpull:master',
+		'gitinfo',
+		'seteeParams',
 		'shell:bump_major',
 		'setNotifications:shell:bump_major',
 		'gitadd:version',
@@ -856,9 +879,9 @@ module.exports = function(grunt) {
 		'gitcheckout:alpha',
 		'setNotifications:gitcheckout:alpha',
 		'gitpull:alpha',
-		'seteeParams',
-		'gitinfo',
 		'setNotifications:gitpull:alpha',
+		'gitinfo',
+		'seteeParams',
 		'gitcheckout:release',
 		'setNotifications:gitcheckout:release',
 		'shell:prVersion',
@@ -881,9 +904,9 @@ module.exports = function(grunt) {
 		'gitcheckout:beta',
 		'setNotifications:gitcheckout:beta',
 		'gitpull:beta',
+		'setNotifications:gitpull:beta',
 		'gitinfo',
 		'seteeParams',
-		'setNotifications:gitpull:beta',
 		'gitcheckout:release',
 		'setNotifications:gitcheckout:release',
 		'shell:prVersion',
@@ -907,9 +930,9 @@ module.exports = function(grunt) {
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
+		'setNotifications:gitpull:master',
 		'gitinfo',
 		'seteeParams',
-		'setNotifications:gitpull:master',
 		'gitcheckout:release',
 		'setNotifications:gitcheckout:release',
 		'shell:prVersion',
