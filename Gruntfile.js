@@ -666,6 +666,10 @@ module.exports = function(grunt) {
 
 	grunt.registerTask( 'maybeRun', 'Checks to see if grunt should run tasks basied on the last commit in the gitlog', function maybeRun() {
 		var gitinfo = grunt.config.get( 'gitinfo' );
+		if ( typeof gitinfo.local === 'undefined' ) {
+			grunt.verbose.warn( 'git info did not appear to work' );
+			return;
+		}
 		grunt.verbose.writeln( gitinfo.local.branch.current.lastCommitAuthor );
 		var authorToCheck = 'EE DevBox Server';
 		if ( gitinfo.local.branch.current.lastCommitAuthor.indexOf( authorToCheck ) > -1 ) {
