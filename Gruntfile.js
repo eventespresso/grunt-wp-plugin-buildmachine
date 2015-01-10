@@ -644,8 +644,6 @@ module.exports = function(grunt) {
 			params.versionType = params.branch = gitinfo.local.branch.current.name;
 		}
 
-		grunt.log.warn(console.log(params.sites) );
-
 		if ( params.sites !== null && typeof params.sites !== 'undefined' ) {
 			params.sandboxsite = params['sites'][params.branch]['sandboxsite']  !== 'undefined' ? params['sites'][params.branch]['sandboxsite'] : null;
 			params.sandboxdecafsite =  params['sites'][params.branch]['sandboxdecafsite']  !== 'undefined' ? params['sites'][params.branch]['sandboxdecafsite'] : null;
