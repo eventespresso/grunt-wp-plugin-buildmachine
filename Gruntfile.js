@@ -727,8 +727,8 @@ module.exports = function(grunt) {
 		grunt.config.set( 'eeParams', params );
 
 		//set commands for shell rm task
-		grunt.config.set( 'shell.remove_folders_release.command', rm_prepare_folders( params.releaseFilesRemove ).join('&&') );
-		grunt.config.set( 'shell.remove_folders_decaf', rm_prepare_folders( params.decafFilesRemove ).join('&&') );
+		grunt.config.set( 'shell.remove_folders_release.command', rm_prepare_folders( params.releaseFilesRemove ).join(';') );
+		grunt.config.set( 'shell.remove_folders_decaf', rm_prepare_folders( params.decafFilesRemove ).join(';') );
 	});
 
 
@@ -1034,12 +1034,12 @@ module.exports = function(grunt) {
 		'setNotifications:gitpull:master',
 		'gitinfo',
 		'seteeParams',
+		'shell:prepWPassets',
+		'setNotifications:shell:prepWPassets',
 		'shell:checkoutTag',
 		'setNotifications:shell:checkoutTag',
 		'shell:decafVersion',
 		'setNotifications:shell:decafVersion',
-		'shell:prepWPassets',
-		'setNotifications:shell:prepWPassets',
 		'shell:remove_folders_decaf',
 		'setNotifications:shell:remove_folders_decaf',
 		'shell:prepWPBuild',
@@ -1064,12 +1064,12 @@ module.exports = function(grunt) {
 		'setNotifications:gitpull:master',
 		'gitinfo',
 		'seteeParams',
+		'shell:prepWPassets',
+		'setNotifications:shell:prepWPassets',
 		'shell:checkoutTag',
 		'setNotifications:shell:checkoutTag',
 		'shell:decafVersion',
 		'setNotifications:shell:decafVersion',
-		'shell:prepWPassets',
-		'setNotifications:shell:prepWPassets',
 		'shell:remove_folders_decaf',
 		'setNotifications:shell:remove_folders_decaf',
 		'shell:prepWPBuild',
