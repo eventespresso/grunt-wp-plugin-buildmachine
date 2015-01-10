@@ -192,7 +192,7 @@ module.exports = function(grunt) {
 			}
 		},
 
-		gitinfo {
+		gitinfo : {
 			options: {
 				cwd: 'src'
 			}
