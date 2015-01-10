@@ -702,7 +702,6 @@ module.exports = function(grunt) {
 		'gitpull:master',
 		'gitinfo',
 		'seteeParams',
-		'maybeRun',
 		'SandboxGithub'
 		]);
 
