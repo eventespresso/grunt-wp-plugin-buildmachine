@@ -46,6 +46,7 @@ module.exports = function(grunt) {
 		"releaseFilesRemove" : [],
 		"decafFilesRemove" : [],
 		"branch" : "",
+		"sites" : null,
 		"sandboxsite" : null,
 		"sandboxdecafsite" : null,
 		"sandboxUrl" : "",
@@ -643,10 +644,12 @@ module.exports = function(grunt) {
 			params.versionType = params.branch = gitinfo.local.branch.current.name;
 		}
 
-		params.sandboxsite = params['sites'][params.branch]['sandboxsite']  !== 'undefined' ? params['sites'][params.branch]['sandboxsite'] : null;
-		params.sandboxdecafsite =  params['sites'][params.branch]['sandboxdecafsite']  !== 'undefined' ? params['sites'][params.branch]['sandboxdecafsite'] : null;;
-		params.sandboxUrl =  params['sites'][params.branch]['sandboxUrl']  !== 'undefined' ? params['sites'][params.branch]['sandboxUrl'] : null;;
-		params.sandboxdecafUrl =  params['sites'][params.branch]['sandboxdecafUrl']  !== 'undefined' ? params['sites'][params.branch]['sandboxdecafUrl'] : null;;
+		if ( params.sites !== null ) {
+			params.sandboxsite = params['sites'][params.branch]['sandboxsite']  !== 'undefined' ? params['sites'][params.branch]['sandboxsite'] : null;
+			params.sandboxdecafsite =  params['sites'][params.branch]['sandboxdecafsite']  !== 'undefined' ? params['sites'][params.branch]['sandboxdecafsite'] : null;
+			params.sandboxUrl =  params['sites'][params.branch]['sandboxUrl']  !== 'undefined' ? params['sites'][params.branch]['sandboxUrl'] : null;
+			params.sandboxdecafUrl =  params['sites'][params.branch]['sandboxdecafUrl']  !== 'undefined' ? params['sites'][params.branch]['sandboxdecafUrl'] : null;
+		}
 
 		grunt.config.set( 'eeParams', params );
 
