@@ -961,7 +961,6 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:prRelease',
 		'gitarchive:prRelease',
 		'setNotifications:gitarchive:prRelease',
-		''
 		'shell:shareBuildpr',
 		'setNotifications:shell:shareBuildpr',
 		'setNotifications:end',
