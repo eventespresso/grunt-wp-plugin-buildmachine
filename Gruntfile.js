@@ -606,8 +606,8 @@ module.exports = function(grunt) {
 			if ( err ) { throw err; }
 			grunt.log.ok( 'Topic changed for hipchat' );
 			var msg = grunt.config.get( 'notificationMessage' );
-			msg += '<li>HipChat topic changed for Main Chat room.</li>'
-			msg += '<strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
+			msg += '<li>HipChat topic changed for Main Chat room.</li>';
+			msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 			msg += '</ul>';
 			grunt.config.set( 'notificationMessage', msg );
 			done();
@@ -664,13 +664,13 @@ module.exports = function(grunt) {
 				} catch(e) {
 					grunt.verbose.or.write('error with posting topic').error().error(e.message );
 					msg += '</ul>';
-					msg += '<strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
+					msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 					grunt.config.set( 'notificationMessage', msg );
 					return;
 				}
 			} else {
 				msg += '</ul>';
-				msg += '<strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
+				msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 				grunt.config.set( 'notificationMessage', msg );
 			}
 
