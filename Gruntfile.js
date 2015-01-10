@@ -629,12 +629,12 @@ module.exports = function(grunt) {
 
 		if ( params.sandboxdecafsite !== null ) {
 			grunt.task.run( 'shell:decafSandboxPull', 'setNotifications:shell:decafSandboxPull' );
-			msg += '<br><%= eeParams.branch %>branch has been updated for <%= eeParams.name %> on <a href="http://<%= eeParams.sandboxdecafUrl %>"><%= eeParams.sandboxdecafUrl %></a>.');
+			msg += '<br><%= eeParams.branch %>branch has been updated for <%= eeParams.name %> on <a href="http://<%= eeParams.sandboxdecafUrl %>"><%= eeParams.sandboxdecafUrl %></a>.';
 		}
 
 		if ( params.github ) {
 			grunt.task.run( 'shell:githubPush', 'setNotifications:shell:githubPush' );
-			msg += '<br><%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.');
+			msg += '<br><%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.';
 		}
 
 		if ( msg !== null ) {
