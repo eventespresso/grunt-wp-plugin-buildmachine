@@ -729,7 +729,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
 		'setNotifications:gitpull:master',
-		'gitinfo'
+		'gitinfo',
 		'seteeParams',
 		'maybeRun',
 		'shell:bump_rc',
@@ -750,7 +750,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcheckout:alpha',
 		'gitpull:alpha',
 		'setNotifications:gitpull:alpha',
-		'gitinfo'
+		'gitinfo',
 		'seteeParams',
 		'maybeRun',
 		'shell:bump_rc',
