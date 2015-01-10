@@ -28,9 +28,8 @@ switch( $type ) {
 		break;
 
 	case 'decaf' :
-		//we're not bumping, just replacing whatever string is in the version string with 'decaf', and dropping the last version numbers.  Since decaf is built on top of rc builds, we'll just replace the second from last array index.
+		//we're not bumping, just replacing whatever string is in the version string with 'decaf', and dropping the last version numbers.  Since decaf is built on top of checked out tags, we'll just replace the second from last array index.
 		$version_split[3] = 'decaf';
-		unset( $version_split[4] );
 		break;
 
 	case 'rc' :

@@ -40,6 +40,7 @@ module.exports = function(grunt) {
 		"slug" : "",
 		"wpOrgSlug" : "",
 		"wpOrgUser" : "",
+		"wpOrgRelease" : "",
 		"name" : "",
 		"archiveBaseUrl" : "",
 		"archiveBasePath" : "",
@@ -156,6 +157,13 @@ module.exports = function(grunt) {
 			remove_folders_decaf: {
 				notify: '<%= eeParams.releaseFilesRemove.length %> folders and files removed in prep for decaf release.',
 				command: ''
+			},
+			checkoutTag : {
+				notify: 'Checking out <%= eeParams.wpOrgRelease =%> version to be packaged for wordpress.org release.',
+				command: [
+					'cd src',
+					'git checkout <%= eeParams.wpOrgRelease =%> -B release_prep'
+				].join('&&')
 			},
 			prepWPassets : {
 				notify: 'Moving contents of wp-assets into correct directory.',
@@ -1026,8 +1034,8 @@ module.exports = function(grunt) {
 		'setNotifications:gitpull:master',
 		'gitinfo',
 		'seteeParams',
-		'gitcheckout:release',
-		'setNotifications:gitcheckout:release',
+		'shell:checkoutTag',
+		'setNotifications:shell:checkoutTag',
 		'shell:decafVersion',
 		'setNotifications:shell:decafVersion',
 		'shell:prepWPassets',
@@ -1056,8 +1064,8 @@ module.exports = function(grunt) {
 		'setNotifications:gitpull:master',
 		'gitinfo',
 		'seteeParams',
-		'gitcheckout:release',
-		'setNotifications:gitcheckout:release',
+		'shell:checkoutTag',
+		'setNotifications:shell:checkoutTag',
 		'shell:decafVersion',
 		'setNotifications:shell:decafVersion',
 		'shell:prepWPassets',
