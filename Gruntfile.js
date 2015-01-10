@@ -188,7 +188,7 @@ module.exports = function(grunt) {
 			renameMainFile : {
 				notify: 'Renamed main file <em><%= eeParams.versionFile %></em> to <em><%=eeParams.wpOrgSlug %></em> to match the slug for the wordpress.org release.',
 				command: 'mv build/wp-org/<%= eeParams.versionFile %> build/wp-org/<%= eeParams.wpOrgSlug %>.php'
-			}
+			},
 			shareBuild : {
 				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
