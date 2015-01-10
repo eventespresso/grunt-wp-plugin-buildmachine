@@ -178,14 +178,17 @@ module.exports = function(grunt) {
 					].join(';')
 			},
 			prepWPBuild : {
-				notify: 'Copying contents of plugin into wp-org build directory to prep for deploy to wordpress.org. This task also renamed the main file to match the wporg plugin slug.',
+				notify: 'Copying contents of plugin into wp-org build directory to prep for deploy to wordpress.org.',
 				command: [
 					'rm -rf build/wp-org',
 					'mkdir build/wp-org',
-					'cp -r src/* build/wp-org',
-					'mv build/wp-org/<%= eeParams.versionFile %> build/wp-org/<%= eeParams.wpOrgSlug %>.php'
+					'cp -r src/* build/wp-org'
 					].join(';')
 			},
+			renameMainFile : {
+				notify: 'Renamed main file <em><%= eeParams.versionFile %></em> to <em><%=eeParams.wpOrgSlug %></em> to match the slug for the wordpress.org release.',
+				command: 'mv build/wp-org/<%= eeParams.versionFile %> build/wp-org/<%= eeParams.wpOrgSlug %>.php'
+			}
 			shareBuild : {
 				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
@@ -877,7 +880,7 @@ module.exports = function(grunt) {
 		'gitinfo',
 		'seteeParams',
 		'shell:bump_minor',
-		'setNotificationsshell:bump_minor',
+		'setNotifications:shell:bump_minor',
 		'gitadd:version',
 		'setNotifications:gitadd:version',
 		'gitcommit:release',
@@ -1046,6 +1049,8 @@ module.exports = function(grunt) {
 		'setNotifications:shell:decafVersion',
 		'shell:remove_folders_decaf',
 		'setNotifications:shell:remove_folders_decaf',
+		'shell:renameMainFile',
+		'setNotifications:shell:renameMainFile',
 		'shell:prepWPBuild',
 		'setNotifications:shell:prepWPBuild',
 		'gitadd:version',
@@ -1076,6 +1081,8 @@ module.exports = function(grunt) {
 		'setNotifications:shell:decafVersion',
 		'shell:remove_folders_decaf',
 		'setNotifications:shell:remove_folders_decaf',
+		'shell:renameMainFile',
+		'setNotifications:shell:renameMainFile',
 		'shell:prepWPBuild',
 		'setNotifications:shell:prepWPBuild',
 		'gitadd:version',
