@@ -728,7 +728,7 @@ module.exports = function(grunt) {
 
 		//set commands for shell rm task
 		grunt.config.set( 'shell.remove_folders_release.command', rm_prepare_folders( params.releaseFilesRemove ).join(';') );
-		grunt.config.set( 'shell.remove_folders_decaf', rm_prepare_folders( params.decafFilesRemove ).join(';') );
+		grunt.config.set( 'shell.remove_folders_decaf.command', rm_prepare_folders( params.decafFilesRemove ).join(';') );
 	});
 
 
