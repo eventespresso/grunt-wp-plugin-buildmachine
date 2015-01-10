@@ -137,6 +137,10 @@ module.exports = function(grunt) {
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
 					'php version-bump.php'
 				].join('&&'),
+				options: {
+					callback: setNewVersion,
+					stdout: false
+				}
 			},
 			prVersion: {
 				notify: 'Version changed for pr (adding beta prefix). Version changed to <%= new_version %>',
@@ -799,7 +803,7 @@ module.exports = function(grunt) {
 
 	//bumping rc version
 	grunt.registerTask( 'bumprc_master', [
-		'setNotifications:init:bumprc:purple',
+		'setNotifications:init:bumprc_master:purple',
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
@@ -820,7 +824,7 @@ module.exports = function(grunt) {
 		] );
 
 	grunt.registerTask( 'bumprc_alpha', [
-		'setNotifications:init:bumprc:purple',
+		'setNotifications:init:bumprc_alpha:purple',
 		'gitcheckout:alpha',
 		'setNotifications:gitcheckout:alpha',
 		'gitpull:alpha',
@@ -842,7 +846,7 @@ module.exports = function(grunt) {
 
 
 	grunt.registerTask( 'bumprc_beta', [
-		'setNotifications:init:bumprc:purple',
+		'setNotifications:init:bumprc_beta:purple',
 		'gitcheckout:beta',
 		'setNotifications:gitcheckout:beta',
 		'gitpull:beta',
@@ -950,7 +954,7 @@ module.exports = function(grunt) {
 
 	//building pre-releases
 	grunt.registerTask( 'pr_alpha', [
-		'setNotifications:init:release:green',
+		'setNotifications:init:pr_alpha:green',
 		'gitcheckout:alpha',
 		'setNotifications:gitcheckout:alpha',
 		'gitpull:alpha',
@@ -975,7 +979,7 @@ module.exports = function(grunt) {
 		'hipchat_notifier:notify_team'
 		]);
 	grunt.registerTask( 'pr_beta', [
-		'setNotifications:init:release:green',
+		'setNotifications:init:pr_beta:green',
 		'gitcheckout:beta',
 		'setNotifications:gitcheckout:beta',
 		'gitpull:beta',
@@ -1000,7 +1004,7 @@ module.exports = function(grunt) {
 		'hipchat_notifier:notify_team'
 		]);
 	grunt.registerTask( 'pr', [
-		'setNotifications:init:release:green',
+		'setNotifications:init:pr:green',
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
@@ -1027,7 +1031,7 @@ module.exports = function(grunt) {
 
 	//wporg builds
 	grunt.registerTask( 'wpdeploy', [
-		'setNotifications:init:release:green',
+		'setNotifications:init:wpdeploy:green',
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
@@ -1057,7 +1061,7 @@ module.exports = function(grunt) {
 		]);
 
 	grunt.registerTask( 'wpdeploy_ziponly', [
-		'setNotifications:init:release:green',
+		'setNotifications:init:wpdeploy_ziponly:green',
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
