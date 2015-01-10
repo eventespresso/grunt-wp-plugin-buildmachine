@@ -607,8 +607,8 @@ module.exports = function(grunt) {
 			grunt.log.ok( 'Topic changed for hipchat' );
 			var msg = grunt.config.get( 'notificationMessage' );
 			msg += '<li>HipChat topic changed for Main Chat room.</li>';
-			msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 			msg += '</ul>';
+			msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 			grunt.config.set( 'notificationMessage', msg );
 			done();
 		} );
