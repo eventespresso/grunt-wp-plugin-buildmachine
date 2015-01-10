@@ -195,7 +195,7 @@ module.exports = function(grunt) {
 		gitinfo : {
 			options: {
 				cwd: 'src'
-			}
+			},
 			local : {
 				branch: {
 					current : {
