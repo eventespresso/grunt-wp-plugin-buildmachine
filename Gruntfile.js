@@ -194,8 +194,8 @@ module.exports = function(grunt) {
 					'git pull origin <%= eeParams.branch %>'
 					].join('&&'),
 				options: {
-					stdout: false,
-					stderr: false
+					stdout: true,
+					stderr: true
 				}
 			},
 			decafSandboxPull: {
@@ -206,8 +206,8 @@ module.exports = function(grunt) {
 					'git pull origin <%= eeParams.branch %>'
 				].join('&&'),
 				options: {
-					stdout: false,
-					stderr: false
+					stdout: true,
+					stderr: true
 				}
 			},
 			githubPush: {
@@ -218,8 +218,8 @@ module.exports = function(grunt) {
 					'git push github <%= eeParams.branch %>'
 				].join('&&'),
 				options: {
-					stdout: false,
-					stderr:false
+					stdout: true,
+					stderr:true
 				}
 			}
 		},
