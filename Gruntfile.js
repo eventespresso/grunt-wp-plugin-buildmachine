@@ -172,7 +172,7 @@ module.exports = function(grunt) {
 					'git checkout <%= eeParams.branch %>',
 					'git pull origin <%= eeParams.branch %>'
 				].join('&&')
-			}
+			},
 
 			githubPush: {
 				notify: "Pushed <%= eeParams.branch %> branch to github repo.",
