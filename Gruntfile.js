@@ -38,13 +38,19 @@ module.exports = function(grunt) {
 		"versionFile" : "",
 		"versionType" : "rc",
 		"slug" : "",
+		"name" : "",
 		"archiveBaseUrl" : "",
 		"archiveBasePath" : "",
 		"awsbucket" : "",
 		"awsregion" : "",
 		"releaseFilesRemove" : [],
 		"decafFilesRemove" : [],
-		"branch_to_update" : "test"
+		"branch" : "",
+		"sandboxsite" : null,
+		"sandboxdecafsite" : null,
+		"sandboxUrl" : "",
+		"sandboxdecafUrl" : ""
+		"github" : false
 	};
 
 	var defaultaws = {
@@ -77,6 +83,8 @@ module.exports = function(grunt) {
 		taskCount: 0,
 		taskCompleted: 0,
 		notificationMessage: '',
+		mainChatMessage: '',
+		mainChatColor: 'grey',
 		notificationColor: 'grey',
 
 		//shell commands
@@ -146,6 +154,34 @@ module.exports = function(grunt) {
 				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>-pr.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 				command: 'mv build/<%= eeParams.slug %>-pr.zip <%= eeParams.archiveBasePath %>'
 			},
+
+			SandboxPull: {
+				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
+				command: [
+					'cd <%= eeParams.sandboxsite %>',
+					'git checkout <%= eeParams.branch %>',
+					'git pull origin <%= eeParams.branch %>'
+					].join('&&')
+				}
+			},
+
+			decafSandboxPull: {
+				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
+				command: [
+					'cd <%= eeParams.sandboxdecafsite %>',
+					'git checkout <%= eeParams.branch %>',
+					'git pull origin <%= eeParams.branch %>'
+				].join('&&')
+			}
+
+			githubPush: {
+				notify: "Pushed <%= eeParams.branch %> branch to github repo.",
+				command: [
+					'cd src',
+					'git checkout <%= eeParams.branch %>',
+					'git push github <%= eeParams.branch %>'
+				].join('&&')
+			}
 		},
 
 		//git commands
@@ -299,7 +335,7 @@ module.exports = function(grunt) {
 					cwd: 'src',
 					branch: 'beta'
 				}
-			},
+			}
 		},
 
 		gitpush: {
@@ -345,6 +381,8 @@ module.exports = function(grunt) {
 					tags: false
 				}
 			}
+
+
 		},
 
 		gitarchive: {
@@ -400,6 +438,16 @@ module.exports = function(grunt) {
 					message: '<%= notificationMessage %>',
 					from: "GruntBot",
 					color: "<%= notificationColor %>",
+					message_format: "html"
+				}
+			},
+
+			notify_main_chat: {
+				options: {
+					roomId: '424398',
+					message: '<%= mainChatMessage %>',
+					from: "GruntBot",
+					color: "<%= mainChatColor %>",
 					message_format: "html"
 				}
 			}
@@ -574,6 +622,32 @@ module.exports = function(grunt) {
 	});
 
 
+	//deciding whether to do sandbox and github pushes dependent on params set in the repo info.json file.
+	grunt.registerTask( 'SandboxGithub', 'Do sandbox and github pushes?', function SandboxGithub() {
+		var params = grunt.config.get( 'eeParams' );
+		if ( params.sandboxsite !== null ) {
+			grunt.task.run('shell:SandboxPull', 'setNotifications:shell:SandboxPull' );
+			grunt.config.set( 'mainChatMessage', '<%= eeParams.branch %> for <%= eeParams.name %> has been updated on <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>.');
+			grunt.config.set( 'mainChatColor', 'purple' );
+			grunt.task.run( 'hipchat_notifier:notify_main_chat' );
+		}
+
+		if ( params.sandboxdecafsite !== null ) {
+			grunt.task.run( 'shell:decafSandboxPull', 'setNotifications:shell:decafSandboxPull' );
+			grunt.config.set( 'mainChatMessage', '<%= eeParams.branch %> has been updated for for <%= eeParams.name %> on <a href="http://<%= eeParams.sandboxdecafUrl %>"><%= eeParams.sandboxdecafUrl %></a>.');
+			grunt.config.set( 'mainChatColor', 'purple' );
+			grunt.task.run( 'hipchat_notifier:notify_main_chat' );
+		}
+
+		if ( params.github ) {
+			grunt.task.run( 'shell:githubPush', 'setNotifications:shell:githubPush' );
+			grunt.config.set( 'mainChatMessage', '<%= eeParams.branch %> for for <%= eeParams.name %> has been pushed to github.');
+			grunt.config.set( 'mainChatColor', 'purple' );
+			grunt.task.run( 'hipchat_notifier:notify_main_chat' );
+		}
+	});
+
+
 	//bumping rc version
 	grunt.registerTask( 'bumprc_master', [
 		'setNotifications:init:bumprc:purple',
@@ -589,6 +663,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:version',
 		'gitpush:bump',
 		'setNotifications:gitpush:bump',
+		'SandboxGithub',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		] );
@@ -607,6 +682,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:version',
 		'gitpush:bump_alpha',
 		'setNotifications:gitpush:bump_alpha',
+		'SandboxGithub',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		] );
@@ -627,6 +703,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:version',
 		'gitpush:bump_beta',
 		'setNotifications:gitpush:bump_beta',
+		'SandboxGithub',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		] );
@@ -669,6 +746,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:version',
 		'gitpush:release',
 		'setNotifications:gitpush:release',
+		'SandboxGithub',
 		'shell:shareBuild',
 		'setNotifications:shell:shareBuild',
 		'setNotifications:end',
@@ -706,6 +784,7 @@ module.exports = function(grunt) {
 		'setNotifications:shell:bump_rc',
 		'gitpush:release',
 		'setNotifications:gitpush:release',
+		'SandboxGithub',
 		'shell:shareBuild',
 		'setNotifications:shell:shareBuild',
 		'setNotifications:end',
