@@ -160,7 +160,11 @@ module.exports = function(grunt) {
 					'cd <%= eeParams.sandboxsite %>',
 					'git checkout <%= eeParams.branch %>',
 					'git pull origin <%= eeParams.branch %>'
-					].join('&&')
+					].join('&&'),
+				options: {
+					stdout: false,
+					stderr: false
+				}
 			},
 			decafSandboxPull: {
 				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
@@ -168,7 +172,11 @@ module.exports = function(grunt) {
 					'cd <%= eeParams.sandboxdecafsite %>',
 					'git checkout <%= eeParams.branch %>',
 					'git pull origin <%= eeParams.branch %>'
-				].join('&&')
+				].join('&&'),
+				options: {
+					stdout: false,
+					stderr: false
+				}
 			},
 			githubPush: {
 				notify: "Pushed <%= eeParams.branch %> branch to github repo.",
@@ -176,7 +184,11 @@ module.exports = function(grunt) {
 					'cd src',
 					'git checkout <%= eeParams.branch %>',
 					'git push github <%= eeParams.branch %>'
-				].join('&&')
+				].join('&&'),
+				options: {
+					stdout: false,
+					stderr:false
+				}
 			}
 		},
 
