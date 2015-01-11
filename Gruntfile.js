@@ -28,6 +28,9 @@ module.exports = function(grunt) {
 
 	function rm_prepare_folders( folders_to_remove ) {
 		var folders = [];
+		if ( typeof folders === 'undefined' ) {
+			return folders;
+		}
 		for ( var i = 0; i < folders_to_remove.length; i++ ) {
 			folders[i] = 'rm -rf ' + folders_to_remove[i];
 		}
