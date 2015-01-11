@@ -912,6 +912,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:version',
 		'gitpush:release',
 		'setNotifications:gitpush:release',
+		'updateSandbox_master',
 		'shell:shareBuild',
 		'setNotifications:shell:shareBuild',
 		'setNotifications:end',
