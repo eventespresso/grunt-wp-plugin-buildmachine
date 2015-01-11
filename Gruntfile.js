@@ -233,7 +233,8 @@ module.exports = function(grunt) {
 				command: [
 					'cd src',
 					'git checkout <%= eeParams.branch %>',
-					'git push github <%= eeParams.branch %>'
+					'git push github <%= eeParams.branch %>',
+					'git push github --tags'
 				].join('&&'),
 				options: {
 					stdout: true,
@@ -951,6 +952,7 @@ module.exports = function(grunt) {
 		'setNotifications:shell:bump_rc',
 		'gitpush:release',
 		'setNotifications:gitpush:release',
+		'updateSandbox_master',
 		'shell:shareBuild',
 		'setNotifications:shell:shareBuild',
 		'setNotifications:end',
