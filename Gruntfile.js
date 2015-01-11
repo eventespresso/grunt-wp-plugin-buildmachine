@@ -746,19 +746,19 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'SandboxGithub', 'Do sandbox and github pushes?', function SandboxGithub() {
 		var params = grunt.config.get( 'eeParams' );
 		var msg = "";
-		if ( params.sandboxsite !== null || typeof params.sandboxsite !== 'undefined' ) {
+		if ( params.sandboxsite !== null && typeof params.sandboxsite !== 'undefined' ) {
 			grunt.task.run('shell:SandboxPull', 'setNotifications:shell:SandboxPull' );
-			msg +=  '<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>.';
+			msg +=  '<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>.<br>';
 		}
 
-		if ( params.sandboxdecafsite !== null || typeof params.sandboxsite !== 'undefined' ) {
+		if ( params.sandboxdecafsite !== null && typeof params.sandboxsite !== 'undefined' ) {
 			grunt.task.run( 'shell:decafSandboxPull', 'setNotifications:shell:decafSandboxPull' );
-			msg += '<br><%= eeParams.branch %> branch has been updated for <%= eeParams.name %> on <a href="http://<%= eeParams.sandboxdecafUrl %>"><%= eeParams.sandboxdecafUrl %></a>.';
+			msg += '<%= eeParams.branch %> branch has been updated for <%= eeParams.name %> on <a href="http://<%= eeParams.sandboxdecafUrl %>"><%= eeParams.sandboxdecafUrl %></a>.<br>';
 		}
 
 		if ( params.github ) {
 			grunt.task.run( 'shell:githubPush', 'setNotifications:shell:githubPush' );
-			msg += '<br><%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.';
+			msg += '<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.<br>';
 		}
 
 		if ( msg !== "" ) {
