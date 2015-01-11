@@ -28,7 +28,7 @@ module.exports = function(grunt) {
 
 	function rm_prepare_folders( folders_to_remove ) {
 		var folders = [];
-		if ( typeof folders === 'undefined' ) {
+		if ( typeof folders_to_remove === 'undefined' ) {
 			return folders;
 		}
 		for ( var i = 0; i < folders_to_remove.length; i++ ) {
