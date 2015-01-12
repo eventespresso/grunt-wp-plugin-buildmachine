@@ -210,24 +210,22 @@ module.exports = function(grunt) {
 				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
 				command: [
 					'cd <%= eeParams.sandboxsite %>',
-					'git checkout <%= eeParams.branch %>',
 					'git pull origin <%= eeParams.branch %>'
 					].join('&&'),
 				options: {
 					stdout: false,
-					stderr: true
+					stderr: false
 				}
 			},
 			decafSandboxPull: {
 				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
 				command: [
 					'cd <%= eeParams.sandboxdecafsite %>',
-					'git checkout <%= eeParams.branch %>',
 					'git pull origin <%= eeParams.branch %>'
 				].join('&&'),
 				options: {
 					stdout: false,
-					stderr: true
+					stderr: false
 				}
 			},
 			githubPushTags: {
@@ -240,7 +238,7 @@ module.exports = function(grunt) {
 				].join('&&'),
 				options: {
 					stdout: false,
-					stderr:true
+					stderr:false
 				}
 			},
 			githubPush: {
