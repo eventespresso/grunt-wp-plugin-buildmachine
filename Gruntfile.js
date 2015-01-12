@@ -93,6 +93,7 @@ module.exports = function(grunt) {
 		mainChatMessage: '',
 		mainChatColor: 'grey',
 		notificationColor: 'grey',
+		tagPush: false,
 
 		//shell commands
 		shell: {
@@ -212,7 +213,7 @@ module.exports = function(grunt) {
 					'git pull origin <%= eeParams.branch %>'
 					].join('&&'),
 				options: {
-					stdout: true,
+					stdout: false,
 					stderr: true
 				}
 			},
@@ -224,12 +225,12 @@ module.exports = function(grunt) {
 					'git pull origin <%= eeParams.branch %>'
 				].join('&&'),
 				options: {
-					stdout: true,
+					stdout: false,
 					stderr: true
 				}
 			},
-			githubPush: {
-				notify: "Pushed <%= eeParams.branch %> branch to github repo.",
+			githubPushTags: {
+				notify: "Pushed <%= eeParams.branch %> branch to github repo along with all tags.",
 				command: [
 					'cd src',
 					'git checkout <%= eeParams.branch %>',
@@ -237,7 +238,19 @@ module.exports = function(grunt) {
 					'git push github --tags'
 				].join('&&'),
 				options: {
-					stdout: true,
+					stdout: false,
+					stderr:true
+				}
+			},
+			githubPush: {
+				notify: "Pushed <%= eeParams.branch %> branch to github repo.",
+				command: [
+					'cd src',
+					'git checkout <%= eeParams.branch %>',
+					'git push github <%= eeParams.branch %>'
+				].join('&&'),
+				options: {
+					stdout: false,
 					stderr:true
 				}
 			}
@@ -758,7 +771,12 @@ module.exports = function(grunt) {
 		}
 
 		if ( params.github ) {
-			grunt.task.run( 'shell:githubPush', 'setNotifications:shell:githubPush' );
+			tagPush = grunt.config.get( 'tagPush' );
+			if ( tagPush ) {
+				grunt.task.run( 'shell:githubPushTags', 'setNotifications:shell:githubPushTags' );
+			} else {
+				grunt.task.run( 'shell:githubPush', 'setNotifications:shell:githubPush' );
+			}
 			msg += '<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.<br>';
 		}
 
@@ -780,6 +798,10 @@ module.exports = function(grunt) {
 		if ( gitinfo.local.branch.current.lastCommitAuthor.indexOf( authorToCheck ) > -1 ) {
 			grunt.fail.warn( 'Will not continue tasks because last commit was the grunt commit!' );
 		}
+	});
+
+	grunt.registerTask( 'setTagPush', 'Used to set the tagpush flag to true', function setTagPush() {
+		grunt.config.set( 'tagPush', true );
 	});
 
 	grunt.registerTask( 'testinggitinfo', ['gitcheckout:alpha', 'gitinfo', 'maybeRun'] );
@@ -913,6 +935,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:version',
 		'gitpush:release',
 		'setNotifications:gitpush:release',
+		'setTagPush',
 		'updateSandbox_master',
 		'shell:shareBuild',
 		'setNotifications:shell:shareBuild',
@@ -952,6 +975,7 @@ module.exports = function(grunt) {
 		'setNotifications:shell:bump_rc',
 		'gitpush:release',
 		'setNotifications:gitpush:release',
+		'setTagPush',
 		'updateSandbox_master',
 		'shell:shareBuild',
 		'setNotifications:shell:shareBuild',
