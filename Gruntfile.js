@@ -210,6 +210,7 @@ module.exports = function(grunt) {
 				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
 				command: [
 					'cd <%= eeParams.sandboxsite %>',
+					'unset GIT_DIR',
 					'git pull origin <%= eeParams.branch %>'
 					].join('&&'),
 				options: {
@@ -221,6 +222,7 @@ module.exports = function(grunt) {
 				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
 				command: [
 					'cd <%= eeParams.sandboxdecafsite %>',
+					'unset GIT_DIR',
 					'git pull origin <%= eeParams.branch %>'
 				].join('&&'),
 				options: {
@@ -232,6 +234,7 @@ module.exports = function(grunt) {
 				notify: "Pushed <%= eeParams.branch %> branch to github repo along with all tags.",
 				command: [
 					'cd src',
+					'unset GIT_DIR',
 					'git push github <%= eeParams.branch %>',
 					'git push github --tags'
 				].join('&&'),
@@ -244,6 +247,7 @@ module.exports = function(grunt) {
 				notify: "Pushed <%= eeParams.branch %> branch to github repo.",
 				command: [
 					'cd src',
+					'unset GIT_DIR',
 					'git push github <%= eeParams.branch %>'
 				].join('&&'),
 				options: {
