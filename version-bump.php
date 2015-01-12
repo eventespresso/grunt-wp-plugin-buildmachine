@@ -107,7 +107,7 @@ if ( $type == 'decaf' ) {
 
 	//get version file contents.
 	$readmeTxt = file_get_contents( $readmeFile );
-	$readmeTxt = preg_replace( "/^[\t\/*#@]*Stable tag:(.*)$/mi/", 'Stable tag: ' . $new_version, $readmeTxt );
+	$readmeTxt = preg_replace( "/^[\t\/*#@]*Stable tag:(.*)$/mi", 'Stable tag: ' . $new_version, $readmeTxt );
 	file_put_contents( $readmeFile, $readmeTxt );
 }
 
