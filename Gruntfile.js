@@ -232,7 +232,6 @@ module.exports = function(grunt) {
 				notify: "Pushed <%= eeParams.branch %> branch to github repo along with all tags.",
 				command: [
 					'cd src',
-					'git checkout <%= eeParams.branch %>',
 					'git push github <%= eeParams.branch %>',
 					'git push github --tags'
 				].join('&&'),
@@ -245,7 +244,6 @@ module.exports = function(grunt) {
 				notify: "Pushed <%= eeParams.branch %> branch to github repo.",
 				command: [
 					'cd src',
-					'git checkout <%= eeParams.branch %>',
 					'git push github <%= eeParams.branch %>'
 				].join('&&'),
 				options: {
