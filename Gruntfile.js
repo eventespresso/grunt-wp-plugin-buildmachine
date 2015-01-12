@@ -139,6 +139,7 @@ module.exports = function(grunt) {
 				command: [
 					'export EE_VERSION_BUMP_TYPE="decaf"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
+					'export EE_README_FILE="src/readme.txt',
 					'php version-bump.php'
 				].join('&&'),
 				options: {

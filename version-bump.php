@@ -101,6 +101,16 @@ $new_version = implode( '.', $version_split );
 //replace versions in file with the new version_number.
 $version_file = preg_replace( "/$orig_version/", $new_version, $version_file );
 
+//if version type is decaf then let's update readme.txt as well.
+if ( $type == 'decaf' ) {
+	$readmeFile = getenv( 'EE_README_FILE' );
+
+	//get version file contents.
+	$readmeTxt = file_get_contents( $readmeFile );
+	$readmeTxt = preg_replace( "/^[\t\/*#@]*Stable tag:(.*)$/mi/", 'Stable tag: ' . $new_version, $readmeTxt );
+	file_put_contents( $readmeFile, $readmeTxt );
+}
+
 //write contents to original file.
 $success = file_put_contents( $file, $version_file );
 
