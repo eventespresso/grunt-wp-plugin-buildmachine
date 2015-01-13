@@ -16,15 +16,15 @@
 module.exports = function(grunt) {
 
 	function setNewVersion( err, stdout, stderr, cb ) {
-		/*grunt.config.set('new_version', stdout);
+		grunt.config.set('new_version', stdout);
 		grunt.log.writeln();
 		grunt.log.ok('Version bumped to ' + stdout)
 		if ( stdout != '0' ) {
 			cb();
 		} else {
 			grunt.fail.warn( 'Something went wrong with setting the version' );
+			cb();
 		}/**/
-		cb();
 	};
 
 	function rm_prepare_folders( folders_to_remove ) {
@@ -108,7 +108,7 @@ module.exports = function(grunt) {
 					].join('&&'),
 				options: {
 					callback: setNewVersion,
-					stdout: false,
+					stdout: true,
 					stderr: false,
 					stdin: false
 				}
@@ -122,7 +122,7 @@ module.exports = function(grunt) {
 					].join('&&'),
 				options: {
 					callback: setNewVersion,
-					stdout: false,
+					stdout: true,
 					stderr: false,
 					stdin: false
 				}
@@ -136,7 +136,7 @@ module.exports = function(grunt) {
 					].join('&&'),
 				options: {
 					callback: setNewVersion,
-					stdout: false,
+					stdout: true,
 					stderr: false,
 					stdin: false
 				}
@@ -151,7 +151,7 @@ module.exports = function(grunt) {
 				].join('&&'),
 				options: {
 					callback: setNewVersion,
-					stdout: false,
+					stdout: true,
 					stderr: false,
 					stdin: false
 				}
@@ -165,7 +165,7 @@ module.exports = function(grunt) {
 				].join('&&'),
 				options: {
 					callback: setNewVersion,
-					stdout: false,
+					stdout: true,
 					stderr: false,
 					stdin: false
 				}
