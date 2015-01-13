@@ -16,14 +16,15 @@
 module.exports = function(grunt) {
 
 	function setNewVersion( err, stdout, stderr, cb ) {
-		grunt.config.set('new_version', stdout);
+		/*grunt.config.set('new_version', stdout);
 		grunt.log.writeln();
-		grunt.log.ok('Version bumped to ' + stdout);
+		grunt.log.ok('Version bumped to ' + stdout)
 		if ( stdout != '0' ) {
 			cb();
 		} else {
 			grunt.fail.warn( 'Something went wrong with setting the version' );
-		}
+		}/**/
+		cb();
 	};
 
 	function rm_prepare_folders( folders_to_remove ) {
@@ -107,7 +108,9 @@ module.exports = function(grunt) {
 					].join('&&'),
 				options: {
 					callback: setNewVersion,
-					stdout: false
+					stdout: false,
+					stderr: false,
+					stdin: false
 				}
 			},
 			bump_minor: {
@@ -119,7 +122,9 @@ module.exports = function(grunt) {
 					].join('&&'),
 				options: {
 					callback: setNewVersion,
-					stdout: false
+					stdout: false,
+					stderr: false,
+					stdin: false
 				}
 			},
 			bump_major: {
@@ -131,7 +136,9 @@ module.exports = function(grunt) {
 					].join('&&'),
 				options: {
 					callback: setNewVersion,
-					stdout: false
+					stdout: false,
+					stderr: false,
+					stdin: false
 				}
 			},
 			decafVersion: {
@@ -144,7 +151,9 @@ module.exports = function(grunt) {
 				].join('&&'),
 				options: {
 					callback: setNewVersion,
-					stdout: false
+					stdout: false,
+					stderr: false,
+					stdin: false
 				}
 			},
 			prVersion: {
@@ -157,6 +166,8 @@ module.exports = function(grunt) {
 				options: {
 					callback: setNewVersion,
 					stdout: false
+					stderr: false,
+					stdin: false
 				}
 			},
 			remove_folders_release: {
@@ -215,7 +226,8 @@ module.exports = function(grunt) {
 					].join('&&'),
 				options: {
 					stdout: false,
-					stderr: false
+					stderr: false,
+					stdin: false
 				}
 			},
 			decafSandboxPull: {
@@ -227,7 +239,8 @@ module.exports = function(grunt) {
 				].join('&&'),
 				options: {
 					stdout: false,
-					stderr: false
+					stderr: false,
+					stdin: false
 				}
 			},
 			githubPushTags: {
@@ -240,7 +253,8 @@ module.exports = function(grunt) {
 				].join('&&'),
 				options: {
 					stdout: false,
-					stderr:false
+					stderr:false,
+					stdin: false
 				}
 			},
 			githubPush: {
@@ -252,7 +266,8 @@ module.exports = function(grunt) {
 				].join('&&'),
 				options: {
 					stdout: false,
-					stderr:false
+					stderr:false,
+					stdin: false
 				}
 			}
 		},
