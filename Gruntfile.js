@@ -165,7 +165,7 @@ module.exports = function(grunt) {
 				].join('&&'),
 				options: {
 					callback: setNewVersion,
-					stdout: false
+					stdout: false,
 					stderr: false,
 					stdin: false
 				}
