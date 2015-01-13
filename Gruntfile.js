@@ -252,7 +252,7 @@ module.exports = function(grunt) {
 				].join('&&'),
 				options: {
 					stdout: false,
-					stderr:true
+					stderr:false
 				}
 			}
 		},
