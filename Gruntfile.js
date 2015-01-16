@@ -1100,7 +1100,7 @@ module.exports = function(grunt) {
 	//test build for micro minor versions.
 	//bumping major versions and releasing.
 	grunt.registerTask( 'microzip', [
-		'setNotifications:init:release:yellow',
+		'setNotifications:init:micro-release:yellow',
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
