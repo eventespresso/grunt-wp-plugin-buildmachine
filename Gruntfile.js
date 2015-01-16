@@ -88,6 +88,7 @@ module.exports = function(grunt) {
 		rc_version: null,
 		minor_version: null,
 		major_version: null,
+		preReleaseBuild : false,
 		taskCount: 0,
 		taskCompleted: 0,
 		notificationMessage: '',
@@ -210,8 +211,8 @@ module.exports = function(grunt) {
 				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
 			},
 			shareBuildpr : {
-				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>-pr.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
-				command: 'mv build/<%= eeParams.slug %>-pr.zip <%= eeParams.archiveBasePath %>'
+				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
+				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
 			},
 			shareBuildWP : {
 				notify: 'Archive folder for WP deploy has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.wpOrgSlug %>-wp.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
@@ -506,7 +507,7 @@ module.exports = function(grunt) {
 					treeIsh: 'release_prep',
 					format: 'zip',
 					prefix: '<%= eeParams.slug %>/',
-					output: '../build/<%= eeParams.slug %>-pr.zip'
+					output: '../build/<%= eeParams.slug %>.zip'
 				}
 			},
 			wpRelease: {
@@ -671,6 +672,14 @@ module.exports = function(grunt) {
 				grunt.config.set( 'notificationColor', this.args[2] );
 			}
 
+			switch ( this.args[1] ) {
+				case 'pr_alpha' :
+				case 'pr_beta' :
+				case 'pr' :
+					grunt.config.set( 'preReleaseBuild', true );
+					break;
+			}
+
 			return true;
 		} else if ( this.args[0] == 'end' ) {
 
@@ -755,6 +764,12 @@ module.exports = function(grunt) {
 			params.branch = 'master';
 		} else {
 			params.versionType = params.branch = gitinfo.local.branch.current.name;
+		}
+
+		//pre-release-build?
+		if ( grunt.config.get( 'preReleaseBuild' ) ) {
+			params.slug = params.slug.replace('-reg', '' );
+			params.slug += '-pr';
 		}
 
 		if ( params.sites !== null && typeof params.sites !== 'undefined' ) {
