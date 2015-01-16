@@ -984,18 +984,21 @@ module.exports = function(grunt) {
 		'setNotifications:gitpull:master',
 		'gitinfo',
 		'seteeParams',
+		'gitcheckout:release',
+		'setNotifications:gitcheckout:release',
 		'shell:bump_major',
 		'setNotifications:shell:bump_major',
 		'gitadd:version',
 		'setNotifications:gitadd:version',
 		'gitcommit:release',
 		'setNotifications:gitcommit:release',
-		'gitcheckout:release',
-		'setNotifications:gitcheckout:release',
 		'gittag:releaseAll',
 		'setNotifications:gittag:releaseAll',
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
+		'gitadd:version',
+		'gitcommit:release',
+		'setNotifications:gitcommit:release',
 		'gittag:release',
 		'setNotifications:gittag:release',
 		'gitarchive:release',
@@ -1092,6 +1095,33 @@ module.exports = function(grunt) {
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		]);
+
+
+	//test build for micro minor versions.
+	//bumping major versions and releasing.
+	grunt.registerTask( 'microzip', [
+		'setNotifications:init:release:yellow',
+		'gitcheckout:master',
+		'setNotifications:gitcheckout:master',
+		'gitpull:master',
+		'setNotifications:gitpull:master',
+		'gitinfo',
+		'seteeParams',
+		'gitcheckout:release',
+		'setNotifications:gitcheckout:release',
+		'shell:remove_folders_release',
+		'setNotifications:shell:remove_folders_release',
+		'gitcommit:release',
+		'setNotifications:gitcommit:release',
+		'gitarchive:release',
+		'setNotifications:gitarchive:release',
+		'gitcheckout:master',
+		'setNotifications:gitcheckout:master',
+		'shell:shareBuild',
+		'setNotifications:shell:shareBuild',
+		'setNotifications:end',
+		'hipchat_notifier:notify_team'
+		] );
 
 	//wporg builds
 	grunt.registerTask( 'wpdeploy', [
