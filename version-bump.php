@@ -29,12 +29,14 @@ switch( $type ) {
 
 	case 'micro_zip' :
 		//for micro zips we bump back the minor number and replace rc with p.
-		if ( $version_split[2] === 0 ) {
-			$version_split[1] = $version_split[1] - 1;
-		}  elseif ( $version_split[2] === 0 ) {
-			$version_split[2] = 9;
-			$version_split[1] = 9;
-			$version_split[0] = $version_split[0] - 1;
+		if ( (int) $version_split[2] === 0 ) {
+			if ( (int) $version_split[1] === 0 ) {
+				$version_split[0] = $version_split[0] - 1;
+				$version_split[1] = 9;
+				$version_split[2] = 9;
+			} else {
+				$verstion_split[1] = $version_split[1] - 1;
+			}
 		} else {
 			$version_split[2] = $version_split[2] - 1;
 		}
