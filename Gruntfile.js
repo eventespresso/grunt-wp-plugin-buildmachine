@@ -1111,6 +1111,7 @@ module.exports = function(grunt) {
 		'setNotifications:gitcheckout:release',
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
+		'gitadd:version',
 		'gitcommit:release',
 		'setNotifications:gitcommit:release',
 		'gitarchive:release',
