@@ -89,6 +89,7 @@ module.exports = function(grunt) {
 		minor_version: null,
 		major_version: null,
 		preReleaseBuild : false,
+		microZipBuild : false,
 		taskCount: 0,
 		taskCompleted: 0,
 		notificationMessage: '',
@@ -161,6 +162,20 @@ module.exports = function(grunt) {
 				notify: 'Version changed for pr (adding beta prefix). Version changed to <%= new_version %>',
 				command: [
 					'export EE_VERSION_BUMP_TYPE="pre_release"',
+					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
+					'php version-bump.php'
+				].join('&&'),
+				options: {
+					callback: setNewVersion,
+					stdout: true,
+					stderr: false,
+					stdin: false
+				}
+			},
+			microZipVersion: {
+				notify: 'Version changed for microzip (bumping back and using p). Version changed to <%= new_version %>',
+				command: [
+					'export EE_VERSION_BUMP_TYPE="micro_zip"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
 					'php version-bump.php'
 				].join('&&'),
@@ -678,6 +693,9 @@ module.exports = function(grunt) {
 				case 'pr' :
 					grunt.config.set( 'preReleaseBuild', true );
 					break;
+				case 'microzip' :
+					grunt.config.set( 'microZipBuild', true );
+					break;
 			}
 
 			return true;
@@ -688,7 +706,7 @@ module.exports = function(grunt) {
 			/**
 			 * update topic in hipchat room! BUT only if updating event-espresso-core
 			 */
-			if ( grunt.config.get( 'eeParams.slug' ) == 'event-espresso-core-reg' ) {
+			if ( grunt.config.get( 'eeParams.slug' ) == 'event-espresso-core-reg' && grunt.config.get( 'microZipBuild' ) !== true ) {
 				var HipchatClient, hipchat;
 				HipchatClient = require('hipchat-client');
 				var roomID = '424398';
@@ -1109,6 +1127,8 @@ module.exports = function(grunt) {
 		'seteeParams',
 		'gitcheckout:release',
 		'setNotifications:gitcheckout:release',
+		'shell:microZipVersion',
+		'setNotifications:shell:microZipVersion',
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
 		'gitadd:version',
