@@ -635,20 +635,20 @@ module.exports = function(grunt) {
 		/*grunt.verbose.ok( console.log(versions) );*/
 		if ( versions.rc !== null ) {
 			if ( versions.vrtype == 'rc' ) {
-				currentTopic = currentTopic.replace( /MASTR\:*.[0-9]\.[0-9]\.[0-9]\.rc\.[0-9]{3}/g, 'MASTR: ' + versions.rc );
+				currentTopic = currentTopic.replace( /MASTR\:*.[0-9]\.[0-9]\.[0-9]+\.rc\.[0-9]{3}/g, 'MASTR: ' + versions.rc );
 			} else if ( versions.vrtype == 'alpha' ) {
-				currentTopic = currentTopic.replace( /ALPHA\:*.[0-9]\.[0-9]\.[0-9]\.alpha\.[0-9]{3}/g, 'ALPHA: ' + versions.rc );
+				currentTopic = currentTopic.replace( /ALPHA\:*.[0-9]\.[0-9]\.[0-9]+\.alpha\.[0-9]{3}/g, 'ALPHA: ' + versions.rc );
 			} else if ( versions.vrtype == 'beta' ) {
-				currentTopic = currentTopic.replace( /BETA\:*.[0-9]\.[0-9]\.[0-9]\.beta\.[0-9]{3}/g, 'BETA: ' + versions.rc );
+				currentTopic = currentTopic.replace( /BETA\:*.[0-9]\.[0-9]\.[0-9]+\.beta\.[0-9]{3}/g, 'BETA: ' + versions.rc );
 			}
 		}
 
 		if ( versions.minor !== null  ) {
-			currentTopic = currentTopic.replace( /REL\:*.[0-9]\.[0-9]\.[0-9]\.p/, 'REL: ' + versions.minor );
+			currentTopic = currentTopic.replace( /REL\:*.[0-9]\.[0-9]\.[0-9]+\.p/, 'REL: ' + versions.minor );
 		}
 
 		if ( versions.major !== null ) {
-			currentTopic = currentTopic.replace( /REL\:*.[0-9]\.[0-9]\.[0-9]\.p/, 'REL: ' + versions.major );
+			currentTopic = currentTopic.replace( /REL\:*.[0-9]\.[0-9]\.[0-9]+\.p/, 'REL: ' + versions.major );
 		}
 		//SET new topic
 		hipchat.api.rooms.topic( { room_id: roomID, topic: currentTopic, from: 'gruntBOT' }, function( err, res ) {
