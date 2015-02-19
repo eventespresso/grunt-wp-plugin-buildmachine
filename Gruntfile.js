@@ -1251,6 +1251,10 @@ module.exports = function(grunt) {
 	//build just the pot file.
 	grunt.registerTask( 'pot_only', [
 		'setNotifications:init:pot_only:yellow',
+		'gitcheckout:master',
+		'setNotifications:gitcheckout:master',
+		'gitpull:master',
+		'setNotifications:gitpull:master',
 		'shell:potCheckout',
 		'setNotifications:shell:potCheckout',
 		'pot',
