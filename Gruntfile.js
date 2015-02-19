@@ -625,7 +625,7 @@ module.exports = function(grunt) {
 		},
 
 		//generate pot file
-		pot {
+		pot:  {
 			notify: "Building POT files.",
 			options: {
 				text_domain: '<%= eeParams.text_domain %>',
