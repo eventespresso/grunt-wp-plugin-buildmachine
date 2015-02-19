@@ -622,7 +622,7 @@ module.exports = function(grunt) {
 					assets_dir: 'build/wp-org-assets'
 				}
 			}
-		}
+		},
 
 		//generate pot file
 		pot {
