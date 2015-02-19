@@ -630,7 +630,7 @@ module.exports = function(grunt) {
 			notify: 'Built POT File.  File is available by <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot">clicking here</a>  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 			target : {
 				options: {
-					cwd: '~/buildmachine/all_builds/src',
+					cwd: '../all_builds/src',
 					domainPath: '<%= eeParams.archiveBaseUrl %>',
 					include: ['.*'],
 					potFilename: '<%= eeParams.textDomain %>.pot',
