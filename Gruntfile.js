@@ -631,7 +631,7 @@ module.exports = function(grunt) {
 
 			options: {
 				cwd: '../all_builds/src',
-				domainPath: '<%= eeParams.archiveBaseUrl %>',
+				domainPath: '<%= archiveBasePath %>',
 				include: ['.*'],
 				potFilename: '<%= eeParams.textDomain %>.pot',
 				potHeaders: {
