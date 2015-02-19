@@ -290,7 +290,7 @@ module.exports = function(grunt) {
 			potCheckout: {
 				notify: "Checking out master in the pot assembly directory",
 				command: [
-					'cd ../all_builds/src/<%= eeParams.srcBuildFolderName %>',
+					'cd ~/buildmachine/all_builds/src/<%= eeParams.srcBuildFolderName %>',
 					'unset GIT_DIR',
 					'git checkout master',
 					'git pull origin master'
