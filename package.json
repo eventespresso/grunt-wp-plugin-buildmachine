@@ -8,10 +8,10 @@
     "grunt-git": "^0.3.2",
     "grunt-gitinfo": "^0.1.7",
     "grunt-hipchat-notifier": "^0.3.0",
-    "grunt-pot": "^0.2.1",
     "grunt-shell": "^1.1.1",
     "grunt-templated-changelog": "^0.1.3",
     "grunt-wp-deploy": "^1.0.3",
+    "grunt-wp-i18n": "^0.5.0",
     "hipchat-client": "^1.0.2"
   }
 }

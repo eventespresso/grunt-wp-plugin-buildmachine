@@ -636,9 +636,8 @@ module.exports = function(grunt) {
 				package_name: '<%= eeParams.name %>',
 				package_version: '<%= new_version %>'
 			},
-			files: {
-				cwd: '~/buildmachine/all_builds/src/',
-				src: [ '**/*.php' ],
+			potfiles: {
+				src: [ '~/buildmachine/all_builds/src/**/*.php' ],
 				expand: true,
 			}
 		}
