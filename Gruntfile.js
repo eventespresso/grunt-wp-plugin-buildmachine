@@ -625,9 +625,26 @@ module.exports = function(grunt) {
 			}
 		},
 
+
+		makepot: {
+			notify: 'Built POT File.  File is available by <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot">clicking here</a>  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
+			target : {
+				options: {
+					cwd: '~/buildmachine/all_builds/src',
+					domainPath: '<%= eeParams.archiveBaseUrl %>',
+					include: ['.*'],
+					potFilename: '<%= eeParams.textDomain %>.pot',
+					potHeaders: {
+						poedit: true,
+						'x-poedit-keywordslist' : true
+					}
+				}
+			}
+		}
+
 		//generate pot file
 		pot:  {
-			notify: "Building POT files.",
+			notify: 'Built POT File.  File is available by <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot">clicking here</a>  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 			options: {
 				text_domain: '<%= eeParams.textDomain %>',
 				dest: '<%= eeParams.archiveBasePath %><%= eeParams.textDomain %>.pot',
@@ -650,7 +667,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-gitinfo');
 	grunt.loadNpmTasks('grunt-wp-deploy');
-	grunt.loadNpmTasks('grunt-pot');
+	grunt.loadNpmTasks('grunt-wp-i18n');
 
 	function postnewTopic( roomInfo, hipchat, done ) {
 		var roomID = '424398';
@@ -1260,8 +1277,8 @@ module.exports = function(grunt) {
 		'setNotifications:gitpull:master',
 		'shell:potCheckout',
 		'setNotifications:shell:potCheckout',
-		'pot',
-		'setNotifications:pot',
+		'makepot',
+		'setNotifications:makepot',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		]);
