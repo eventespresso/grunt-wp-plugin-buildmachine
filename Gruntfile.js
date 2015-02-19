@@ -1254,6 +1254,8 @@ module.exports = function(grunt) {
 		'gitcheckout:master',
 		'setNotifications:gitcheckout:master',
 		'gitpull:master',
+		'gitinfo',
+		'seteeParams',
 		'setNotifications:gitpull:master',
 		'shell:potCheckout',
 		'setNotifications:shell:potCheckout',
