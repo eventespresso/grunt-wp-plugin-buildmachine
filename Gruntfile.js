@@ -641,23 +641,6 @@ module.exports = function(grunt) {
 				}
 			}
 		}
-
-		//generate pot file
-		pot:  {
-			notify: 'Built POT File.  File is available by <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot">clicking here</a>  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
-			options: {
-				text_domain: '<%= eeParams.textDomain %>',
-				dest: '<%= eeParams.archiveBasePath %><%= eeParams.textDomain %>.pot',
-				encoding: 'UTF-8',
-				keywords: ['__', '_e', '__ngettext:1,2', '_n:1,2', '__ngettext_nooop:1,2', '_n_noop:1,2', '_c', '_nc:4c,1,2', '_x:1,2c', '_nx:4c,1,2', '_nx_noop:4c,1,2', '_ex:1,2c', 'esc_attr__', 'esc_attr_e', 'esc_attr_x:1,2c', 'esc_html__', 'esc_html_e', 'esc_html_x:1,2c'],
-				package_name: '<%= eeParams.name %>',
-				package_version: '<%= new_version %>'
-			},
-			potfiles: {
-				src: [ '~/buildmachine/all_builds/src/**/*.php' ],
-				expand: true,
-			}
-		}
 	});
 
 	//load plugins providing the task.
