@@ -1025,6 +1025,12 @@ module.exports = function(grunt) {
 		'updateSandbox_master',
 		'shell:shareBuild',
 		'setNotifications:shell:shareBuild',
+		'shell:potCheckout',
+		'setNotifications:shell:potCheckout',
+		'makepot',
+		'setNotifications:makepot',
+		'shell:sharePOTBuild',
+		'setNotifications:shell:sharePOTBuild',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		] );
@@ -1071,6 +1077,12 @@ module.exports = function(grunt) {
 		'updateSandbox_master',
 		'shell:shareBuild',
 		'setNotifications:shell:shareBuild',
+		'shell:potCheckout',
+		'setNotifications:shell:potCheckout',
+		'makepot',
+		'setNotifications:makepot',
+		'shell:sharePOTBuild',
+		'setNotifications:shell:sharePOTBuild',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		] );
