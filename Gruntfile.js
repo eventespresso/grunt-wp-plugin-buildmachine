@@ -637,7 +637,8 @@ module.exports = function(grunt) {
 				package_version: '<%= new_version %>'
 			},
 			files: {
-				src: [ '~/buildmachine/all_builds/src/**/*.php' ],
+				cwd: '~/buildmachine/all_builds/src/',
+				src: [ '**/*.php' ],
 				expand: true,
 			}
 		}
