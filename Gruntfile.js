@@ -235,6 +235,10 @@ module.exports = function(grunt) {
 				notify: 'Archive folder for WP deploy has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.wpOrgSlug %>-wp.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
 				command: 'mv build/<%= eeParams.wpOrgSlug %>-wp.zip <%= eeParams.archiveBasePath %>'
 			},
+			sharePOTBuild : {
+				notify: 'POT Build moved for retrieval.',
+				command: 'mv ~/buildmachine/all_builds/src/languages/<%= eeParams.textDomain %>.pot <%= eeParams.archiveBasePath %>'
+			},
 			SandboxPull: {
 				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
 				command: [
@@ -1261,6 +1265,8 @@ module.exports = function(grunt) {
 		'setNotifications:shell:potCheckout',
 		'makepot',
 		'setNotifications:makepot',
+		'shell:sharePOTBuild',
+		'setNotifications:shell:sharePOTBuild',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		]);
