@@ -624,7 +624,8 @@ module.exports = function(grunt) {
 					plugin_slug: '<%= eeParams.wpOrgSlug %>',
 					svn_user: '<%= eeParams.wpOrgUser %>',
 					build_dir: 'build/wp-org',
-					assets_dir: 'build/wp-org-assets'
+					assets_dir: 'build/wp-org-assets',
+					max_buffer: 600*1024
 				}
 			}
 		},
