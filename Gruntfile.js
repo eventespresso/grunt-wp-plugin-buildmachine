@@ -293,6 +293,19 @@ module.exports = function(grunt) {
 					stdin: false
 				}
 			},
+			gitFetch : {
+				notify: "Fetching remotes.",
+				command: [
+					'cd src',
+					'unset GIT_DIR',
+					'git fetch origin'
+				].join('&&'),
+				options: {
+					stdout: false,
+					stderr: false,
+					stdin: false
+				}
+			},
 			potCheckout: {
 				notify: "Checking out master in the pot assembly directory",
 				command: [
