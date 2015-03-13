@@ -341,8 +341,7 @@ module.exports = function(grunt) {
 			custom: {
 				notify: 'Fetching all remotes.',
 				options : {
-					repository: 'origin',
-					all : true
+					repository: 'origin'
 				}
 			}
 		},
