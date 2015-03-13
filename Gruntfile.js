@@ -337,6 +337,15 @@ module.exports = function(grunt) {
 			}
 		},
 
+		gitfetch: {
+			custom: {
+				notify: 'Fetching all remotes.',
+				options : {
+					all : true
+				}
+			}
+		},
+
 		gitcommit: {
 			//commit version bump.
 			version: {
@@ -1011,8 +1020,11 @@ module.exports = function(grunt) {
 		var gitBranch = typeof( branch ) !== 'undefined' ? branch : grunt.config.get( 'prBranch' );
 		grunt.config.set( 'prBranch', gitBranch );
 
+		grunt.log.writeln('GitBranch set is: ' + gitBranch );
+
 		grunt.task.run([
 			'setNotifications:init:pr_custom:green',
+			'gitfetch:custom',
 			'gitcheckout:custom',
 			'setNotifications:gitcheckout:custom',
 			'gitpull:custom',
