@@ -1008,7 +1008,6 @@ module.exports = function(grunt) {
 
 
 	grunt.registerTask( 'pr_custom', 'A custom task for building pre-releases off of a named branch', function( branch ) {
-		prBranch
 		var gitBranch = typeof( branch ) !== 'undefined' ? branch : grunt.config.get( 'prBranch' );
 		grunt.config.set( 'prBranch', gitBranch );
 
