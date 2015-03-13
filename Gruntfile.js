@@ -827,7 +827,7 @@ module.exports = function(grunt) {
 			params.slug += '-pr';
 		}
 
-		if ( params.sites !== null && typeof params.sites !== 'undefined' ) {
+		if ( params.sites !== null && typeof params.sites !== 'undefined' && ! grunt.config.get( 'preReleaseBuild' ) ) {
 			params.sandboxsite = params['sites'][params.branch]['sandboxsite']  !== 'undefined' ? params['sites'][params.branch]['sandboxsite'] : null;
 			params.sandboxdecafsite =  params['sites'][params.branch]['sandboxdecafsite']  !== 'undefined' ? params['sites'][params.branch]['sandboxdecafsite'] : null;
 			params.sandboxUrl =  params['sites'][params.branch]['sandboxUrl']  !== 'undefined' ? params['sites'][params.branch]['sandboxUrl'] : null;
