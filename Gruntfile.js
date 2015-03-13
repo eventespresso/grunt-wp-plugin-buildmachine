@@ -1037,8 +1037,8 @@ module.exports = function(grunt) {
 
 		grunt.task.run([
 			'setNotifications:init:pr_custom:green',
-			'gitfetch:custom',
-			'setNotifications:gitfetch:custom',
+			'shell:gitFetch',
+			'setNotifications:shell:gitFetch',
 			'gitcheckout:custom',
 			'setNotifications:gitcheckout:custom',
 			'gitpull:custom',
