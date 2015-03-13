@@ -99,6 +99,7 @@ module.exports = function(grunt) {
 		mainChatColor: 'grey',
 		notificationColor: 'grey',
 		tagPush: false,
+		prBranch: master,
 
 		//shell commands
 		shell: {
@@ -417,22 +418,6 @@ module.exports = function(grunt) {
 				}
 			},
 
-			alpha: {
-				notify: 'Checkout out alpha branch.',
-				options: {
-					cwd: 'src',
-					branch: 'alpha'
-				}
-			},
-
-			beta: {
-				notify: 'Checkout out beta branch.',
-				options: {
-					cwd: 'src',
-					branch: 'beta'
-				}
-			},
-
 			testingSetup: {
 				notify: 'Checking out testing branch and ensuring its created and mirroring originating branch.  (This branch is used for non-destructive testing of grunt tasks).',
 				options: {
@@ -448,6 +433,14 @@ module.exports = function(grunt) {
 					cwd : 'src',
 					branch: 'testing_auto_updates',
 				}
+			},
+
+			custom: {
+				notify: 'Checking out <%= prBranch %>',
+				options: {
+					cwd : 'src',
+					branch : '<%= prBranch %>'
+				}
 			}
 		},
 
@@ -460,21 +453,15 @@ module.exports = function(grunt) {
 				}
 			},
 
-			alpha: {
-				notify: 'Pulling alpha branch from remote (make sure all up to date!.',
+			custom: {
+				notify: 'Pulling <%= prBranch %> branch.',
 				options: {
-					cwd: 'src',
-					branch: 'alpha'
-				}
-			},
-
-			beta: {
-				notify: 'Pulling beta branch from remote (make sure all up to date!.',
-				options: {
-					cwd: 'src',
-					branch: 'beta'
+					cwd : 'src',
+					branch : '<%= prBranch %>'
 				}
 			}
+
+
 		},
 
 		gitpush: {
@@ -495,29 +482,20 @@ module.exports = function(grunt) {
 				}
 			},
 
-
-			bump_alpha: {
-				notify: 'Pushing alpha branch to remote.',
-				options: {
-					cwd: 'src',
-					branch: 'alpha'
-				}
-			},
-
-			bump_beta: {
-				notify: 'Pushing beta branch to remote.',
-				options: {
-					cwd: 'src',
-					branch: 'beta'
-				}
-			},
-
 			testing: {
 				notify: 'Pushing testing branch to remote (used for testing git grunt tasks non-destructively)',
 				options: {
 					cwd: 'src',
 					branch: 'testing_auto_updates',
 					tags: false
+				}
+			},
+
+			custom: {
+				notify: 'Pushing <%= prBranch %> to remote.',
+				options: {
+					cwd : 'src',
+					branch : '<%= prBranch %>'
 				}
 			}
 
@@ -726,8 +704,7 @@ module.exports = function(grunt) {
 			}
 
 			switch ( this.args[1] ) {
-				case 'pr_alpha' :
-				case 'pr_beta' :
+				case 'pr_custom' :
 				case 'pr' :
 					grunt.config.set( 'preReleaseBuild', true );
 					break;
@@ -901,22 +878,6 @@ module.exports = function(grunt) {
 		'SandboxGithub'
 		]);
 
-	grunt.registerTask( 'updateSandbox_alpha', [
-		'gitcheckout:alpha',
-		'gitpull:alpha',
-		'gitinfo',
-		'seteeParams',
-		'SandboxGithub'
-		]);
-
-	grunt.registerTask( 'updateSandbox_beta', [
-		'gitcheckout:beta',
-		'gitpull:beta',
-		'gitinfo',
-		'seteeParams',
-		'SandboxGithub'
-		]);
-
 	//bumping rc version
 	grunt.registerTask( 'bumprc_master', [
 		'setNotifications:init:bumprc_master:purple',
@@ -935,49 +896,6 @@ module.exports = function(grunt) {
 		'setNotifications:gitcommit:version',
 		'gitpush:bump',
 		'setNotifications:gitpush:bump',
-		'setNotifications:end',
-		'hipchat_notifier:notify_team'
-		] );
-
-	grunt.registerTask( 'bumprc_alpha', [
-		'setNotifications:init:bumprc_alpha:purple',
-		'gitcheckout:alpha',
-		'setNotifications:gitcheckout:alpha',
-		'gitpull:alpha',
-		'setNotifications:gitpull:alpha',
-		'gitinfo',
-		'seteeParams',
-		'maybeRun',
-		'shell:bump_rc',
-		'setNotifications:shell:bump_rc',
-		'gitadd:version',
-		'setNotifications:gitadd:version',
-		'gitcommit:version',
-		'setNotifications:gitcommit:version',
-		'gitpush:bump_alpha',
-		'setNotifications:gitpush:bump_alpha',
-		'setNotifications:end',
-		'hipchat_notifier:notify_team'
-		] );
-
-
-	grunt.registerTask( 'bumprc_beta', [
-		'setNotifications:init:bumprc_beta:purple',
-		'gitcheckout:beta',
-		'setNotifications:gitcheckout:beta',
-		'gitpull:beta',
-		'setNotifications:gitpull:beta',
-		'gitinfo',
-		'seteeParams',
-		'maybeRun',
-		'shell:bump_rc',
-		'setNotifications:shell:bump_rc',
-		'gitadd:version',
-		'setNotifications:gitadd:version',
-		'gitcommit:version',
-		'setNotifications:gitcommit:version',
-		'gitpush:bump_beta',
-		'setNotifications:gitpush:bump_beta',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		] );
@@ -1089,58 +1007,40 @@ module.exports = function(grunt) {
 		] );
 
 
+	grunt.registerTask( 'pr_custom', 'A custom task for building pre-releases off of a named branch', function( branch ) {
+		prBranch
+		var gitBranch = typeof( branch ) !== 'undefined' ? branch : grunt.config.get( 'prBranch' );
+		grunt.config.set( 'prBranch', gitBranch );
 
-	//building pre-releases
-	grunt.registerTask( 'pr_alpha', [
-		'setNotifications:init:pr_alpha:green',
-		'gitcheckout:alpha',
-		'setNotifications:gitcheckout:alpha',
-		'gitpull:alpha',
-		'setNotifications:gitpull:alpha',
-		'gitinfo',
-		'seteeParams',
-		'gitcheckout:release',
-		'setNotifications:gitcheckout:release',
-		'shell:prVersion',
-		'setNotifications:shell:prVersion',
-		'shell:remove_folders_release',
-		'setNotifications:shell:remove_folders_release',
-		'gitadd:version',
-		'setNotifications:gitadd:version',
-		'gitcommit:prRelease',
-		'setNotifications:gitcommit:prRelease',
-		'gitarchive:prRelease',
-		'setNotifications:gitarchive:prRelease',
-		'shell:shareBuildpr',
-		'setNotifications:shell:shareBuildpr',
-		'setNotifications:end',
-		'hipchat_notifier:notify_team'
-		]);
-	grunt.registerTask( 'pr_beta', [
-		'setNotifications:init:pr_beta:green',
-		'gitcheckout:beta',
-		'setNotifications:gitcheckout:beta',
-		'gitpull:beta',
-		'setNotifications:gitpull:beta',
-		'gitinfo',
-		'seteeParams',
-		'gitcheckout:release',
-		'setNotifications:gitcheckout:release',
-		'shell:prVersion',
-		'setNotifications:shell:prVersion',
-		'shell:remove_folders_release',
-		'setNotifications:shell:remove_folders_release',
-		'gitadd:version',
-		'setNotifications:gitadd:version',
-		'gitcommit:prRelease',
-		'setNotifications:gitcommit:prRelease',
-		'gitarchive:prRelease',
-		'setNotifications:gitarchive:prRelease',
-		'shell:shareBuildpr',
-		'setNotifications:shell:shareBuildpr',
-		'setNotifications:end',
-		'hipchat_notifier:notify_team'
-		]);
+		grunt.task.run([
+			'setNotifications:init:pr_custom:green',
+			'gitcheckout:custom',
+			'setNotifications:gitcheckout:custom',
+			'gitpull:custom',
+			'setNotifications:gitpull:custom',
+			'gitinfo',
+			'seteeParams',
+			'gitcheckout:release',
+			'setNotifications:gitcheckout:release',
+			'shell:prVersion',
+			'setNotifications:shell:prVersion',
+			'shell:remove_folders_release',
+			'setNotifications:shell:remove_folders_release',
+			'gitadd:version',
+			'setNotifications:gitadd:version',
+			'gitcommit:prRelease',
+			'setNotifications:gitcommit:prRelease',
+			'gitarchive:prRelease',
+			'setNotifications:gitarchive:prRelease',
+			'shell:shareBuildpr',
+			'setNotifications:shell:shareBuildpr',
+			'setNotifications:end',
+			'hipchat_notifier:notify_team'
+			]);
+
+	});
+
+
 	grunt.registerTask( 'pr', [
 		'setNotifications:init:pr:green',
 		'gitcheckout:master',
@@ -1166,6 +1066,8 @@ module.exports = function(grunt) {
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		]);
+
+	grunt.registerTask
 
 
 	//test build for micro minor versions.
