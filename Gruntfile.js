@@ -99,7 +99,7 @@ module.exports = function(grunt) {
 		mainChatColor: 'grey',
 		notificationColor: 'grey',
 		tagPush: false,
-		prBranch: master,
+		prBranch: 'master',
 
 		//shell commands
 		shell: {
