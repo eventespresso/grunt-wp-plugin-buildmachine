@@ -60,7 +60,8 @@ module.exports = function(grunt) {
 		"sandboxdecafsite" : null,
 		"sandboxUrl" : "",
 		"sandboxdecafUrl" : "",
-		"github" : false
+		"github" : false,
+		"demoee" : false
 	};
 
 	var defaultaws = {
@@ -290,6 +291,19 @@ module.exports = function(grunt) {
 				options: {
 					stdout: false,
 					stderr:false,
+					stdin: false
+				}
+			},
+			demoeePush: {
+				notify: "Pushed <%= eeParams.branch %> branch to demoee repo.",
+				command: [
+					'cd src',
+					'unset GIT_DIR',
+					'git push demoee <%= eeParams.branch %>'
+				].join('&&'),
+				ooptions: {
+					stdout: false,
+					stderr: false,
 					stdin: false
 				}
 			},
@@ -864,6 +878,11 @@ module.exports = function(grunt) {
 				grunt.task.run( 'shell:githubPush', 'setNotifications:shell:githubPush' );
 			}
 			msg += '<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.<br>';
+		}
+
+		if ( params.demoee ) {
+			grunt.task.run( 'shell:demoeePush', 'setNotifications:shell:demoeePush' );
+			msg += '<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to demoee.org.<br>';
 		}
 
 		if ( msg !== "" ) {
