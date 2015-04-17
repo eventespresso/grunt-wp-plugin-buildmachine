@@ -301,7 +301,7 @@ module.exports = function(grunt) {
 					'unset GIT_DIR',
 					'git push demoee <%= eeParams.branch %>'
 				].join('&&'),
-				ooptions: {
+				options: {
 					stdout: false,
 					stderr: false,
 					stdin: false
