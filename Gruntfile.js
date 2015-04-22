@@ -752,6 +752,7 @@ module.exports = function(grunt) {
 		var options_string = this.nameArgs.replace(/:/g, '.');
 		var task_name = options_string.replace(nameregex, '');
 		var task_notification = task_name + '.notify';
+        var githubsync = false;
 		var msg = grunt.config.get( 'notificationMessage' );
 
 		if ( this.args[0] == 'init' ) {
@@ -777,6 +778,10 @@ module.exports = function(grunt) {
 				case 'microzip' :
 					grunt.config.set( 'microZipBuild', true );
 					break;
+                case 'githubsync' :
+                    githubsync = true;
+                    break;
+
 			}
 
 			return true;
@@ -787,7 +792,7 @@ module.exports = function(grunt) {
 			/**
 			 * update topic in hipchat room! BUT only if updating event-espresso-core
 			 */
-			if ( grunt.config.get( 'eeParams.slug' ) == 'event-espresso-core-reg' && grunt.config.get( 'microZipBuild' ) !== true ) {
+			if ( grunt.config.get( 'eeParams.slug' ) == 'event-espresso-core-reg' && grunt.config.get( 'microZipBuild' ) !== true && grunt.config.get( 'preReleaseBuild' ) !== true && ! githubsync ) {
 				var HipchatClient, hipchat;
 				HipchatClient = require('hipchat-client');
 				var roomID = '424398';
@@ -1283,7 +1288,7 @@ module.exports = function(grunt) {
         grunt.log.writeln( 'GitBranch set is: ' + gitBranch );
 
         grunt.task.run([
-            'setNotifications: init:githubsync:green',
+            'setNotifications:init:githubsync:green',
             'shell:gitFetch',
             'setNotifications:shell:gitFetch',
             'gitcheckout:sync',
