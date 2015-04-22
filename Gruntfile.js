@@ -101,6 +101,7 @@ module.exports = function(grunt) {
 		notificationColor: 'grey',
 		tagPush: false,
 		prBranch: 'master',
+        syncBranch: 'master',
 
 		//shell commands
 		shell: {
@@ -192,7 +193,7 @@ module.exports = function(grunt) {
 			},
 			remove_folders_release: {
 				notify: '<%= eeParams.releaseFilesRemove.length %> folders and files removed in prep for release.',
-				command: '',
+				command: ''
 			},
 			remove_folders_decaf: {
 				notify: '<%= eeParams.releaseFilesRemove.length %> folders and files removed in prep for decaf release.',
@@ -294,6 +295,19 @@ module.exports = function(grunt) {
 					stdin: false
 				}
 			},
+            githubSync: {
+                notify: "Pushed <%= syncBranch %> branch to github repo.",
+                command: [
+                    'cd src',
+                    'unset GIT_DIR',
+                    'git push github <%= syncBranch %>'
+                ].join('&&'),
+                options: {
+                    stdout: false,
+                    stderr:false,
+                    stdin: false
+                }
+            },
 			demoeePush: {
 				notify: "Pushed <%= eeParams.branch %> branch to demoee repo.",
 				command: [
@@ -380,7 +394,7 @@ module.exports = function(grunt) {
 				options: {
 					cwd: 'src',
 					message: 'Bumping version to <%= new_version %>'
-				},
+				}
 			},
 			//releasebump
 			release: {
@@ -413,7 +427,7 @@ module.exports = function(grunt) {
 					cwd: 'src',
 					message: 'Changed version to <%= new_version %> and prepped for pre release'
 				}
-			},
+			}
 		},
 
 		gittag: {
@@ -467,7 +481,7 @@ module.exports = function(grunt) {
 				notify: 'Checking out testing branch.  (This branch is used for non-destructive testing of grunt tasks).',
 				options: {
 					cwd : 'src',
-					branch: 'testing_auto_updates',
+					branch: 'testing_auto_updates'
 				}
 			},
 
@@ -477,7 +491,15 @@ module.exports = function(grunt) {
 					cwd : 'src',
 					branch : '<%= prBranch %>'
 				}
-			}
+			},
+
+            sync: {
+                notify: 'Checking out <%= syncBranch %>',
+                options: {
+                    cwd : 'src',
+                    branch : '<%= syncBranch %>'
+                }
+            }
 		},
 
 		gitpull: {
@@ -495,7 +517,15 @@ module.exports = function(grunt) {
 					cwd : 'src',
 					branch : '<%= prBranch %>'
 				}
-			}
+			},
+
+            sync: {
+                notify: 'Pulling <%= syncBranch %> branch.',
+                options: {
+                    cwd : 'src',
+                    branch : '<%= syncBranch %>'
+                }
+            }
 
 
 		},
@@ -856,6 +886,24 @@ module.exports = function(grunt) {
 	});
 
 
+    //deciding whether to do a github push of the current set syncbranch dependent on params set in the repo info.json file.
+    grunt.registerTask( 'GithubOnlyPush', 'Maybe push to github', function GithubOnlyPush() {
+        var params = grunt.config.get( 'eeParams' );
+        var msg = "";
+
+        if ( params.github ) {
+                grunt.task.run( 'shell:githubSync', 'setNotifications:shell:githubSync' );
+
+            msg += '<%= syncBranch %> branch for <%= eeParams.name %> has been pushed to github.<br>';
+        }
+
+        if ( msg !== "" ) {
+            grunt.config.set('mainChatMessage', msg );
+            grunt.config.set( 'mainChatColor', 'purple' );
+            grunt.task.run( 'hipchat_notifier:notify_main_chat' );
+        }
+    });
+
 	//deciding whether to do sandbox and github pushes dependent on params set in the repo info.json file.
 	grunt.registerTask( 'SandboxGithub', 'Do sandbox and github pushes?', function SandboxGithub() {
 		var params = grunt.config.get( 'eeParams' );
@@ -1111,8 +1159,6 @@ module.exports = function(grunt) {
 		'hipchat_notifier:notify_team'
 		]);
 
-	grunt.registerTask
-
 
 	//test build for micro minor versions.
 	//bumping major versions and releasing.
@@ -1229,4 +1275,24 @@ module.exports = function(grunt) {
 		'setNotifications:end',
 		'hipchat_notifier:notify_team'
 		]);
+
+    //just sync incoming branch with github
+    grunt.registerTask( 'githubsync', 'A custom task for syncing named branches with github', function( branch ) {
+    var gitBranch = typeof( branch ) !== 'undefined' ? branch : grunt.config.get( 'syncBranch' );
+        grunt.config.set( 'syncBranch', gitBranch );
+        grunt.log.writeln( 'GitBranch set is: ' + gitBranch );
+
+        grunt.task.run([
+            'setNotifications: init:githubsync:green',
+            'shell:gitFetch',
+            'setNotifications:shell:gitFetch',
+            'gitcheckout:sync',
+            'setNotifications:gitcheckout:sync',
+            'gitpull:sync',
+            'setNotifications:gitpull:sync',
+            'gitinfo',
+            'git:GithubOnlyPush'
+        ]);
+    });
+
 }
