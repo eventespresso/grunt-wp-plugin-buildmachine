@@ -18,14 +18,14 @@ module.exports = function(grunt) {
 	function setNewVersion( err, stdout, stderr, cb ) {
 		grunt.config.set('new_version', stdout);
 		grunt.log.writeln();
-		grunt.log.ok('Version bumped to ' + stdout)
+		grunt.log.ok('Version bumped to ' + stdout);
 		if ( stdout != '0' ) {
 			cb();
 		} else {
 			grunt.fail.warn( 'Something went wrong with setting the version' );
 			cb();
 		}/**/
-	};
+	}
 
 	function rm_prepare_folders( folders_to_remove ) {
 		var folders = [];
@@ -36,7 +36,7 @@ module.exports = function(grunt) {
 			folders[i] = 'rm -rf ' + folders_to_remove[i];
 		}
 		return folders;
-	};
+	}
 
 	var defaultParams = {
 		"versionFile" : "",
@@ -713,7 +713,7 @@ module.exports = function(grunt) {
 			minor : grunt.config.get( 'minor_version' ),
 			major: grunt.config.get( 'major_version' ),
 			vrtype: grunt.config.get( 'eeParams.versionType')
-		}
+		};
 		/*grunt.verbose.ok( console.log(versions) );*/
 		if ( versions.rc !== null ) {
 			if ( versions.vrtype == 'rc' ) {
@@ -742,8 +742,8 @@ module.exports = function(grunt) {
 			msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 			grunt.config.set( 'notificationMessage', msg );
 			done();
-		} );
-	};
+		} )
+	}
 
 	grunt.registerTask( 'setNotifications', 'Testing what is available for custom grunt tasks', function setNotifications() {
 		//grab what notification we're running.
@@ -871,7 +871,7 @@ module.exports = function(grunt) {
 			params.slug += '-pr';
 		}
 
-		if ( params.sites !== null && typeof params.sites !== 'undefined' && ! grunt.config.get( 'preReleaseBuild' ) ) {
+		if ( params.sites !== null && typeof params.sites !== 'undefined' && ! grunt.config.get( 'preReleaseBuild' ) && params.branch == 'master' ) {
 			params.sandboxsite = params['sites'][params.branch]['sandboxsite']  !== 'undefined' ? params['sites'][params.branch]['sandboxsite'] : null;
 			params.sandboxdecafsite =  params['sites'][params.branch]['sandboxdecafsite']  !== 'undefined' ? params['sites'][params.branch]['sandboxdecafsite'] : null;
 			params.sandboxUrl =  params['sites'][params.branch]['sandboxUrl']  !== 'undefined' ? params['sites'][params.branch]['sandboxUrl'] : null;
