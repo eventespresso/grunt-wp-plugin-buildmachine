@@ -1291,6 +1291,7 @@ module.exports = function(grunt) {
             'gitpull:sync',
             'setNotifications:gitpull:sync',
             'gitinfo',
+            'seteeParams',
             'GithubOnlyPush',
             'setNotifications:end',
             'hipchat_notifier:notify_team'
