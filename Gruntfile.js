@@ -1291,7 +1291,7 @@ module.exports = function(grunt) {
             'gitpull:sync',
             'setNotifications:gitpull:sync',
             'gitinfo',
-            'git:GithubOnlyPush'
+            'GithubOnlyPush'
         ]);
     });
 
