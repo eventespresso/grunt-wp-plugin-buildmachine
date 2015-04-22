@@ -1291,7 +1291,9 @@ module.exports = function(grunt) {
             'gitpull:sync',
             'setNotifications:gitpull:sync',
             'gitinfo',
-            'GithubOnlyPush'
+            'GithubOnlyPush',
+            'setNotifications:end',
+            'hipchat_notifier:notify_team'
         ]);
     });
 
