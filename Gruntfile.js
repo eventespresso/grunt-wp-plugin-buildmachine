@@ -677,23 +677,29 @@ module.exports = function(grunt) {
             },
 
             notify_build : {
-                channel : '<%= slack.channels.build =>',
-                attachments : [ '<%= slackNotificationMessage =>' ],
-                username : 'EEBot',
-                icon_emoji : ':coffee:'
+                options : {
+                    channel: '<%= slack.channels.build =>',
+                    attachments: ['<%= slackNotificationMessage =>'],
+                    username: 'EEBot',
+                    icon_emoji: ':coffee:'
+                }
             },
 
             notify_main : {
-                channel : '<%= slack.channels.main =>',
-                text : '<%= mainChatSlackMessage =>',
-                username : 'EEBot',
-                icon_emoji : ':coffee:'
+                options : {
+                    channel : '<%= slack.channels.main =>',
+                    text : '<%= mainChatSlackMessage =>',
+                    username : 'EEBot',
+                    icon_emoji : ':coffee:'
+                }
             },
 
             change_topic : {
-                channel : '<%= slack.channels.main =>',
-                text : '<%= slackTopic =>',
-                type : 'topic'
+                options : {
+                    channel: '<%= slack.channels.main =>',
+                    text: '<%= slackTopic =>',
+                    type: 'topic'
+                }
             }
         },
 
@@ -828,7 +834,7 @@ module.exports = function(grunt) {
             slackmsg.fallback = 'Grunt performed some tasks on the server';
             slackmsg.pretext = "Here are all the tasks completed";
             slackmsg.title = "GruntBOT activity report for **" + this.args[1] + "**";
-            slackmsg.text = "**Notification messages:**\n\n";
+            slackmsg.text = "**Notificationnano  messages:**\n\n";
 
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
