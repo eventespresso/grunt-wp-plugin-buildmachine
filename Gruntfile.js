@@ -840,6 +840,7 @@ module.exports = function(grunt) {
             slackmsg.fallback = 'Grunt performed some tasks on the server';
             slackmsg.pretext = "Here are all the tasks completed";
             slackmsg.title = "GruntBOT activity report";
+            slackmsg.text = "";
 
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
