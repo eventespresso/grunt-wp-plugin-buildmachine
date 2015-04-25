@@ -678,8 +678,8 @@ module.exports = function(grunt) {
 
             notify_build : {
                 options : {
-                    channel: '<%= slack.channels.build =>',
-                    attachments: ['<%= slackNotificationMessage =>'],
+                    channel: '<%= slack.channels.build %>',
+                    attachments: ['<%= slackNotificationMessage %>'],
                     username: 'EEBot',
                     icon_emoji: ':coffee:'
                 }
@@ -687,8 +687,8 @@ module.exports = function(grunt) {
 
             notify_main : {
                 options : {
-                    channel : '<%= slack.channels.main =>',
-                    text : '<%= mainChatSlackMessage =>',
+                    channel : '<%= slack.channels.main %>',
+                    text : '<%= mainChatSlackMessage %>',
                     username : 'EEBot',
                     icon_emoji : ':coffee:'
                 }
