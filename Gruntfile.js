@@ -247,17 +247,17 @@ module.exports = function(grunt) {
 			},
 			shareBuild : {
 				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
-                slacknotify: "Archive folder has been made available and can be retrieved from <%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip.  **Username:** <%= privateParams.archiveUser %>.  **Password:** <%= privateParams.archivePass %>.",
+                slacknotify: "Archive folder has been made available and can be retrieved from <%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip.  *Username:* <%= privateParams.archiveUser %>.  *Password:* <%= privateParams.archivePass %>.",
 				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
 			},
 			shareBuildpr : {
 				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
-                slacknotify: "Archive folder has been made available and can be retrieved from <%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip  **Username:** <%= privateParams.archiveUser %>.  **Password:** <%= privateParams.archivePass %>.",
+                slacknotify: "Archive folder has been made available and can be retrieved from <%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip  *Username:* <%= privateParams.archiveUser %>.  *Password:* <%= privateParams.archivePass %>.",
 				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
 			},
 			shareBuildWP : {
 				notify: 'Archive folder for WP deploy has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.wpOrgSlug %>-wp.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
-                slacknotify: "Archive folder for WP deploy has been made available and can be retrieved from <%= eeParams.archiveBaseUrl %><%= eeParams.wpOrgSlug %>-wp.zip  **Username:** <%= privateParams.archiveUser %>.  **Password:** <%= privateParams.archivePass %>.",
+                slacknotify: "Archive folder for WP deploy has been made available and can be retrieved from <%= eeParams.archiveBaseUrl %><%= eeParams.wpOrgSlug %>-wp.zip  *Username:* <%= privateParams.archiveUser %>.  *Password:* <%= privateParams.archivePass %>.",
 				command: 'mv build/<%= eeParams.wpOrgSlug %>-wp.zip <%= eeParams.archiveBasePath %>'
 			},
 			sharePOTBuild : {
@@ -734,7 +734,7 @@ module.exports = function(grunt) {
 
 		makepot: {
 			notify: 'Built POT File.  File is available by <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot">clicking here</a>  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
-            slacknotify: "Built POT File.  File is available here: <%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot  **Username:** <%= privateParams.archiveUser %>.  **Password:** <%= privateParams.archivePass %>.",
+            slacknotify: "Built POT File.  File is available here: <%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot  *Username:* <%= privateParams.archiveUser %>.  *Password:* <%= privateParams.archivePass %>.",
 			options: {
 				cwd: '../all_builds/src',
 				domainPath: 'languages/',
@@ -807,7 +807,7 @@ module.exports = function(grunt) {
 			msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 
             slackmsg.text += "- Hipchat topic changed for Main Chat room.\n\n";
-            slackmsg.text += "**The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + '.**';
+            slackmsg.text += "*The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + '.*';
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
 			done();
@@ -833,8 +833,8 @@ module.exports = function(grunt) {
 
             slackmsg.fallback = 'Grunt performed some tasks on the server';
             slackmsg.pretext = "Here are all the tasks completed";
-            slackmsg.title = "GruntBOT activity report for **" + this.args[1] + "**";
-            slackmsg.text = "**Notification  messages:**\n\n";
+            slackmsg.title = "GruntBOT activity report for *" + this.args[1] + "*";
+            slackmsg.text = "*Notification  messages:*\n\n";
 
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
@@ -888,7 +888,7 @@ module.exports = function(grunt) {
 					msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 
                     slackmsg.text += "/n/n";
-                    slackmsg.text += "**The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + ".**";
+                    slackmsg.text += "*The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + ".*";
 					grunt.config.set( 'notificationMessage', msg );
                     grunt.config.set( 'slackNotificationMessage', slackmsg );
 					return;
@@ -898,7 +898,7 @@ module.exports = function(grunt) {
 				msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 
                 slackmsg.text += "/n/n";
-                slackmsg.text += "**The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + ".**";
+                slackmsg.text += "*The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + ".*";
 				grunt.config.set( 'notificationMessage', msg );
                 grunt.config.set( 'slackNotificationMessage', slackmsg );
 			}
