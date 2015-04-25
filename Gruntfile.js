@@ -688,6 +688,7 @@ module.exports = function(grunt) {
 
             notify_main : {
                 options : {
+                    token : '<%= slack.botToken %>',
                     channel : '<%= slack.channels.main %>',
                     text : '<%= mainChatSlackMessage %>',
                     username : 'EEBot',
