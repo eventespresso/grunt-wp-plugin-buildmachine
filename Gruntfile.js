@@ -1028,7 +1028,7 @@ module.exports = function(grunt) {
             msg += '<%= syncBranch %> branch for <%= eeParams.name %> has been pushed to github.<br>';
             slackmsg.fallback = "<%= syncBranch %> branch for <%= eeParams.name %> has been pushed to github.\n";
             slackmsg.color = "good";
-            slackmsg.text += "<%= syncBranch %> branch for <%= eeParams.name %> has been pushed to github.\n";
+            slackmsg.text = "<%= syncBranch %> branch for <%= eeParams.name %> has been pushed to github.\n";
         }
 
         if ( msg !== "" ) {
@@ -1047,7 +1047,7 @@ module.exports = function(grunt) {
 		if ( params.sandboxsite !== null && typeof params.sandboxsite !== 'undefined' ) {
 			grunt.task.run('shell:SandboxPull', 'setNotifications:shell:SandboxPull' );
 			msg +=  '<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>.<br>';
-            slackmsg.text += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <%= eeParams.sandboxUrl %>\n";
+            slackmsg.text = "<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <%= eeParams.sandboxUrl %>\n";
 		}
 
 		if ( params.sandboxdecafsite !== null && typeof params.sandboxsite !== 'undefined' ) {
