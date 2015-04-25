@@ -100,7 +100,7 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON( 'package.json' ),
 		aws: grunt.file.exists( 'aws.json' ) ? grunt.file.readJSON( 'aws.json' ) : defaultaws,
 		hipchat: grunt.file.exists( 'hipchat.json' ) ? grunt.file.readJSON( 'hipchat.json' ): defaulthipchat,
-        slack: grunt.file.exists( 'slack.json' ) ? grunt.file.readJSON( 'slack.json' ) : defaultslack,
+        slack: grunt.file.exists( 'slack.json' ) ? grunt.file.readJSON( 'slack.json' ) : defaultSlack,
 		privateParams: grunt.file.exists( 'private.json' ) ? grunt.file.readJSON( 'private.json' ) : defaultPrivate,
 		eeParams: defaultParams,
 		new_version: '',
