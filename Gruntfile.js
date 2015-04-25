@@ -806,7 +806,7 @@ module.exports = function(grunt) {
 			msg += '</ul>';
 			msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 
-            slackmsg.text += "- Hipchat topic changed for Main Chat room.\n\n";
+            slackmsg.text += "• Hipchat topic changed for Main Chat room.\n\n";
             slackmsg.text += "*The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + '.*';
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
@@ -928,7 +928,7 @@ module.exports = function(grunt) {
             slack_notification_message = slack_notification_message === null || typeof slack_notification_message === 'undefined' ? notification_message : slack_notification_message;
 
 			msg += '<li>' + notification_message + '</li>';
-            slackmsg.text += "- " + slack_notification_message + "\n\n";
+            slackmsg.text += "• " + slack_notification_message + "\n\n";
 			grunt.verbose.ok( notification_message );
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
