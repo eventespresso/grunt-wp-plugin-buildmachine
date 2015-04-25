@@ -758,7 +758,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-wp-deploy');
 	grunt.loadNpmTasks('grunt-wp-i18n');
 
-	function postnewTopic( roomInfo, hipchat, done ) {
+	function postnewTopic( roomInfo, hipchat, done, taskName ) {
 		var roomID = '424398';
 		var authToken = grunt.config.get( 'hipchat_notifier.options.authToken' );
 		/*grunt.verbose.writeln( console.log( roomInfo ) );*/
@@ -813,6 +813,11 @@ module.exports = function(grunt) {
                     "value" : grunt.config.get( 'eeParams.slug' ),
                     "short" : true
                 },
+                {
+                    "title" : "Task Run",
+                    "value" : taskName,
+                    "short" : true
+                }
             ];
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
@@ -840,6 +845,7 @@ module.exports = function(grunt) {
             slackmsg.fallback = 'Grunt performed some tasks on the server';
             slackmsg.pretext = "Here are all the tasks completed";
             slackmsg.title = "GruntBOT activity report";
+            slackmsg.mrkdwn_in = ["text", "pretext"];
             slackmsg.text = "";
 
 			grunt.config.set( 'notificationMessage', msg );
@@ -884,7 +890,7 @@ module.exports = function(grunt) {
 				try {
 					hipchat.api.rooms.show( {room_id: roomID }, function(err, res) {
 						if ( err ) { throw err; }
-						postnewTopic( res, hipchat, done );
+						postnewTopic( res, hipchat, done, task_name );
                         grunt.task.run( 'slack_api:change_topic' );
 					});
 
@@ -899,6 +905,11 @@ module.exports = function(grunt) {
                             "value" : grunt.config.get( 'eeParams.slug' ),
                             "short" : true
                         },
+                        {
+                            "title" : "Task Run",
+                            "value" : task_name,
+                            "short" : true
+                        }
                     ];
 					grunt.config.set( 'notificationMessage', msg );
                     grunt.config.set( 'slackNotificationMessage', slackmsg );
@@ -914,6 +925,11 @@ module.exports = function(grunt) {
                         "value" : grunt.config.get( 'eeParams.slug' ),
                         "short" : true
                     },
+                    {
+                        "title" : "Task Run",
+                        "value" : task_name,
+                        "short" : true
+                    }
                 ];
 				grunt.config.set( 'notificationMessage', msg );
                 grunt.config.set( 'slackNotificationMessage', slackmsg );
