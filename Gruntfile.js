@@ -74,6 +74,20 @@ module.exports = function(grunt) {
 		"roomID" : ""
 	};
 
+    /**
+     *
+     * @type {{authToken: string, channels: {}}}
+     *
+     * Channels should be object indexed by a reference and value is channel in slack
+     * "channels" : {
+     *      build : '#general'
+     * }
+     */
+    var defaultSlack = {
+        "authToken" : "",
+        "channels" : {}
+    };
+
 	var defaultPrivate = {
 		"archiveUser" : "",
 		"archivePass" : ""
@@ -85,6 +99,7 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON( 'package.json' ),
 		aws: grunt.file.exists( 'aws.json' ) ? grunt.file.readJSON( 'aws.json' ) : defaultaws,
 		hipchat: grunt.file.exists( 'hipchat.json' ) ? grunt.file.readJSON( 'hipchat.json' ): defaulthipchat,
+        slack: grunt.file.exists( 'slack.json' ) ? grunt.file.readJSON( 'slack.json' ) : defaultslack,
 		privateParams: grunt.file.exists( 'private.json' ) ? grunt.file.readJSON( 'private.json' ) : defaultPrivate,
 		eeParams: defaultParams,
 		new_version: '',
@@ -96,7 +111,10 @@ module.exports = function(grunt) {
 		taskCount: 0,
 		taskCompleted: 0,
 		notificationMessage: '',
+        slackNotificationMessage: '',
 		mainChatMessage: '',
+        mainChatSlackMessage : '',
+        slackTopic : '',
 		mainChatColor: 'purple',
 		notificationColor: 'purple',
 		tagPush: false,
@@ -224,18 +242,22 @@ module.exports = function(grunt) {
 			},
 			renameMainFile : {
 				notify: 'Renamed main file <em><%= eeParams.versionFile %></em> to <em><%=eeParams.wpOrgSlug %></em> to match the slug for the wordpress.org release.',
-				command: 'mv src/<%= eeParams.versionFile %> src/<%= eeParams.wpOrgSlug %>.php'
+				slacknotify: "Renamed main file _<%= eeParams.versionFile %>_ to _<%=eeParams.wpOrgSlug %>_ to match the slug for the wordpress.org release.",
+                command: 'mv src/<%= eeParams.versionFile %> src/<%= eeParams.wpOrgSlug %>.php'
 			},
 			shareBuild : {
 				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
+                slacknotify: "Archive folder has been made available and can be retrieved from <%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip.  **Username:** <%= privateParams.archiveUser %>.  **Password:** <%= privateParams.archivePass %>.",
 				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
 			},
 			shareBuildpr : {
 				notify: 'Archive folder has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
+                slacknotify: "Archive folder has been made available and can be retrieved from <%= eeParams.archiveBaseUrl %><%= eeParams.slug %>.zip  **Username:** <%= privateParams.archiveUser %>.  **Password:** <%= privateParams.archivePass %>.",
 				command: 'mv build/<%= eeParams.slug %>.zip <%= eeParams.archiveBasePath %>'
 			},
 			shareBuildWP : {
 				notify: 'Archive folder for WP deploy has been made available and can be retrieved from <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.wpOrgSlug %>-wp.zip">clicking here</a>.  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
+                slacknotify: "Archive folder for WP deploy has been made available and can be retrieved from <%= eeParams.archiveBaseUrl %><%= eeParams.wpOrgSlug %>-wp.zip  **Username:** <%= privateParams.archiveUser %>.  **Password:** <%= privateParams.archivePass %>.",
 				command: 'mv build/<%= eeParams.wpOrgSlug %>-wp.zip <%= eeParams.archiveBasePath %>'
 			},
 			sharePOTBuild : {
@@ -244,6 +266,7 @@ module.exports = function(grunt) {
 			},
 			SandboxPull: {
 				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
+                slacknotify: "Pulled <%= eeParams.branch %> branch to http://<%= eeParams.sandboxUrl %>",
 				command: [
 					'cd <%= eeParams.sandboxsite %>',
 					'unset GIT_DIR',
@@ -257,6 +280,7 @@ module.exports = function(grunt) {
 			},
 			decafSandboxPull: {
 				notify: 'Pulled <%= eeParams.branch %> branch to <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>',
+                slacknotify: "Pulled <%= eeParams.branch %> branch to http://<%= eeParams.sandboxUrl %>.",
 				command: [
 					'cd <%= eeParams.sandboxdecafsite %>',
 					'unset GIT_DIR',
@@ -646,6 +670,33 @@ module.exports = function(grunt) {
 			}
 		},
 
+
+        slack_api : {
+            options : {
+                token : '<%= slack.authToken %>'
+            },
+
+            notify_build : {
+                channel : '<%= slack.channels.build =>',
+                attachments : [ '<%= slackNotificationMessage =>' ],
+                username : 'EEBot',
+                icon_emoji : ':coffee:'
+            },
+
+            notify_main : {
+                channel : '<%= slack.channels.main =>',
+                text : '<%= mainChatSlackMessage =>',
+                username : 'EEBot',
+                icon_emoji : ':coffee:'
+            },
+
+            change_topic : {
+                channel : '<%= slack.channels.main =>',
+                text : '<%= slackTopic =>',
+                type : 'topic'
+            }
+        },
+
 		//css minification
 		cssmin : {
 			minify: {
@@ -677,7 +728,7 @@ module.exports = function(grunt) {
 
 		makepot: {
 			notify: 'Built POT File.  File is available by <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot">clicking here</a>  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
-
+            notify: "Built POT File.  File is available here: <%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot  **Username:** <%= privateParams.archiveUser %>.  **Password:** <%= privateParams.archivePass %>.",
 			options: {
 				cwd: '../all_builds/src',
 				domainPath: 'languages/',
@@ -695,6 +746,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks( 'grunt-shell' );
 	grunt.loadNpmTasks( 'grunt-git' );
 	grunt.loadNpmTasks('grunt-hipchat-notifier');
+    grunt.loadNpmTasks( 'grunt-slack-api' );
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-gitinfo');
 	grunt.loadNpmTasks('grunt-wp-deploy');
@@ -732,17 +784,28 @@ module.exports = function(grunt) {
 		if ( versions.major !== null ) {
 			currentTopic = currentTopic.replace( /REL\:*.[0-9]\.[0-9]\.[0-9]+\.p/, 'REL: ' + versions.major );
 		}
-		//SET new topic
+
+        //SET new topic with slack
+        grunt.config.set( 'slackTopic', currentTopic );
+
+
+		//SET new topic with hipchat
 		hipchat.api.rooms.topic( { room_id: roomID, topic: currentTopic, from: 'gruntBOT' }, function( err, res ) {
 			if ( err ) { throw err; }
 			grunt.log.ok( 'Topic changed for hipchat' );
 			var msg = grunt.config.get( 'notificationMessage' );
+            var slackmsg = grunt.config.get( 'slackNotificationMessage' );
+
 			msg += '<li>HipChat topic changed for Main Chat room.</li>';
 			msg += '</ul>';
 			msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
+
+            slackmsg.text += "- Hipchat topic changed for Main Chat room.\n\n";
+            slackmsg.text += "**The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + '.**';
 			grunt.config.set( 'notificationMessage', msg );
+            grunt.config.set( 'slackNotificationMessage', slackmsg );
 			done();
-		} )
+		} );
 	}
 
 	grunt.registerTask( 'setNotifications', 'Testing what is available for custom grunt tasks', function setNotifications() {
@@ -752,14 +815,23 @@ module.exports = function(grunt) {
 		var options_string = this.nameArgs.replace(/:/g, '.');
 		var task_name = options_string.replace(nameregex, '');
 		var task_notification = task_name + '.notify';
+        var slack_task_notification = task_name + '.slacknotify';
 		var msg = grunt.config.get( 'notificationMessage' );
+        var slackmsg = grunt.config.get( 'slackNotificationMessage' );
 
 		if ( this.args[0] == 'init' ) {
 			msg = '<b>GruntBOT activity Report for:</b><br>';
 			msg += 'Task Group Run: <b>' + this.args[1] + '</b><br><br>';
 			msg += 'Notification Messages:<br>';
 			msg += '<ul>';
+
+            slackmsg.fallback = 'Grunt performed some tasks on the server';
+            slackmsg.pretext = "Here are all the tasks completed";
+            slackmsg.title = "GruntBOT activity report for **" + this.args[1] + "**";
+            slackmsg.text = "**Notification messages:**\n\n";
+
 			grunt.config.set( 'notificationMessage', msg );
+            grunt.config.set( 'slackNotificationMessage', slackmsg );
 			grunt.log.ok( 'Messages initialized for notifications successfully.' );
 
 			grunt.verbose.writeln( console.log(this.args) );
@@ -767,6 +839,7 @@ module.exports = function(grunt) {
 			//set background color for chat client:
 			if ( typeof this.args[2] !== 'undefined' && this.args[2] !== null ) {
 				grunt.config.set( 'notificationColor', this.args[2] );
+                slackmsg.color = this.args[2];
 			}
 
 			switch ( this.args[1] ) {
@@ -800,19 +873,28 @@ module.exports = function(grunt) {
 					hipchat.api.rooms.show( {room_id: roomID }, function(err, res) {
 						if ( err ) { throw err; }
 						postnewTopic( res, hipchat, done );
+                        grunt.task.run( 'slack_api:change_topic' );
 					});
 
 				} catch(e) {
 					grunt.verbose.or.write('error with posting topic').error().error(e.message );
 					msg += '</ul>';
 					msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
+
+                    slackmsg.text += "/n/n";
+                    slackmsg.text += "**The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + ".**";
 					grunt.config.set( 'notificationMessage', msg );
+                    grunt.config.set( 'slackNotificationMessage', slackmsg );
 					return;
 				}
 			} else {
 				msg += '</ul>';
 				msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
+
+                slackmsg.text += "/n/n";
+                slackmsg.text += "**The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + ".**";
 				grunt.config.set( 'notificationMessage', msg );
+                grunt.config.set( 'slackNotificationMessage', slackmsg );
 			}
 
 			return true;
@@ -835,9 +917,15 @@ module.exports = function(grunt) {
 					grunt.config.set( 'major_version', new_version );
 					break;
 			}
+
+            slack_notification_message = grunt.config.get( slack_task_notification );
+            slack_notification_message = slack_notification_message === null ? notification_message : slack_notification_message;
+
 			msg += '<li>' + notification_message + '</li>';
+            slackmsg.text += "- " + slack_notification_message + "\n\n";
 			grunt.verbose.ok( notification_message );
 			grunt.config.set( 'notificationMessage', msg );
+            grunt.config.set( 'slackNotificationMessage', slackmsg );
 		}
 		return true;
 	});
@@ -889,33 +977,38 @@ module.exports = function(grunt) {
     //deciding whether to do a github push of the current set syncbranch dependent on params set in the repo info.json file.
     grunt.registerTask( 'GithubOnlyPush', 'Maybe push to github', function GithubOnlyPush() {
         var params = grunt.config.get( 'eeParams' );
-        var msg = "";
+        var msg = slackmsg = "";
 
         if ( params.github ) {
                 grunt.task.run( 'shell:githubSync', 'setNotifications:shell:githubSync' );
 
             msg += '<%= syncBranch %> branch for <%= eeParams.name %> has been pushed to github.<br>';
+            slackmsg += "<%= syncBranch %> branch for <%= eeParams.name %> has been pushed to github.\n";
         }
 
         if ( msg !== "" ) {
             grunt.config.set('mainChatMessage', msg );
+            grunt.config.set('mainChatSlackMessage', slackmsg );
             grunt.config.set( 'mainChatColor', 'purple' );
             grunt.task.run( 'hipchat_notifier:notify_main_chat' );
+            grunt.task.run( 'slack_api:notify_main' );
         }
     });
 
 	//deciding whether to do sandbox and github pushes dependent on params set in the repo info.json file.
 	grunt.registerTask( 'SandboxGithub', 'Do sandbox and github pushes?', function SandboxGithub() {
 		var params = grunt.config.get( 'eeParams' );
-		var msg = "";
+		var msg = "", slackmsg = "", tagPush = false;
 		if ( params.sandboxsite !== null && typeof params.sandboxsite !== 'undefined' ) {
 			grunt.task.run('shell:SandboxPull', 'setNotifications:shell:SandboxPull' );
 			msg +=  '<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>.<br>';
+            slackmsg += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <%= eeParams.sandboxUrl %>\n";
 		}
 
 		if ( params.sandboxdecafsite !== null && typeof params.sandboxsite !== 'undefined' ) {
 			grunt.task.run( 'shell:decafSandboxPull', 'setNotifications:shell:decafSandboxPull' );
 			msg += '<%= eeParams.branch %> branch has been updated for <%= eeParams.name %> on <a href="http://<%= eeParams.sandboxdecafUrl %>"><%= eeParams.sandboxdecafUrl %></a>.<br>';
+            slackmsg += "<%= eeParams.branch %> branch has been updated for <%= eeParams.name %> on http://<%= eeParams.sandboxdecafUrl %>.\n";
 		}
 
 		if ( params.github ) {
@@ -926,17 +1019,21 @@ module.exports = function(grunt) {
 				grunt.task.run( 'shell:githubPush', 'setNotifications:shell:githubPush' );
 			}
 			msg += '<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.<br>';
+            slackmsg += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.\n";
 		}
 
 		if ( params.demoee ) {
 			grunt.task.run( 'shell:demoeePush', 'setNotifications:shell:demoeePush' );
 			msg += '<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to demoee.org.<br>';
+            slackmsg += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to demoee.org.\n";
 		}
 
 		if ( msg !== "" ) {
 			grunt.config.set('mainChatMessage', msg );
+            grunt.config.set( 'mainChatSlackMessage', slackmsg );
 			grunt.config.set( 'mainChatColor', 'purple' );
 			grunt.task.run( 'hipchat_notifier:notify_main_chat' );
+            grunt.task.run( 'slack_api:notify_main' );
 		}
 	});
 
@@ -986,7 +1083,8 @@ module.exports = function(grunt) {
 		'gitpush:bump',
 		'setNotifications:gitpush:bump',
 		'setNotifications:end',
-		'hipchat_notifier:notify_team'
+		'hipchat_notifier:notify_team',
+        'slack_api:notify_build'
 		] );
 
 
@@ -1040,7 +1138,8 @@ module.exports = function(grunt) {
 		'shell:sharePOTBuild',
 		'setNotifications:shell:sharePOTBuild',
 		'setNotifications:end',
-		'hipchat_notifier:notify_team'
+		'hipchat_notifier:notify_team',
+        'slack_api:notify_build'
 		] );
 
 
@@ -1092,7 +1191,8 @@ module.exports = function(grunt) {
 		'shell:sharePOTBuild',
 		'setNotifications:shell:sharePOTBuild',
 		'setNotifications:end',
-		'hipchat_notifier:notify_team'
+		'hipchat_notifier:notify_team',
+        'slack_api:notify_build'
 		] );
 
 
@@ -1127,7 +1227,8 @@ module.exports = function(grunt) {
 			'shell:shareBuildpr',
 			'setNotifications:shell:shareBuildpr',
 			'setNotifications:end',
-			'hipchat_notifier:notify_team'
+			'hipchat_notifier:notify_team',
+            'slack_api:notify_build'
 			]);
 
 	});
@@ -1156,7 +1257,8 @@ module.exports = function(grunt) {
 		'shell:shareBuildpr',
 		'setNotifications:shell:shareBuildpr',
 		'setNotifications:end',
-		'hipchat_notifier:notify_team'
+		'hipchat_notifier:notify_team',
+        'slack_api:notify_build'
 		]);
 
 
@@ -1186,7 +1288,8 @@ module.exports = function(grunt) {
 		'shell:shareBuild',
 		'setNotifications:shell:shareBuild',
 		'setNotifications:end',
-		'hipchat_notifier:notify_team'
+		'hipchat_notifier:notify_team',
+        'slack_api:notify_build'
 		] );
 
 	//wporg builds
@@ -1219,7 +1322,8 @@ module.exports = function(grunt) {
 		'wp_deploy:deploy',
 		'setNotifications:wp_deploy:deploy',
 		'setNotifications:end',
-		'hipchat_notifier:notify_team'
+		'hipchat_notifier:notify_team',
+        'slack_api:notify_build'
 		]);
 
 	grunt.registerTask( 'wpdeploy_ziponly', [
@@ -1249,7 +1353,8 @@ module.exports = function(grunt) {
 		'shell:shareBuildWP',
 		'setNotifications:shell:shareBuildWP',
 		'setNotifications:end',
-		'hipchat_notifier:notify_team'
+		'hipchat_notifier:notify_team',
+        'slack_api:notify_build'
 		]);
 
 
@@ -1273,7 +1378,8 @@ module.exports = function(grunt) {
 		'shell:sharePOTBuild',
 		'setNotifications:shell:sharePOTBuild',
 		'setNotifications:end',
-		'hipchat_notifier:notify_team'
+		'hipchat_notifier:notify_team',
+        'slack_api:notify_build'
 		]);
 
     //just sync incoming branch with github
@@ -1294,7 +1400,8 @@ module.exports = function(grunt) {
             'seteeParams',
             'GithubOnlyPush',
             'setNotifications:end',
-            'hipchat_notifier:notify_team'
+            'hipchat_notifier:notify_team',
+            'slack_api:notify_build'
         ]);
     });
 
