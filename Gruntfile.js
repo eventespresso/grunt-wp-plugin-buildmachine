@@ -697,8 +697,8 @@ module.exports = function(grunt) {
 
             change_topic : {
                 options : {
-                    channel: '<%= slack.channels.main =>',
-                    text: '<%= slackTopic =>',
+                    channel: '<%= slack.channels.main %>',
+                    text: '<%= slackTopic %>',
                     type: 'topic'
                 }
             }
@@ -1018,7 +1018,7 @@ module.exports = function(grunt) {
     //deciding whether to do a github push of the current set syncbranch dependent on params set in the repo info.json file.
     grunt.registerTask( 'GithubOnlyPush', 'Maybe push to github', function GithubOnlyPush() {
         var params = grunt.config.get( 'eeParams' );
-        var msg = slackmsg = "";
+        var msg = "", slackmsg = "";
 
         if ( params.github ) {
                 grunt.task.run( 'shell:githubSync', 'setNotifications:shell:githubSync' );
