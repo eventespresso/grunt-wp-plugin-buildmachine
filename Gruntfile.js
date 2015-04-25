@@ -734,7 +734,7 @@ module.exports = function(grunt) {
 
 		makepot: {
 			notify: 'Built POT File.  File is available by <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot">clicking here</a>  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
-            notify: "Built POT File.  File is available here: <%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot  **Username:** <%= privateParams.archiveUser %>.  **Password:** <%= privateParams.archivePass %>.",
+            slacknotify: "Built POT File.  File is available here: <%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot  **Username:** <%= privateParams.archiveUser %>.  **Password:** <%= privateParams.archivePass %>.",
 			options: {
 				cwd: '../all_builds/src',
 				domainPath: 'languages/',
@@ -834,7 +834,7 @@ module.exports = function(grunt) {
             slackmsg.fallback = 'Grunt performed some tasks on the server';
             slackmsg.pretext = "Here are all the tasks completed";
             slackmsg.title = "GruntBOT activity report for **" + this.args[1] + "**";
-            slackmsg.text = "**Notificationnano  messages:**\n\n";
+            slackmsg.text = "**Notification  messages:**\n\n";
 
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
@@ -924,8 +924,8 @@ module.exports = function(grunt) {
 					break;
 			}
 
-            slack_notification_message = grunt.config.get( slack_task_notification );
-            slack_notification_message = slack_notification_message === null ? notification_message : slack_notification_message;
+            var slack_notification_message = grunt.config.get( slack_task_notification );
+            slack_notification_message = slack_notification_message === null || typeof slack_notification_message === 'undefined' ? notification_message : slack_notification_message;
 
 			msg += '<li>' + notification_message + '</li>';
             slackmsg.text += "- " + slack_notification_message + "\n\n";
