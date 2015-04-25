@@ -4,3 +4,4 @@ build/
 aws.json
 hipchat.json
 private.json
+slack.json
