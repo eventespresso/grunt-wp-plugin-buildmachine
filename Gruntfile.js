@@ -806,8 +806,14 @@ module.exports = function(grunt) {
 			msg += '</ul>';
 			msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 
-            slackmsg.text += "• Hipchat topic changed for Main Chat room.\n\n";
-            slackmsg.text += "*The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + '.*';
+            slackmsg.text += "• Slack topic changed for #general.\n\n";
+            slackmsg.fields = [
+                {
+                    "title" : "Plugin",
+                    "value" : grunt.config.get( 'eeParams.slug' ),
+                    "short" : true
+                },
+            ];
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
 			done();
@@ -833,8 +839,7 @@ module.exports = function(grunt) {
 
             slackmsg.fallback = 'Grunt performed some tasks on the server';
             slackmsg.pretext = "Here are all the tasks completed";
-            slackmsg.title = "GruntBOT activity report for *" + this.args[1] + "*";
-            slackmsg.text = "*Notification  messages:*\n\n";
+            slackmsg.title = "GruntBOT activity report";
 
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
@@ -887,8 +892,13 @@ module.exports = function(grunt) {
 					msg += '</ul>';
 					msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 
-                    slackmsg.text += "/n/n";
-                    slackmsg.text += "*The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + ".*";
+                    slackmsg.fields = [
+                        {
+                            "title" : "Plugin",
+                            "value" : grunt.config.get( 'eeParams.slug' ),
+                            "short" : true
+                        },
+                    ];
 					grunt.config.set( 'notificationMessage', msg );
                     grunt.config.set( 'slackNotificationMessage', slackmsg );
 					return;
@@ -897,8 +907,13 @@ module.exports = function(grunt) {
 				msg += '</ul>';
 				msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
 
-                slackmsg.text += "/n/n";
-                slackmsg.text += "*The notifications above are for " + grunt.config.get( 'eeParams.slug' ) + ".*";
+                slackmsg.fields = [
+                    {
+                        "title" : "Plugin",
+                        "value" : grunt.config.get( 'eeParams.slug' ),
+                        "short" : true
+                    },
+                ];
 				grunt.config.set( 'notificationMessage', msg );
                 grunt.config.set( 'slackNotificationMessage', slackmsg );
 			}
