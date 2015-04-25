@@ -111,7 +111,7 @@ module.exports = function(grunt) {
 		taskCount: 0,
 		taskCompleted: 0,
 		notificationMessage: '',
-        slackNotificationMessage: '',
+        slackNotificationMessage: {},
 		mainChatMessage: '',
         mainChatSlackMessage : '',
         slackTopic : '',
