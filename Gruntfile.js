@@ -690,7 +690,7 @@ module.exports = function(grunt) {
                 options : {
                     token : '<%= slack.botToken %>',
                     channel : '<%= slack.channels.main %>',
-                    text : '<%= mainChatSlackMessage %>',
+                    attachments : [ '<%= mainChatSlackMessage %>' ],
                     username : 'EEBot',
                     icon_emoji : ':coffee:'
                 }
@@ -1020,13 +1020,15 @@ module.exports = function(grunt) {
     //deciding whether to do a github push of the current set syncbranch dependent on params set in the repo info.json file.
     grunt.registerTask( 'GithubOnlyPush', 'Maybe push to github', function GithubOnlyPush() {
         var params = grunt.config.get( 'eeParams' );
-        var msg = "", slackmsg = "";
+        var msg = "", slackmsg = {};
 
         if ( params.github ) {
                 grunt.task.run( 'shell:githubSync', 'setNotifications:shell:githubSync' );
 
             msg += '<%= syncBranch %> branch for <%= eeParams.name %> has been pushed to github.<br>';
-            slackmsg += "<%= syncBranch %> branch for <%= eeParams.name %> has been pushed to github.\n";
+            slackmsg.fallback = "<%= syncBranch %> branch for <%= eeParams.name %> has been pushed to github.\n";
+            slackmsg.color = "good";
+            slackmsg.text += "<%= syncBranch %> branch for <%= eeParams.name %> has been pushed to github.\n";
         }
 
         if ( msg !== "" ) {
@@ -1041,17 +1043,17 @@ module.exports = function(grunt) {
 	//deciding whether to do sandbox and github pushes dependent on params set in the repo info.json file.
 	grunt.registerTask( 'SandboxGithub', 'Do sandbox and github pushes?', function SandboxGithub() {
 		var params = grunt.config.get( 'eeParams' );
-		var msg = "", slackmsg = "", tagPush = false;
+		var msg = "", slackmsg = {}, tagPush = false;
 		if ( params.sandboxsite !== null && typeof params.sandboxsite !== 'undefined' ) {
 			grunt.task.run('shell:SandboxPull', 'setNotifications:shell:SandboxPull' );
 			msg +=  '<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>.<br>';
-            slackmsg += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <%= eeParams.sandboxUrl %>\n";
+            slackmsg.text += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <%= eeParams.sandboxUrl %>\n";
 		}
 
 		if ( params.sandboxdecafsite !== null && typeof params.sandboxsite !== 'undefined' ) {
 			grunt.task.run( 'shell:decafSandboxPull', 'setNotifications:shell:decafSandboxPull' );
 			msg += '<%= eeParams.branch %> branch has been updated for <%= eeParams.name %> on <a href="http://<%= eeParams.sandboxdecafUrl %>"><%= eeParams.sandboxdecafUrl %></a>.<br>';
-            slackmsg += "<%= eeParams.branch %> branch has been updated for <%= eeParams.name %> on http://<%= eeParams.sandboxdecafUrl %>.\n";
+            slackmsg.text += "<%= eeParams.branch %> branch has been updated for <%= eeParams.name %> on http://<%= eeParams.sandboxdecafUrl %>.\n";
 		}
 
 		if ( params.github ) {
@@ -1062,13 +1064,15 @@ module.exports = function(grunt) {
 				grunt.task.run( 'shell:githubPush', 'setNotifications:shell:githubPush' );
 			}
 			msg += '<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.<br>';
-            slackmsg += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.\n";
+            slackmsg.text += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.\n";
 		}
 
 		if ( params.demoee ) {
 			grunt.task.run( 'shell:demoeePush', 'setNotifications:shell:demoeePush' );
 			msg += '<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to demoee.org.<br>';
-            slackmsg += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to demoee.org.\n";
+            slackmsg.fallback = "<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to demoee.org.";
+            slackmsg.color = "good";
+            slackmsg.text += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to demoee.org.\n";
 		}
 
 		if ( msg !== "" ) {
