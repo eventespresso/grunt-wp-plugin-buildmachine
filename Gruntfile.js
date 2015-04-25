@@ -61,7 +61,8 @@ module.exports = function(grunt) {
 		"sandboxUrl" : "",
 		"sandboxdecafUrl" : "",
 		"github" : false,
-		"demoee" : false
+		"demoee" : false,
+        "taskGroupName" : ""
 	};
 
 	var defaultaws = {
@@ -758,7 +759,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-wp-deploy');
 	grunt.loadNpmTasks('grunt-wp-i18n');
 
-	function postnewTopic( roomInfo, hipchat, done, taskName ) {
+	function postnewTopic( roomInfo, hipchat, done ) {
 		var roomID = '424398';
 		var authToken = grunt.config.get( 'hipchat_notifier.options.authToken' );
 		/*grunt.verbose.writeln( console.log( roomInfo ) );*/
@@ -815,7 +816,7 @@ module.exports = function(grunt) {
                 },
                 {
                     "title" : "Task Run",
-                    "value" : taskName,
+                    "value" : grunt.config.get( 'taskGroupName' ),
                     "short" : true
                 }
             ];
@@ -841,6 +842,8 @@ module.exports = function(grunt) {
 			msg += 'Task Group Run: <b>' + this.args[1] + '</b><br><br>';
 			msg += 'Notification Messages:<br>';
 			msg += '<ul>';
+
+            grunt.config.set( 'taskGroupName', this.args[1] );
 
             slackmsg.fallback = 'Grunt performed some tasks on the server';
             slackmsg.pretext = "Here are all the tasks completed";
@@ -890,7 +893,7 @@ module.exports = function(grunt) {
 				try {
 					hipchat.api.rooms.show( {room_id: roomID }, function(err, res) {
 						if ( err ) { throw err; }
-						postnewTopic( res, hipchat, done, task_name );
+						postnewTopic( res, hipchat, done );
                         grunt.task.run( 'slack_api:change_topic' );
 					});
 
@@ -907,7 +910,7 @@ module.exports = function(grunt) {
                         },
                         {
                             "title" : "Task Run",
-                            "value" : task_name,
+                            "value" : grunt.config.get( 'taskGroupName' ),
                             "short" : true
                         }
                     ];
@@ -927,7 +930,7 @@ module.exports = function(grunt) {
                     },
                     {
                         "title" : "Task Run",
-                        "value" : task_name,
+                        "value" : grunt.config.get( 'taskGroupName' ),
                         "short" : true
                     }
                 ];
@@ -960,7 +963,7 @@ module.exports = function(grunt) {
             slack_notification_message = slack_notification_message === null || typeof slack_notification_message === 'undefined' ? notification_message : slack_notification_message;
 
 			msg += '<li>' + notification_message + '</li>';
-            slackmsg.text += "• " + slack_notification_message + "\n\n";
+            slackmsg.text += "• " + slack_notification_message + "\n";
 			grunt.verbose.ok( notification_message );
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
