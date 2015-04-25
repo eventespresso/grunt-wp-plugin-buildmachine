@@ -697,6 +697,7 @@ module.exports = function(grunt) {
 
             change_topic : {
                 options : {
+                    token: '<%= slack.botToken =>',
                     channel: '<%= slack.channels.main %>',
                     text: '<%= slackTopic %>',
                     type: 'topic'
