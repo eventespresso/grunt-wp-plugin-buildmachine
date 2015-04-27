@@ -121,6 +121,7 @@ module.exports = function(grunt) {
 		tagPush: false,
 		prBranch: 'master',
         syncBranch: 'master',
+        taskGroupName: '',
 
 		//shell commands
 		shell: {
