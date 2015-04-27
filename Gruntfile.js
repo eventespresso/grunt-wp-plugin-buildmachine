@@ -1045,10 +1045,11 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'SandboxGithub', 'Do sandbox and github pushes?', function SandboxGithub() {
 		var params = grunt.config.get( 'eeParams' );
 		var msg = "", slackmsg = {}, tagPush = false;
+        slackmsg.text = "";
 		if ( params.sandboxsite !== null && typeof params.sandboxsite !== 'undefined' ) {
 			grunt.task.run('shell:SandboxPull', 'setNotifications:shell:SandboxPull' );
 			msg +=  '<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <a href="http://<%= eeParams.sandboxUrl %>"><%= eeParams.sandboxUrl %></a>.<br>';
-            slackmsg.text = "<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <%= eeParams.sandboxUrl %>\n";
+            slackmsg.text += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been updated on <%= eeParams.sandboxUrl %>\n";
 		}
 
 		if ( params.sandboxdecafsite !== null && typeof params.sandboxsite !== 'undefined' ) {
