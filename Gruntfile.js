@@ -95,6 +95,24 @@ module.exports = function(grunt) {
 	};
 
 
+    var slackPostTopic = function( slackChannelInfo ) {
+        //setUp what hipchat needs for posting
+        var HipchatClient = require( 'hipchat-client '),
+            roomID = '424398',
+            authToken = grunt.config.get( 'hipchat_notifier_options.authToken'),
+            done = this.async(),
+            hipchat = new HipchatClient( authToken );
+        roomInfo.room.topic = slackChannelInfo.topic.value;
+
+        //send to postNewTopic
+        postnewTopic( roomInfo, hipchat, done );
+
+        //postto slack
+        grunt.task.run( 'slack_api:change_topic' );
+
+    }
+
+
 	//project config.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON( 'package.json' ),
@@ -705,6 +723,14 @@ module.exports = function(grunt) {
                     text: '<%= slackTopic %>',
                     type: 'topic'
                 }
+            },
+
+            get_topic_info : {
+                options : {
+                    token : '<%= slack.botToken %>',
+                    channel : '<% slack.channels.main &.',
+                    callback : slackPostTopic
+                }
             }
         },
 
@@ -880,12 +906,36 @@ module.exports = function(grunt) {
 			return true;
 		} else if ( this.args[0] == 'end' ) {
 
+            /**
+             * Grab topic from slack instead of hipchat (we'll revert if we go back to hipchat)
+             */
+            if ( grunt.config.get( 'eeParams.slug' ) == 'event-espresso-core-reg' && grunt.config.get( 'microZipBuild' ) !== true && grunt.config.get( 'preReleaseBuild' ) !== true && grunt.config.get(  'syncBranch' ) == 'master' ) {
+                grunt.task.run('slack_api:get_topic_info');
+            } else {
+                    msg += '</ul>';
+                    msg += '<br><strong>The notifications above are for ' + grunt.config.get( 'eeParams.slug' ) + '.</strong>';
+
+                    slackmsg.fields = [
+                        {
+                            "title" : "Plugin",
+                            "value" : grunt.config.get( 'eeParams.slug' ),
+                            "short" : true
+                        },
+                        {
+                            "title" : "Task Run",
+                            "value" : grunt.config.get( 'taskGroupName' ),
+                            "short" : true
+                        }
+                    ];
+                    grunt.config.set( 'notificationMessage', msg );
+                    grunt.config.set( 'slackNotificationMessage', slackmsg );
+                }
 
 
 			/**
 			 * update topic in hipchat room! BUT only if updating event-espresso-core
 			 */
-			if ( grunt.config.get( 'eeParams.slug' ) == 'event-espresso-core-reg' && grunt.config.get( 'microZipBuild' ) !== true && grunt.config.get( 'preReleaseBuild' ) !== true && grunt.config.get(  'syncBranch' ) == 'master' ) {
+			/**if ( grunt.config.get( 'eeParams.slug' ) == 'event-espresso-core-reg' && grunt.config.get( 'microZipBuild' ) !== true && grunt.config.get( 'preReleaseBuild' ) !== true && grunt.config.get(  'syncBranch' ) == 'master' ) {
 				var HipchatClient, hipchat;
 				HipchatClient = require('hipchat-client');
 				var roomID = '424398';
@@ -941,7 +991,7 @@ module.exports = function(grunt) {
 				grunt.config.set( 'notificationMessage', msg );
                 grunt.config.set( 'slackNotificationMessage', slackmsg );
 			}
-
+            /**/
 			return true;
 		}
 
