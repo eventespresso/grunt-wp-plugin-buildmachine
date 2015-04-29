@@ -13,6 +13,8 @@
  * NOTE: This is still a work in progress and is by no means complete.  Use at your own risk!
  */
 
+var HipchatClient = require('hipchat-client');
+
 module.exports = function(grunt) {
 
 	function setNewVersion( err, stdout, stderr, cb ) {
@@ -75,6 +77,12 @@ module.exports = function(grunt) {
 		"roomID" : ""
 	};
 
+
+    var slackPostTopic = function( response ) {
+        _slackPostTopic( response );
+    }
+
+
     /**
      *
      * @type {{authToken: string, channels: {}}}
@@ -94,23 +102,6 @@ module.exports = function(grunt) {
 		"archivePass" : ""
 	};
 
-
-    var slackPostTopic = function( slackChannelInfo ) {
-        //setUp what hipchat needs for posting
-        var HipchatClient = require( 'hipchat-client '),
-            roomID = '424398',
-            authToken = grunt.config.get( 'hipchat_notifier_options.authToken'),
-            done = this.async(),
-            hipchat = new HipchatClient( authToken );
-        roomInfo.room.topic = slackChannelInfo.topic.value;
-
-        //send to postNewTopic
-        postnewTopic( roomInfo, hipchat, done );
-
-        //postto slack
-        grunt.task.run( 'slack_api:change_topic' );
-
-    }
 
 
 	//project config.
@@ -727,8 +718,9 @@ module.exports = function(grunt) {
 
             get_topic_info : {
                 options : {
+                    type: 'getChannelInfo',
                     token : '<%= slack.botToken %>',
-                    channel : '<% slack.channels.main &.',
+                    channel : '<%= slack.channels.main %>',
                     callback : slackPostTopic
                 }
             }
@@ -789,12 +781,27 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-wp-deploy');
 	grunt.loadNpmTasks('grunt-wp-i18n');
 
+
+    var _slackPostTopic = function( slackChannelInfo ) {
+        //setUp what hipchat needs for posting
+        var authToken = grunt.config.get( 'hipchat_notifier.options.authToken' );
+        var done = {},
+            hipchat = new HipchatClient( authToken),
+            roomInfo = { room : {} };
+        roomInfo.room.topic = slackChannelInfo.channel.topic.value;
+        //send to postNewTopic
+        postnewTopic( roomInfo, hipchat, done );
+
+        grunt.task.run( 'slack_api:change_topic' );
+
+    };
+
+
 	function postnewTopic( roomInfo, hipchat, done ) {
 		var roomID = '424398';
-		var authToken = grunt.config.get( 'hipchat_notifier.options.authToken' );
-		/*grunt.verbose.writeln( console.log( roomInfo ) );*/
+		grunt.verbose.writeln( console.log( roomInfo ) );
 		var currentTopic = roomInfo.room.topic;
-		/*grunt.verbose.writeln( console.log( currentTopic ) );*/
+		grunt.verbose.writeln( console.log( currentTopic ) );
 
 		//let's parse and replace elements of the topic.
 		var versions = {
@@ -852,7 +859,7 @@ module.exports = function(grunt) {
             ];
 			grunt.config.set( 'notificationMessage', msg );
             grunt.config.set( 'slackNotificationMessage', slackmsg );
-			done();
+			//done();
 		} );
 	}
 
@@ -1139,7 +1146,7 @@ module.exports = function(grunt) {
 
 
 	grunt.registerTask( 'maybeRun', 'Checks to see if grunt should run tasks basied on the last commit in the gitlog', function maybeRun() {
-		var gitinfo = grunt.config.get( 'gitinfo' );
+        var gitinfo = grunt.config.get( 'gitinfo' );
 		if ( typeof gitinfo.local === 'undefined' ) {
 			grunt.log.warn( 'git info did not appear to work. Needed to be able to complete tasks.' );
 		}
