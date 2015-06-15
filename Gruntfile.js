@@ -760,16 +760,18 @@ module.exports = function(grunt) {
         },
 
 		makepot: {
-			options: {
-				cwd: '../all_builds/src',
-				domainPath: 'languages/',
-				include: ['.*'],
-				potFilename: '<%= eeParams.textDomain %>.pot',
-				potHeaders: {
-					poedit: true,
-					'x-poedit-keywordslist' : true
-				}
-			}
+            dopot : {
+                options: {
+                    cwd: '../all_builds/src',
+                    domainPath: 'languages/',
+                    include: ['.*'],
+                    potFilename: '<%= eeParams.textDomain %>.pot',
+                    potHeaders: {
+                        poedit: true,
+                        'x-poedit-keywordslist': true
+                    }
+                }
+            }
 		}
 	});
 
