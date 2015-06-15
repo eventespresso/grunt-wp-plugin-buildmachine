@@ -754,10 +754,12 @@ module.exports = function(grunt) {
 			}
 		},
 
+        makepot_notifications : {
+            notify: 'Built POT File.  File is available by <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot">clicking here</a>  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
+            slacknotify: "Built POT File.  File is available here: <%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot  *Username:* <%= privateParams.archiveUser %>.  *Password:* <%= privateParams.archivePass %>."
+        },
 
 		makepot: {
-			notify: 'Built POT File.  File is available by <a href="<%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot">clicking here</a>  Username: <%= privateParams.archiveUser %>.  Password: <%= privateParams.archivePass %>.',
-            slacknotify: "Built POT File.  File is available here: <%= eeParams.archiveBaseUrl %><%= eeParams.textDomain %>.pot  *Username:* <%= privateParams.archiveUser %>.  *Password:* <%= privateParams.archivePass %>.",
 			options: {
 				cwd: '../all_builds/src',
 				domainPath: 'languages/',
@@ -1241,7 +1243,7 @@ module.exports = function(grunt) {
 		'shell:potCheckout',
 		'setNotifications:shell:potCheckout',
 		'makepot',
-		'setNotifications:makepot',
+		'setNotifications:makepot_notifications',
 		'shell:sharePOTBuild',
 		'setNotifications:shell:sharePOTBuild',
 		'setNotifications:end',
@@ -1294,7 +1296,7 @@ module.exports = function(grunt) {
 		'shell:potCheckout',
 		'setNotifications:shell:potCheckout',
 		'makepot',
-		'setNotifications:makepot',
+		'setNotifications:makepot_notifications',
 		'shell:sharePOTBuild',
 		'setNotifications:shell:sharePOTBuild',
 		'setNotifications:end',
@@ -1481,7 +1483,7 @@ module.exports = function(grunt) {
 		'shell:potCheckout',
 		'setNotifications:shell:potCheckout',
 		'makepot',
-		'setNotifications:makepot',
+		'setNotifications:makepot_notifications',
 		'shell:sharePOTBuild',
 		'setNotifications:shell:sharePOTBuild',
 		'setNotifications:end',
