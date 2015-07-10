@@ -1244,10 +1244,6 @@ module.exports = function(grunt) {
 		'setNotifications:shell:shareBuild',
 		'shell:potCheckout',
 		'setNotifications:shell:potCheckout',
-		'makepot',
-		'setNotifications:makepot_notifications',
-		'shell:sharePOTBuild',
-		'setNotifications:shell:sharePOTBuild',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team',
         'slack_api:notify_build'
@@ -1297,10 +1293,6 @@ module.exports = function(grunt) {
 		'setNotifications:shell:shareBuild',
 		'shell:potCheckout',
 		'setNotifications:shell:potCheckout',
-		'makepot',
-		'setNotifications:makepot_notifications',
-		'shell:sharePOTBuild',
-		'setNotifications:shell:sharePOTBuild',
 		'setNotifications:end',
 		'hipchat_notifier:notify_team',
         'slack_api:notify_build'
