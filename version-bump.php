@@ -59,8 +59,8 @@ switch( $type ) {
 		preg_match( '/^[ \t\/*#@]*Plugin Name:.*$/mi', $version_file, $name_matches );
 		$orig_plugin_uri = $uri_matches[1] ? $uri_matches[1] : '';
 		$orig_plugin_name = $name_matches[1] ? $name_matches[1] : '';
-		$plugin_name = 'Plugin URI: Event Espresso 4 Decaf';
-		$plugin_uri = 'Plugin Name: https://eventespresso.com/pricing/?ee_ver=ee4&utm_source=ee4_decaf_plugin_admin&utm_medium=link&utm_campaign=wordpress_plugins_page&utm_content=support_link';
+		$plugin_name = 'Plugin Name: Event Espresso 4 Decaf';
+		$plugin_uri = 'Plugin URI: https://eventespresso.com/pricing/?ee_ver=ee4&utm_source=ee4_decaf_plugin_admin&utm_medium=link&utm_campaign=wordpress_plugins_page&utm_content=support_link';
 		break;
 
 	case 'rc' :
