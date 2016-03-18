@@ -20,6 +20,8 @@ if ( empty( $orig_version ) ) {
 }
 
 $version_split = explode( '.', $orig_version);
+$plugin_name = $orig_plugin_name = '';
+$plugin_uri = $orig_plugin_uri = '';
 
 switch( $type ) {
 	case 'pre_release' :
@@ -46,6 +48,14 @@ switch( $type ) {
 	case 'decaf' :
 		//we're not bumping, just replacing whatever string is in the version string with 'decaf', and dropping the last version numbers.  Since decaf is built on top of checked out tags, we'll just replace the second from last array index.
 		$version_split[3] = 'decaf';
+
+		//we're also changing the plugin name and uri
+		preg_match( '/^[ \t\/*#@]*Plugin URI:(.*)$/mi', $version_file, $uri_matches );
+		preg_match( '/^[ \t\/*#@]*Plugin Name:(.*)$/mi', $version_file, $name_matches );
+		$orig_plugin_uri = $uri_matches[1] ? 'Plugin URI:' . $uri_matches[1] : '';
+		$orig_plugin_name = $name_matches[1] ? 'Plugin Name:' . $name_matches[1] : '';
+		$plugin_name = ' Event Espresso 4 Decaf';
+		$plugin_uri = ' https://eventespresso.com/pricing/?ee_ver=ee4&utm_source=ee4_decaf_plugin_admin&utm_medium=link&utm_campaign=wordpress_plugins_page&utm_content=support_link';
 		break;
 
 	case 'rc' :
@@ -117,8 +127,15 @@ $new_version = implode( '.', $version_split );
 //replace versions in file with the new version_number.
 $version_file = preg_replace( "/$orig_version/", $new_version, $version_file );
 
-//if version type is decaf then let's update readme.txt as well.
+//if version type is decaf then let's update extra values in $version_file and the readme.txt as well.
 if ( $type == 'decaf' ) {
+	if ( ! empty( $plugin_name ) && ! empty( $orig_plugin_name ) ) {
+		$version_file = preg_replace( "/$orig_plugin_name/", $plugin_name, $version_file );
+	}
+
+	if( ! empty( $plugin_uri ) && ! empty( $orig_plugin_uri ) ) {
+		$version_file = preg_replace( "/$orig_plugin_uri/", $plugin_uri, $version_file );
+	}
 	$readmeFile = getenv( 'EE_README_FILE' );
 
 	//get version file contents.

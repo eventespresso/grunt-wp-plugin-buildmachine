@@ -228,11 +228,11 @@ module.exports = function(grunt) {
 				notify: '<%= eeParams.releaseFilesRemove.length %> folders and files removed in prep for decaf release.',
 				command: ''
 			},
-			checkoutTag : {
-				notify: 'Checking out <%= eeParams.wpOrgRelease %> version to be packaged for wordpress.org release.',
+			checkoutwpbranch : {
+				notify: 'Creating and checking out a release_prep branch for wp.org release.',
 				command: [
 					'cd src',
-					'git checkout <%= eeParams.wpOrgRelease %> -B release_prep'
+					'git checkout -B release_prep'
 				].join('&&')
 			},
 			prepWPassets : {
@@ -776,10 +776,10 @@ module.exports = function(grunt) {
 	});
 
 	//load plugins providing the task.
-	grunt.loadNpmTasks( 'grunt-shell' );
-	grunt.loadNpmTasks( 'grunt-git' );
+	grunt.loadNpmTasks('grunt-shell');
+	grunt.loadNpmTasks('grunt-git');
 	grunt.loadNpmTasks('grunt-hipchat-notifier');
-    grunt.loadNpmTasks( 'grunt-slack-api' );
+    grunt.loadNpmTasks('grunt-slack-api');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-gitinfo');
 	grunt.loadNpmTasks('grunt-wp-deploy');
@@ -1406,14 +1406,14 @@ module.exports = function(grunt) {
 		'seteeParams',
 		'shell:prepWPassets',
 		'setNotifications:shell:prepWPassets',
-		'shell:checkoutTag',
-		'setNotifications:shell:checkoutTag',
+		'shell:checkoutwpbranch',
+		'setNotifications:shell:checkoutwpbranch',
 		'shell:decafVersion',
 		'setNotifications:shell:decafVersion',
 		'shell:remove_folders_decaf',
 		'setNotifications:shell:remove_folders_decaf',
-		'shell:renameMainFile',
-		'setNotifications:shell:renameMainFile',
+		/*'shell:renameMainFile',
+		'setNotifications:shell:renameMainFile',/**/
 		'shell:prepWPBuild',
 		'setNotifications:shell:prepWPBuild',
 		'gitadd:version',
@@ -1439,14 +1439,14 @@ module.exports = function(grunt) {
 		'seteeParams',
 		'shell:prepWPassets',
 		'setNotifications:shell:prepWPassets',
-		'shell:checkoutTag',
-		'setNotifications:shell:checkoutTag',
+		'shell:checkoutwpbranch',
+		'setNotifications:shell:checkoutwpbranch',
 		'shell:decafVersion',
 		'setNotifications:shell:decafVersion',
 		'shell:remove_folders_decaf',
 		'setNotifications:shell:remove_folders_decaf',
-		'shell:renameMainFile',
-		'setNotifications:shell:renameMainFile',
+		/*'shell:renameMainFile',
+		'setNotifications:shell:renameMainFile',/**/
 		'shell:prepWPBuild',
 		'setNotifications:shell:prepWPBuild',
 		'gitadd:version',
