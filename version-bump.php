@@ -55,12 +55,12 @@ switch( $type ) {
 		}
 
 		//we're also changing the plugin name and uri
-		preg_match( '/^[ \t\/*#@]*Plugin URI:(.*)$/mi', $version_file, $uri_matches );
-		preg_match( '/^[ \t\/*#@]*Plugin Name:(.*)$/mi', $version_file, $name_matches );
-		$orig_plugin_uri = $uri_matches[1] ? 'Plugin URI:' . $uri_matches[1] : '';
-		$orig_plugin_name = $name_matches[1] ? 'Plugin Name:' . $name_matches[1] : '';
-		$plugin_name = ' Event Espresso 4 Decaf';
-		$plugin_uri = ' https://eventespresso.com/pricing/?ee_ver=ee4&utm_source=ee4_decaf_plugin_admin&utm_medium=link&utm_campaign=wordpress_plugins_page&utm_content=support_link';
+		preg_match( '/^[ \t\/*#@]*Plugin URI:.*$/mi', $version_file, $uri_matches );
+		preg_match( '/^[ \t\/*#@]*Plugin Name:.*$/mi', $version_file, $name_matches );
+		$orig_plugin_uri = $uri_matches[1] ? $uri_matches[1] : '';
+		$orig_plugin_name = $name_matches[1] ? $name_matches[1] : '';
+		$plugin_name = 'Plugin URI: Event Espresso 4 Decaf';
+		$plugin_uri = 'Plugin Name: https://eventespresso.com/pricing/?ee_ver=ee4&utm_source=ee4_decaf_plugin_admin&utm_medium=link&utm_campaign=wordpress_plugins_page&utm_content=support_link';
 		break;
 
 	case 'rc' :
@@ -147,7 +147,7 @@ if ( $type == 'decaf' ) {
 
 	//get version file contents.
 	$readmeTxt = file_get_contents( $readmeFile );
-	$readmeTxt = preg_replace( "/^[\t\/*#@]*Stable tag:.*$/mi", 'Stable tag: ' . $new_version, $readmeTxt );
+	$readmeTxt = preg_replace( "/^[\t*#@]*Stable tag:.*$/mi", 'Stable tag: ' . $new_version, $readmeTxt );
 	file_put_contents( $readmeFile, $readmeTxt );
 }
 
