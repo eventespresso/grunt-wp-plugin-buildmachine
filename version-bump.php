@@ -137,11 +137,11 @@ if ( ! empty( $orig_version ) && ! empty( $new_version ) ) {
 //if version type is decaf then let's update extra values in $version_file and the readme.txt as well.
 if ( $type == 'decaf' ) {
 	if ( ! empty( $plugin_name ) && ! empty( $orig_plugin_name ) ) {
-		$version_file = preg_replace( "/$orig_plugin_name/mi", $plugin_name, $version_file );
+		$version_file = preg_replace( "/$orig_plugin_name/", $plugin_name, $version_file );
 	}
 
 	if( ! empty( $plugin_uri ) && ! empty( $orig_plugin_uri ) ) {
-		$version_file = preg_replace( "/$orig_plugin_uri/mi", $plugin_uri, $version_file );
+		$version_file = preg_replace( "/$orig_plugin_uri/", $plugin_uri, $version_file );
 	}
 	$readmeFile = getenv( 'EE_README_FILE' );
 
