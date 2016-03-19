@@ -57,8 +57,8 @@ switch( $type ) {
 		//we're also changing the plugin name and uri
 		preg_match( '/^[ \t\/*#@]*Plugin URI:.*$/mi', $version_file, $uri_matches );
 		preg_match( '/^[ \t\/*#@]*Plugin Name:.*$/mi', $version_file, $name_matches );
-		$orig_plugin_uri = $uri_matches[1] ? $uri_matches[1] : '';
-		$orig_plugin_name = $name_matches[1] ? $name_matches[1] : '';
+		$orig_plugin_uri = isset( $uri_matches[0] ) ? trim( $uri_matches[0] ) : '';
+		$orig_plugin_name = isset( $name_matches[0] ) ? trim( $name_matches[0] ) : '';
 		$plugin_name = 'Plugin Name: Event Espresso 4 Decaf';
 		$plugin_uri = 'Plugin URI: https://eventespresso.com/pricing/?ee_ver=ee4&utm_source=ee4_decaf_plugin_admin&utm_medium=link&utm_campaign=wordpress_plugins_page&utm_content=support_link';
 		break;
@@ -137,17 +137,17 @@ if ( ! empty( $orig_version ) && ! empty( $new_version ) ) {
 //if version type is decaf then let's update extra values in $version_file and the readme.txt as well.
 if ( $type == 'decaf' ) {
 	if ( ! empty( $plugin_name ) && ! empty( $orig_plugin_name ) ) {
-		$version_file = preg_replace( "/$orig_plugin_name/", $plugin_name, $version_file );
+		$version_file = preg_replace( "/$orig_plugin_name/mi", $plugin_name, $version_file );
 	}
 
 	if( ! empty( $plugin_uri ) && ! empty( $orig_plugin_uri ) ) {
-		$version_file = preg_replace( "/$orig_plugin_uri/", $plugin_uri, $version_file );
+		$version_file = preg_replace( "/$orig_plugin_uri/mi", $plugin_uri, $version_file );
 	}
 	$readmeFile = getenv( 'EE_README_FILE' );
 
 	//get version file contents.
 	$readmeTxt = file_get_contents( $readmeFile );
-	$readmeTxt = preg_replace( '/^[ \t\/*#@]*Stable tag:.*$/mi', 'Stable tag: ' . $new_version, $readmeTxt );
+	$readmeTxt = preg_replace( '/^[ \t*#@]*Stable tag:.*$/mi', 'Stable tag: ' . $new_version, $readmeTxt );
 	file_put_contents( $readmeFile, $readmeTxt );
 }
 
