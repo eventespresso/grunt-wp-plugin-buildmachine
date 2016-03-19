@@ -47,6 +47,7 @@ module.exports = function(grunt) {
 		"textDomain" : "",
 		"srcBuildFolderName" : "",
 		"wpOrgSlug" : "",
+        "wpOrgMainFileSlug" : "",
 		"wpOrgUser" : "",
 		"wpOrgRelease" : "",
 		"name" : "",
@@ -746,6 +747,7 @@ module.exports = function(grunt) {
 				notify: 'Deployed to WordPress.org!',
 				options: {
 					plugin_slug: '<%= eeParams.wpOrgSlug %>',
+                    plugin_file_slug : '<%= eeParams.wpOrgMainFileSlug %>',
 					svn_user: '<%= eeParams.wpOrgUser %>',
 					build_dir: 'build/wp-org',
 					assets_dir: 'build/wp-org-assets',
