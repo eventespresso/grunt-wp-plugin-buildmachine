@@ -138,11 +138,11 @@ $new_version = implode( '.', $version_split );
 //update info_json so decaf release get built off of this tag.
 if ( $do_info_json && $info_json_file && ! empty( $new_version ) ) {
 	$info_json = json_decode( file_get_contents( $info_json_file ) );
-	if ( $info_json && isset( $info_json->wpOrgRelease )) {
+	if ( $info_json && is_object( $info_json ) ) {
 		$info_json->wpOrgRelease = $new_version;
+		//now save back to info.json
+		file_put_contents( $info_json_file, json_encode( $info_json ) );
 	}
-	//now save back to info.json
-	file_put_contents( $info_json_file, json_encode( $info_json ) );
 }
 
 
