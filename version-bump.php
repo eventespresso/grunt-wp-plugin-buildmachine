@@ -5,6 +5,7 @@
  */
 $type = getenv( 'EE_VERSION_BUMP_TYPE' );
 $file = getenv( 'EE_VERSION_FILE' );
+$info_json_file = getenv( 'EE_INFO_JSON' );
 
 //get version file contents.
 $version_file = file_get_contents( $file );
@@ -22,6 +23,8 @@ if ( empty( $orig_version ) ) {
 $version_split = explode( '.', $orig_version);
 $plugin_name = $orig_plugin_name = '';
 $plugin_uri = $orig_plugin_uri = '';
+$info_json = '';
+$do_info_json = false;
 
 switch( $type ) {
 	case 'pre_release' :
@@ -97,6 +100,9 @@ switch( $type ) {
 			$last_num++;
 			$version_split[$index] = $last_num;
 		}
+		
+		$do_info_json = true;
+		
 		break;
 
 	case 'major' :
@@ -123,10 +129,21 @@ switch( $type ) {
 			$version_split[$index] = $last_num;
 			$version_split[2] = '0';
 		}
+		$do_info_json = true;
 		break;
 }
 
 $new_version = implode( '.', $version_split );
+
+//update info_json so decaf release get built off of this tag.
+if ( $do_info_json && $info_json_file && ! empty( $new_version ) ) {
+	$info_json = json_decode( file_get_contents( $info_json_file ) );
+	if ( $info_json && isset( $info_json->wpOrgRelease )) {
+		$info_json->wpOrgRelease = $new_version;
+	}
+	//now save back to info.json
+	file_put_contents( $info_json_file, json_encode( $info_json ) );
+}
 
 
 //replace versions in file with the new version_number.

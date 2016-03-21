@@ -141,6 +141,7 @@ module.exports = function(grunt) {
 				command: [
 					'export EE_VERSION_BUMP_TYPE="<%=eeParams.versionType %>"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
+                    'export EE_INFO_JSON="src/info.json"',
 					'php version-bump.php'
 					].join('&&'),
 				options: {
@@ -155,6 +156,7 @@ module.exports = function(grunt) {
 				command: [
 					'export EE_VERSION_BUMP_TYPE="minor"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
+                    'export EE_INFO_JSON="src/info.json"',
 					'php version-bump.php'
 					].join('&&'),
 				options: {
@@ -169,6 +171,8 @@ module.exports = function(grunt) {
 				command: [
 					'export EE_VERSION_BUMP_TYPE="major"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
+                    'export EE_INFO_JSON="src/info.json"',
+                    'export EE_INFO_JSON="src/info.json"',
 					'php version-bump.php'
 					].join('&&'),
 				options: {
@@ -184,6 +188,7 @@ module.exports = function(grunt) {
 					'export EE_VERSION_BUMP_TYPE="decaf"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
 					'export EE_README_FILE="src/readme.txt"',
+                    'export EE_INFO_JSON="src/info.json"',
 					'php version-bump.php'
 				].join('&&'),
 				options: {
@@ -198,6 +203,7 @@ module.exports = function(grunt) {
 				command: [
 					'export EE_VERSION_BUMP_TYPE="pre_release"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
+                    'export EE_INFO_JSON="src/info.json"',
 					'php version-bump.php'
 				].join('&&'),
 				options: {
@@ -212,6 +218,7 @@ module.exports = function(grunt) {
 				command: [
 					'export EE_VERSION_BUMP_TYPE="micro_zip"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
+                    'export EE_INFO_JSON="src/info.json"',
 					'php version-bump.php'
 				].join('&&'),
 				options: {
@@ -229,6 +236,13 @@ module.exports = function(grunt) {
 				notify: '<%= eeParams.releaseFilesRemove.length %> folders and files removed in prep for decaf release.',
 				command: ''
 			},
+            checkoutTag: {
+                notify: 'Checking out <%= eeParams.wpOrgRelease %> version to be packaged for wordpress.org release.',
+                command: [
+                    'cd src',
+                    'git checkout <%= eeParams.wpOrgRelease %> -B release_prep'
+                ].join('&&')
+            },
 			checkoutwpbranch : {
 				notify: 'Creating and checking out a release_prep branch for wp.org release.',
 				command: [
@@ -1408,8 +1422,8 @@ module.exports = function(grunt) {
 		'seteeParams',
 		'shell:prepWPassets',
 		'setNotifications:shell:prepWPassets',
-		'shell:checkoutwpbranch',
-		'setNotifications:shell:checkoutwpbranch',
+		'shell:checkoutTag',
+		'setNotifications:shell:checkoutTag',
 		'shell:decafVersion',
 		'setNotifications:shell:decafVersion',
 		'shell:remove_folders_decaf',
@@ -1441,8 +1455,8 @@ module.exports = function(grunt) {
 		'seteeParams',
 		'shell:prepWPassets',
 		'setNotifications:shell:prepWPassets',
-		'shell:checkoutwpbranch',
-		'setNotifications:shell:checkoutwpbranch',
+		'shell:checkoutTag',
+		'setNotifications:shell:checkoutTag',
 		'shell:decafVersion',
 		'setNotifications:shell:decafVersion',
 		'shell:remove_folders_decaf',
