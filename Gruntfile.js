@@ -135,6 +135,19 @@ module.exports = function(grunt) {
 
 		//shell commands
 		shell: {
+		    //compress php
+            compress_php: {
+                notify: 'Compress php file for dompdf',
+                command: [
+                    'cd src/core/third_party_libs/dompdf',
+                    'find . -name \'*.php\' -type f -exec sh -c \'php -w "${0%.*}.php" > "${0%.*}.cphp"; rm "${0%.*}.php"; mv "${0%.*}.cphp" "${0%.*}.php"\' {} \\;'
+                    ].join('&&'),
+                options: {
+                    stdout: true,
+                    stderr: false,
+                    stdin: false
+                }
+            },
 			//bump dev version.
 			bump_rc: {
 				notify: 'Bump Version task completed.  Version bumped to <%= new_version %>',
@@ -171,7 +184,6 @@ module.exports = function(grunt) {
 				command: [
 					'export EE_VERSION_BUMP_TYPE="major"',
 					'export EE_VERSION_FILE="src/<%= eeParams.versionFile %>"',
-                    'export EE_INFO_JSON="src/info.json"',
                     'export EE_INFO_JSON="src/info.json"',
 					'php version-bump.php'
 					].join('&&'),
@@ -1397,6 +1409,8 @@ module.exports = function(grunt) {
 		'setNotifications:shell:microZipVersion',
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
+        'shell:compress_php',
+        'setNotifications:shell:compress_php',
 		'gitadd:version',
 		'gitcommit:release',
 		'setNotifications:gitcommit:release',
