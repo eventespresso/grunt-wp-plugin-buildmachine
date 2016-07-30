@@ -777,7 +777,8 @@ module.exports = function(grunt) {
 					svn_user: '<%= eeParams.wpOrgUser %>',
 					build_dir: 'build/wp-org',
 					assets_dir: 'build/wp-org-assets',
-					max_buffer: 600*1024
+					checkout_dir: 'checkout/',
+					max_buffer: 1200*1024
 				}
 			}
 		},
