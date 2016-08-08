@@ -65,7 +65,8 @@ module.exports = function(grunt) {
 		"sandboxdecafUrl" : "",
 		"github" : false,
 		"demoee" : false,
-        "taskGroupName" : ""
+        "taskGroupName" : "",
+        "compressPhpPath" : "",
 	};
 
 	var defaultaws = {
@@ -139,7 +140,7 @@ module.exports = function(grunt) {
             compress_php: {
                 notify: 'Compress php file for dompdf',
                 command: [
-                    'cd src/core/third_party_libs/dompdf',
+                    'cd src/<%=eeParams.compressPhpPath%>',
                     'find . -name \'*.php\' -type f -exec sh -c \'php -w "${0%.*}.php" > "${0%.*}.cphp"; rm "${0%.*}.php"; mv "${0%.*}.cphp" "${0%.*}.php"\' {} \\;'
                     ].join('&&'),
                 options: {
@@ -1132,6 +1133,14 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.registerTask( 'compressPhp', 'Maybe compress php files', function compressPhp() {
+        var params = grunt.config.get( 'eeParams' );
+
+        if ( params.compressPhpPath ) {
+            grunt.task.run( 'shell:compress_php', 'setNotifications:shell:compress_php' );
+        }
+    });
+
 	//deciding whether to do sandbox and github pushes dependent on params set in the repo info.json file.
 	grunt.registerTask( 'SandboxGithub', 'Do sandbox and github pushes?', function SandboxGithub() {
 		var params = grunt.config.get( 'eeParams' );
@@ -1249,6 +1258,7 @@ module.exports = function(grunt) {
 		'setNotifications:gittag:releaseAll',
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
+        'compressPhp',
 		'gitadd:version',
 		'setNotifications:gitadd:version',
 		'gitcommit:release',
@@ -1300,6 +1310,7 @@ module.exports = function(grunt) {
 		'setNotifications:gittag:releaseAll',
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
+        'compressPhp',
 		'gitadd:version',
 		'gitcommit:release',
 		'setNotifications:gitcommit:release',
@@ -1350,6 +1361,7 @@ module.exports = function(grunt) {
 			'setNotifications:shell:prVersion',
 			'shell:remove_folders_release',
 			'setNotifications:shell:remove_folders_release',
+            'compressPhp',
 			'gitadd:version',
 			'setNotifications:gitadd:version',
 			'gitcommit:prRelease',
@@ -1380,6 +1392,7 @@ module.exports = function(grunt) {
 		'setNotifications:shell:prVersion',
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
+        'compressPhp',
 		'gitadd:version',
 		'setNotifications:gitadd:version',
 		'gitcommit:prRelease',
@@ -1410,8 +1423,7 @@ module.exports = function(grunt) {
 		'setNotifications:shell:microZipVersion',
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
-        'shell:compress_php',
-        'setNotifications:shell:compress_php',
+        'compressPhp',
 		'gitadd:version',
 		'gitcommit:release',
 		'setNotifications:gitcommit:release',
@@ -1443,6 +1455,7 @@ module.exports = function(grunt) {
 		'setNotifications:shell:decafVersion',
 		'shell:remove_folders_decaf',
 		'setNotifications:shell:remove_folders_decaf',
+        'compressPhp',
 		/*'shell:renameMainFile',
 		'setNotifications:shell:renameMainFile',/**/
 		'shell:prepWPBuild',
@@ -1476,6 +1489,7 @@ module.exports = function(grunt) {
 		'setNotifications:shell:decafVersion',
 		'shell:remove_folders_decaf',
 		'setNotifications:shell:remove_folders_decaf',
+        'compressPhp',
 		/*'shell:renameMainFile',
 		'setNotifications:shell:renameMainFile',/**/
 		'shell:prepWPBuild',
