@@ -67,6 +67,7 @@ module.exports = function(grunt) {
 		"demoee" : false,
         "taskGroupName" : "",
         "compressPhpPath" : "",
+        "remoteNamesToPushTo" : [] /* This should be an array of remote names in the src repo that can be pushed to in a task */
 	};
 
 	var defaultaws = {
@@ -133,6 +134,8 @@ module.exports = function(grunt) {
 		prBranch: 'master',
         syncBranch: 'master',
         taskGroupName: '',
+        remoteSyncNotify: '',
+        remoteSyncCommand: '',
 
 		//shell commands
 		shell: {
@@ -358,6 +361,15 @@ module.exports = function(grunt) {
 					stdin: false
 				}
 			},
+            remoteSync: {
+			    notify: "<%= remoteSyncNotify %>",
+                command: "<%= remoteSyncCommand %>",
+                options: {
+                    stdout: false,
+                    stderr: false,
+                    stdin: false
+                }
+            },
             githubSync: {
                 notify: "Pushed <%= syncBranch %> branch to github repo.",
                 command: [
@@ -831,6 +843,37 @@ module.exports = function(grunt) {
     };
 
 
+    function setupRemoteSyncProps() {
+        var remotes = grunt.config.get( 'eeParams.remoteNamesToPushTo' ),
+            remoteSync = {};
+
+        if ( remotes.length < 1 ) {
+            //don't do anything if there are no remoteNamesToPushTo.
+            return;
+        }
+
+        remoteSync.notify = ( function( r ) {
+            var notifyString = "Pushed master branch to the following repo locations (remote names): ";
+            remotes.forEach( function( el ) {
+                notifyString += el;
+            });
+            return notifyString;
+        }( remotes ) );
+        remoteSync.command = (function(remotes) {
+            var commandsToRun = [];
+            remotes.forEach( function( el ) {
+                commandsToRun.push( 'cd src' );
+                commandsToRun.push( 'unset GIT_DIR' );
+                commandsToRun.push( 'git push ' + el + ' <%= eeParams.branch %>' );
+            });
+            return commandsToRun;
+        }(eeParams.remoteNamesToPushTo)).join('&&');
+
+        grunt.config.set( 'remoteSyncNotify', remoteSync.notify );
+        grunt.config.set( 'remoteSyncCommand', remoteSync.command );
+    }
+
+
 	function postnewTopic( roomInfo, hipchat, done ) {
 		var roomID = '424398';
 		grunt.verbose.writeln( console.log( roomInfo ) );
@@ -1104,6 +1147,8 @@ module.exports = function(grunt) {
 
 		grunt.config.set( 'eeParams', params );
 
+        setupRemoteSyncProps();
+
 		//set commands for shell rm task
 		grunt.config.set( 'shell.remove_folders_release.command', rm_prepare_folders( params.releaseFilesRemove ).join(';') );
 		grunt.config.set( 'shell.remove_folders_decaf.command', rm_prepare_folders( params.decafFilesRemove ).join(';') );
@@ -1111,9 +1156,10 @@ module.exports = function(grunt) {
 
 
     //deciding whether to do a github push of the current set syncbranch dependent on params set in the repo info.json file.
+    //this will also do any remote push as well.
     grunt.registerTask( 'GithubOnlyPush', 'Maybe push to github', function GithubOnlyPush() {
         var params = grunt.config.get( 'eeParams' );
-        var msg = "", slackmsg = {};
+        var msg = "", slackmsg = {}, doNotify = false;
 
         if ( params.github ) {
                 grunt.task.run( 'shell:githubSync', 'setNotifications:shell:githubSync' );
@@ -1128,6 +1174,10 @@ module.exports = function(grunt) {
             grunt.config.set('mainChatMessage', msg );
             grunt.config.set('mainChatSlackMessage', slackmsg );
             grunt.config.set( 'mainChatColor', 'purple' );
+           doNotify = true;
+        }
+
+        if ( doNotify ) {
             grunt.task.run( 'hipchat_notifier:notify_main_chat' );
             grunt.task.run( 'slack_api:notify_main' );
         }
@@ -1144,7 +1194,7 @@ module.exports = function(grunt) {
 	//deciding whether to do sandbox and github pushes dependent on params set in the repo info.json file.
 	grunt.registerTask( 'SandboxGithub', 'Do sandbox and github pushes?', function SandboxGithub() {
 		var params = grunt.config.get( 'eeParams' );
-		var msg = "", slackmsg = {}, tagPush = false;
+		var msg = "", slackmsg = {}, tagPush = false, doNotify = false;
         slackmsg.text = "";
 		if ( params.sandboxsite !== null && typeof params.sandboxsite !== 'undefined' ) {
 			grunt.task.run('shell:SandboxPull', 'setNotifications:shell:SandboxPull' );
@@ -1177,13 +1227,22 @@ module.exports = function(grunt) {
             slackmsg.text += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to demoee.org.\n";
 		}
 
+		if ( params.remoteNamesToPushTo.length > 0 ) {
+		    grunt.task.run( 'shell:remoteSync', 'setNotifications:shell:remoteSync' );
+            doNotify = true;
+        }
+
 		if ( msg !== "" ) {
 			grunt.config.set('mainChatMessage', msg );
             grunt.config.set( 'mainChatSlackMessage', slackmsg );
 			grunt.config.set( 'mainChatColor', 'purple' );
-			grunt.task.run( 'hipchat_notifier:notify_main_chat' );
-            grunt.task.run( 'slack_api:notify_main' );
+            doNotify = true;
 		}
+
+		if ( doNotify ) {
+            grunt.task.run( 'hipchat_notifier:notify_main_chat' );
+            grunt.task.run( 'slack_api:notify_main' );
+        }
 	});
 
 
