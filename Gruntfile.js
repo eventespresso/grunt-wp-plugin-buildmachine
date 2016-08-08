@@ -847,7 +847,7 @@ module.exports = function(grunt) {
         var remotes = grunt.config.get( 'eeParams.remoteNamesToPushTo' ),
             remoteSync = {};
 
-        if ( remotes.length < 1 ) {
+        if ( typeof remotes === 'undefined' || remotes.length < 1 ) {
             //don't do anything if there are no remoteNamesToPushTo.
             return;
         }
@@ -1227,7 +1227,7 @@ module.exports = function(grunt) {
             slackmsg.text += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to demoee.org.\n";
 		}
 
-		if ( params.remoteNamesToPushTo.length > 0 ) {
+		if ( typeof remotes !== 'undefined' && params.remoteNamesToPushTo.length > 0 ) {
 		    grunt.task.run( 'shell:remoteSync', 'setNotifications:shell:remoteSync' );
             doNotify = true;
         }
