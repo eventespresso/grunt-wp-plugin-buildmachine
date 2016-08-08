@@ -5,3 +5,4 @@ aws.json
 hipchat.json
 private.json
 slack.json
+checkout/
