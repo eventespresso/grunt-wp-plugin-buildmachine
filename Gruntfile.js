@@ -1229,6 +1229,12 @@ module.exports = function(grunt) {
 		}
 
 		if ( typeof params.remoteNamesToPushTo !== 'undefined' && params.remoteNamesToPushTo.length > 0 ) {
+            grunt.verbose.writeln( console.log( 'In condition' ) );
+            grunt.verbose.writeln( grunt.config.get( 'remoteSyncNotify' ) );
+            grunt.verbose.writeln( grunt.config.get( 'remoteSyncCommand' ) );
+
+            msg += grunt.config.get( 'remoteSyncNotify' );
+            slackmsg.text += grunt.config.get( 'remoteSyncNotify' );
 		    grunt.task.run( 'shell:remoteSync', 'setNotifications:shell:remoteSync' );
             doNotify = true;
         }
