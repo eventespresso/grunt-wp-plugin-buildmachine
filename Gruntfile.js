@@ -1228,7 +1228,7 @@ module.exports = function(grunt) {
             slackmsg.text += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to demoee.org.\n";
 		}
 
-		if ( typeof remotes !== 'undefined' && params.remoteNamesToPushTo.length > 0 ) {
+		if ( typeof params.remoteNamesToPushTo !== 'undefined' && params.remoteNamesToPushTo.length > 0 ) {
 		    grunt.task.run( 'shell:remoteSync', 'setNotifications:shell:remoteSync' );
             doNotify = true;
         }
