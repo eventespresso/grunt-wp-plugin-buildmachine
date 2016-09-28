@@ -1211,11 +1211,8 @@ module.exports = function(grunt) {
 
 		if ( params.github ) {
 			tagPush = grunt.config.get( 'tagPush' );
-			if ( tagPush ) {
-				grunt.task.run( 'shell:githubPushTags', 'setNotifications:shell:githubPushTags' );
-			} else {
-				grunt.task.run( 'shell:githubPush', 'setNotifications:shell:githubPush' );
-			}
+            grunt.task.run( 'shell:githubPush', 'setNotifications:shell:githubPush' );
+
 			msg += '<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.<br>';
             slackmsg.text += "<%= eeParams.branch %> branch for <%= eeParams.name %> has been pushed to github.\n";
 		}
