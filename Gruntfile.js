@@ -67,6 +67,7 @@ module.exports = function(grunt) {
 		"demoee" : false,
         "taskGroupName" : "",
         "compressPhpPath" : "",
+		"jsBuildDirectory" : "",
         "remoteNamesToPushTo" : [] /* This should be an array of remote names in the src repo that can be pushed to in a task */
 	};
 
@@ -152,6 +153,19 @@ module.exports = function(grunt) {
                     stdin: false
                 }
             },
+			//run any npm tasks
+			npm_run: {
+            	notify: 'Ran build on eejs-api.',
+				command: [
+					'cd src/<%=eeParams.jsBuildDirectory%>',
+					'npm run build'
+				].join('&&'),
+				options: {
+            		stdout: true,
+					stderr: false,
+					stdin: false
+				}
+			},
 			//bump dev version.
 			bump_rc: {
 				notify: 'Bump Version task completed.  Version bumped to <%= new_version %>',
@@ -1250,7 +1264,7 @@ module.exports = function(grunt) {
 	});
 
 
-	grunt.registerTask( 'maybeRun', 'Checks to see if grunt should run tasks basied on the last commit in the gitlog', function maybeRun() {
+	grunt.registerTask( 'maybeRun', 'Checks to see if grunt should run tasks based on the last commit in the gitlog', function maybeRun() {
         var gitinfo = grunt.config.get( 'gitinfo' );
 		if ( typeof gitinfo.local === 'undefined' ) {
 			grunt.log.warn( 'git info did not appear to work. Needed to be able to complete tasks.' );
@@ -1264,6 +1278,13 @@ module.exports = function(grunt) {
 
 	grunt.registerTask( 'setTagPush', 'Used to set the tagpush flag to true', function setTagPush() {
 		grunt.config.set( 'tagPush', true );
+	});
+
+	grunt.registerTask( 'maybeRunNpm', 'Used to determine whether to run the npm run buld task. Currently only runs if the jsBuildDirectory is set in the config.', function maybeRunNpm() {
+		var params = grunt.config.get('eeParams');
+		if (eeParams.jsBuildDirectory !== '') {
+            grunt.task.run('npm_run');
+		}
 	});
 
 	grunt.registerTask( 'testinggitinfo', ['gitcheckout:alpha', 'gitinfo', 'maybeRun'] );
@@ -1322,6 +1343,7 @@ module.exports = function(grunt) {
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
         'compressPhp',
+        'maybeRunNpm',
 		'gitadd:version',
 		'setNotifications:gitadd:version',
 		'gitcommit:release',
