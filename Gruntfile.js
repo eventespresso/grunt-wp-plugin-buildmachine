@@ -1282,12 +1282,14 @@ module.exports = function(grunt) {
 
 	grunt.registerTask( 'maybeRunNpm', 'Used to determine whether to run the npm run buld task. Currently only runs if the jsBuildDirectory is set in the config.', function maybeRunNpm() {
 		var params = grunt.config.get('eeParams');
+        grunt.verbose.writeln( console.log(params) );
 		if (params.jsBuildDirectory !== '') {
-            grunt.task.run('npm_run');
+            grunt.task.run('shell:npm_run');
 		}
 	});
 
 	grunt.registerTask( 'testinggitinfo', ['gitcheckout:alpha', 'gitinfo', 'maybeRun'] );
+	grunt.registerTask('maybeRunNpmTest', ['gitinfo','seteeParams','maybeRunNpm']);
 
 	grunt.registerTask( 'updateSandbox_master', [
 		'gitcheckout:master',
