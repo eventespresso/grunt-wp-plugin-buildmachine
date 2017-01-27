@@ -1282,7 +1282,7 @@ module.exports = function(grunt) {
 
 	grunt.registerTask( 'maybeRunNpm', 'Used to determine whether to run the npm run buld task. Currently only runs if the jsBuildDirectory is set in the config.', function maybeRunNpm() {
 		var params = grunt.config.get('eeParams');
-		if (eeParams.jsBuildDirectory !== '') {
+		if (params.jsBuildDirectory !== '') {
             grunt.task.run('npm_run');
 		}
 	});
@@ -1509,6 +1509,7 @@ module.exports = function(grunt) {
 		'shell:remove_folders_release',
 		'setNotifications:shell:remove_folders_release',
         'compressPhp',
+		'maybeRunNpm',
 		'gitadd:version',
 		'gitcommit:release',
 		'setNotifications:gitcommit:release',
