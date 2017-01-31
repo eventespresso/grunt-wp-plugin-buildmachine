@@ -1545,6 +1545,7 @@ module.exports = function(grunt) {
 		'shell:remove_folders_decaf',
 		'setNotifications:shell:remove_folders_decaf',
         'compressPhp',
+		'maybeRunNpm',
 		/*'shell:renameMainFile',
 		'setNotifications:shell:renameMainFile',/**/
 		'shell:prepWPBuild',
@@ -1579,6 +1580,7 @@ module.exports = function(grunt) {
 		'shell:remove_folders_decaf',
 		'setNotifications:shell:remove_folders_decaf',
         'compressPhp',
+		'maybeRunNpm',
 		/*'shell:renameMainFile',
 		'setNotifications:shell:renameMainFile',/**/
 		'shell:prepWPBuild',
