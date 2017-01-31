@@ -293,7 +293,9 @@ module.exports = function(grunt) {
 				command: [
 					'rm -rf build/wp-org',
 					'mkdir build/wp-org',
-					'cp -r src/* build/wp-org'
+					'cp -r src/* build/wp-org',
+					'cd build/wp-org',
+					'find . -depth -name node_modules -type d -exec rm -r "{}" \\;'
 					].join(';')
 			},
 			renameMainFile : {
