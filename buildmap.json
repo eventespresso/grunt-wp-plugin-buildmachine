@@ -1,9 +1,0 @@
-{
-  "map": [
-    {
-      "origin": "git@codebasehq.com:events/event-espresso/32-core.git",
-      "github": "git@github.com:eventespresso/event-espresso-core.git",
-      "demoee": "ssh://ee3admin@45.55.145.151/~/www/demoeehub/event-espresso-core"
-    }
-  ]
-}

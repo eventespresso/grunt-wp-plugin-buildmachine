@@ -3,3 +3,4 @@ aws.json
 hipchat.json
 private.json
 slack.json
+buildmap.json
