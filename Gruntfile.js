@@ -25,19 +25,24 @@
  * NOTE: This is still a work in progress and is by no means complete.  Use at your own risk!
  */
 
-var builderInit = require('./src/init'),
-    notifications = require('./src/notifications'),
-    remoteSyncTasks = require('./src/remote-sync'),
-    transform = require('./src/transform'),
-    utils = require('./src/util'),
-    shareBuildObject = {
-        notify: 'Archive folder has been made available and can be retrieved from <a href="<%= privateParams.build_creds.archiveBaseUrl %><%= pluginParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.build_creds.archiveUser %>.  Password: <%= privateParams.build_creds.archivePass %>.',
-        slacknotify: "Archive folder has been made available and can be retrieved from <%= pluginParams.build_creds.archiveBaseUrl %><%= pluginParams.slug %>.zip.  *Username:* <%= privateParams.build_creds.archiveUser %>.  *Password:* <%= privateParams.build_creds.archivePass %>.",
-        command: 'mv buildsrc/<%= currentSlug %>/<%= pluginParams.slug %>.zip <%= privateParams.build_creds.archiveBasePath %>'
-    };
+var buildMachineInit = require('./src/init'),
+    buildMachineNotifications = require('./src/notifications'),
+    buildMachineRemoteSyncTasks = require('./src/remote-sync'),
+    buildMachineTransform = require('./src/transform'),
+    buildMachineUtils = require('./src/util');
 
 
 module.exports = function(grunt) {
+    var builderInit= buildMachineInit,
+        notifications = buildMachineNotifications,
+        remoteSyncTasks = buildMachineRemoteSyncTasks,
+        transform = buildMachineTransform,
+        utils = buildMachineUtils,
+        shareBuildObject = {
+            notify: 'Archive folder has been made available and can be retrieved from <a href="<%= privateParams.build_creds.archiveBaseUrl %><%= pluginParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.build_creds.archiveUser %>.  Password: <%= privateParams.build_creds.archivePass %>.',
+            slacknotify: "Archive folder has been made available and can be retrieved from <%= pluginParams.build_creds.archiveBaseUrl %><%= pluginParams.slug %>.zip.  *Username:* <%= privateParams.build_creds.archiveUser %>.  *Password:* <%= privateParams.build_creds.archivePass %>.",
+            command: 'mv buildsrc/<%= currentSlug %>/<%= pluginParams.slug %>.zip <%= privateParams.build_creds.archiveBasePath %>'
+        };
     var defaultPluginParams = {
         "versionFile" : "",
         "versionType" : "rc",
