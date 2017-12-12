@@ -1,0 +1,22 @@
+{
+  "build_creds" : {
+    "archiveUser": "htpasswduserforarchivebuilds",
+    "archivePass": "htpasswdpassforarchivebuilds"
+  },
+  "slack_creds" : {
+    "authToken" : "xxxx-xxxxxxxxxxx-xxxxxxxxxxxx-xxxxxxxxxx-xxxxxxxx",
+    "botToken" : "xxxxx-xxxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxx",
+    "channels" : {
+      "build" : "#buildnotifications",
+      "main" : "xxxxxxxxxxx"
+    }
+  },
+  "hipchat_creds" : {
+    "authToken": "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "roomID" : "xxxxxxx"
+  },
+  "aws_creds" : {
+    "accessKeyId" : "xxxxxxxxxxxxxxxxxxxxxxxx",
+    "secretAccessKey": "xxxxxxxxxxxxxxxxxxxxx"
+  }
+}

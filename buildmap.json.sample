@@ -1,0 +1,9 @@
+{
+  "buildmap": [
+    {
+      "origin": "git@codebasehq.com:events/some-plugin.git",
+      "github": "git@github.com:eventespresso/some-plugin.git",
+      "demoee": "ssh://user@123.123.123.123/~/www/some-plugin-bare-repo"
+    }
+  ]
+}
