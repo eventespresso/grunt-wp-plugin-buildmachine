@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "devDependencies": {
     "grunt": "^1.0.1",
-    "grunt-aws-s3": "^0.10.0",
-    "grunt-contrib-cssmin": "^0.11.0",
-    "grunt-gitinfo": "^0.1.7",
+    "grunt-aws-s3": "^2.0.0",
+    "grunt-contrib-cssmin": "^2.2.1",
+    "grunt-gitinfo": "^0.1.8",
     "grunt-hipchat-notifier": "^0.3.0",
-    "grunt-shell": "^1.1.1",
-    "grunt-slack-api": "^0.1.0",
+    "grunt-shell": "^2.1.0",
+    "grunt-slack-api": "^0.1.2",
     "grunt-templated-changelog": "^0.1.3",
-    "grunt-wp-deploy": "^1.0.3",
-    "grunt-wp-i18n": "^0.5.0",
-    "hipchat-client": "^1.0.2"
+    "grunt-wp-deploy": "^1.2.1",
+    "grunt-wp-i18n": "^1.0.1",
+    "hipchat-client": "^1.0.5"
   }
 }
