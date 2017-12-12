@@ -850,6 +850,16 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask(
+        'builder',
+        'Main Builder tasks. Use "builder:init" for initializing the repositories from the buildmap.json file',
+        function (command) {
+            if (command === 'init') {
+                builderInit.initializeFromMap()
+            }
+        }
+    );
+
+    grunt.registerTask(
         'updateRemotes',
         'Update all the remotes registered for the given plugin slug',
         function(pluginSlug) {
