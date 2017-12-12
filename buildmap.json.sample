@@ -1,5 +1,5 @@
 {
-  "buildmap": [
+  "map": [
     {
       "origin": "git@codebasehq.com:events/some-plugin.git",
       "github": "git@github.com:eventespresso/some-plugin.git",
