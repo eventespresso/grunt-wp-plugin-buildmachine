@@ -81,6 +81,7 @@ module.exports = {
         //only run clone if the directory isn't already present
         if (! slugExists) {
             tasksToRun.push('shell:cloneOrigin');
+            tasksToRun.push('shell:clonePot');
             grunt.log.oklns('Skipping cloning ' + pluginSlug + ' because it already exists.');
         }
         tasksToRun.push('shell:registerRemotes');
@@ -97,8 +98,14 @@ module.exports = {
                 'mkdir -p ' + pluginSlug,
                 'git clone ' + originRepoAddress + ' ' + pluginSlug
             ].join('&&')
-        }
-
+        };
+        shellConfig.clonePot = {
+            command: [
+                'cd potbuilds',
+                'mkdir -p ' + pluginSlug,
+                'git clone ' + originRepoAddress + ' ' + pluginSlug
+            ].join('&&')
+        };
         //prep commands for doing the remote registrations
         remoteRegistrationCommand.push('cd ' + destination);
         remotesToRegister.forEach(function(remoteItem) {
