@@ -2,7 +2,7 @@
  * Module for initializing various parameters etc.
  **/
 var remoteSync = require('./remote-sync');
-var utils = require('./utils.js');
+var utils = require('./util.js');
 module.exports = {
     remote: remoteSync,
     utils: utils,
