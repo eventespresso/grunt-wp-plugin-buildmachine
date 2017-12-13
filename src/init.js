@@ -2,10 +2,16 @@
  * Module for initializing various parameters etc.
  **/
 var remoteSync = require('./remote-sync');
+var crypto = require('crypto');
 var utils = require('./util.js');
+var grunt = {};
 module.exports = {
     remote: remoteSync,
     utils: utils,
+    crypto: crypto,
+    setGrunt: function (gruntObject) {
+        grunt = gruntObject;
+    },
     setPluginParams: function (task) {
         var pluginSlug = grunt.config.get('currentSlug'),
             src = 'buildsrc/' + pluginSlug + '/info.json',
@@ -63,6 +69,7 @@ module.exports = {
     initializeFromMap: function() {
         var buildMap = grunt.config.get('buildMap'),
             init = this;
+        grunt.verbose.writeln(console.log(buildMap));
         buildMap.map.forEach(function(remotes) {
             init.initializeSrc(remotes);
         });
@@ -73,63 +80,80 @@ module.exports = {
             grunt.fail.warn('Cannot build because there is no origin defined for the remotes.');
             return;
         }
-        var pluginSlug = this.getPluginSlugForBuild(remotes.origin),
-            existingDirs = this.getInstalledDirs(),
-            slugExists = existingDirs.indexOf(pluginSlug) > -1,
-            tasksToRun = [];
-        this.setNewShellTasksForBuilder(pluginSlug, remotes['origin'], remotes);
-        //only run clone if the directory isn't already present
-        if (! slugExists) {
-            tasksToRun.push('shell:cloneOrigin');
-            tasksToRun.push('shell:clonePot');
-            grunt.log.oklns('Skipping cloning ' + pluginSlug + ' because it already exists.');
-        }
-        tasksToRun.push('shell:registerRemotes');
-        grunt.run.task(tasksToRun);
-        grunt.log.oklns('Finished initializing remotes for ' + pluginSlug);
+        var encryptedSlug = crypto.createHash('md5').update(remotes.origin).digest("hex"),
+            initObject = this,
+            tasksToRun = [
+                'queueSettingPluginSlugForBuild_' + encryptedSlug,
+                'queueShellTasksForBuilder_' + encryptedSlug
+            ];
+        grunt.registerTask(
+            'queueSettingPluginSlugForBuild_' + encryptedSlug,
+            'Enqueue tasks for getting the slug for this set of remotes.',
+            function () {
+                initObject.queueSettingPluginSlugForBuild(remotes.origin);
+            });
+        grunt.registerTask(
+            'queueShellTasksForBuilder_' + encryptedSlug,
+            'Queue Shell tasks for builder.',
+            function () {
+               initObject.queueNewShellTasksForBuilder(remotes.origin, remotes);
+            });
+        grunt.task.run(tasksToRun);
     },
-    setNewShellTasksForBuilder: function(pluginSlug, originRepoAddress, remotesToRegister) {
-        var destination = 'buildsrc/' + pluginSlug,
+    queueNewShellTasksForBuilder: function(originRepoAddress, remotesToRegister) {
+        var pluginSlug = grunt.config.get('currentSlug'),
+            existingDirs = this.getInstalledDirs(),
+            dirExists = existingDirs.indexOf(pluginSlug) > -1,
+            destination = 'buildsrc/' + pluginSlug,
             shellConfig = grunt.config.get('shell'),
-            remoteRegistrationCommand = [];
+            remoteRegistrationCommand = [],
+            tasksToRun = [];
+        grunt.verbose.writeln(console.log(existingDirs));
         shellConfig.cloneOrigin = {
             command: [
                 'cd buildsrc',
                 'mkdir -p ' + pluginSlug,
-                'git clone ' + originRepoAddress + ' ' + pluginSlug
+                'yes | git clone ' + originRepoAddress + ' ' + pluginSlug
             ].join('&&')
         };
         shellConfig.clonePot = {
             command: [
                 'cd potbuilds',
                 'mkdir -p ' + pluginSlug,
-                'git clone ' + originRepoAddress + ' ' + pluginSlug
+                'yes | git clone ' + originRepoAddress + ' ' + pluginSlug
             ].join('&&')
         };
+        grunt.verbose.writeln(console.log(remotesToRegister));
         //prep commands for doing the remote registrations
         remoteRegistrationCommand.push('cd ' + destination);
-        remotesToRegister.forEach(function(remoteItem) {
-            for (var remoteName in remoteItem) {
-                if (remoteName !== 'origin' && remotesToRegister.hasOwnProperty(remoteName)) {
-                    remoteRegistrationCommand.push(
-                        'git remote remove ' + remoteName + '; git remote add -f' + remoteName + ' ' + remotesToRegister[remoteName]
-                    );
-                }
+        for (var remoteName in remotesToRegister) {
+            if (remoteName !== 'origin' && remotesToRegister.hasOwnProperty(remoteName)) {
+                remoteRegistrationCommand.push(
+                    'git remote remove ' + remoteName + '; yes | git remote add -f ' + remoteName + ' ' + remotesToRegister[remoteName]
+                );
             }
-        });
+        }
         shellConfig.registerRemotes = {
             command: remoteRegistrationCommand.join('&&')
         };
         grunt.config.set('shell', shellConfig);
+        //now queue up tasks that run
+        if (! dirExists) {
+            tasksToRun.push('shell:cloneOrigin');
+            tasksToRun.push('shell:clonePot');
+        }
+        tasksToRun.push('shell:registerRemotes');
+        grunt.task.run(tasksToRun);
+        grunt.log.oklns('Finished initializing remotes for ' + pluginSlug);
     },
-    getPluginSlugForBuild: function(originRepoAddress) {
+    queueSettingPluginSlugForBuild: function(originRepoAddress) {
         var infoPath = 'buildsrc/tmp/info.json',
             shellConfig = grunt.config.get('shell');
         shellConfig.temp_install = {
             command: [
                 'cd buildsrc',
                 'mkdir -p tmp',
-                'git clone ' + originRepoAddress + ' tmp'
+                'yes | git clone ' + originRepoAddress + ' tmp'
             ].join('&&')
         };
         shellConfig.temp_remove = {
@@ -138,26 +162,24 @@ module.exports = {
                 'rm -rf tmp'
             ].join('&&')
         };
+        grunt.registerTask( 'setPluginSlugFromTemp', 'Sets the plugin slug from the temp directory', function () {
+            //k now the repo should be cloned, so we should be able to grab info from the info.json
+            info = grunt.file.exists(infoPath) ? grunt.file.readJSON(infoPath) : null;
+            if (info === null || typeof info.slug === 'undefined') {
+                grunt.fail.warn('Unable to get the info.json from the cloned repository.  Make sure all origin remote addresses have a info.json file in the root directory.');
+            }
+            grunt.config.set('currentSlug', info.slug);
+            grunt.log.oklns('Finished grabbing the plugin slug from the origin repo.');
+        });
         grunt.config.set('shell', shellConfig);
-        grunt.task.run(['shell:temp_install']);
-        //k now the repo should be cloned, so we should be able to grab info from the info.json
-        info = grunt.file.exists(infoPath) ? grunt.file.readJSON(infoPath) : null;
-        if (info === null || typeof info.slug === 'undefined') {
-            grunt.fail.warn('Unable to get the info.json from the cloned repository.  Make sure all origin remote addresses have a info.json file in the root directory.');
-        }
-        //delete temp
-        grunt.task.run(['shell:temp_remove']);
-        grunt.log.oklns('Finished grabbing the plugin slug from the origin repo.');
-        return info.slug;
+        grunt.task.run([
+            'shell:temp_install',
+            'setPluginSlugFromTemp',
+            'shell:temp_remove'
+        ]);
     },
     getInstalledDirs: function()
     {
-        var dirs = [];
-        grunt.file.expand({ cwd: 'buildsrc'}, '/*').forEach(function (file) {
-           if (grunt.file.isDir(file)) {
-               dirs.push(file);
-           }
-        });
-        return dirs;
+        return grunt.file.expand({filter: 'isDirectory', cwd: 'buildsrc'}, ['*']);
     }
 };
