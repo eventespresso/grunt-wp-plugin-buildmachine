@@ -8,7 +8,7 @@ module.exports = {
     },
     setupRemoteSyncProps: function () {
         var eeParams = grunt.config.get('pluginParams'),
-            remotes = pluginParams.remoteNamesToPushTo,
+            remotes = eeParams.remoteNamesToPushTo,
             remoteSync = {};
 
         if (typeof remotes === 'undefined' || remotes.length < 1) {
