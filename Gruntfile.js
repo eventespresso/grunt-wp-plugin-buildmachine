@@ -1063,7 +1063,7 @@ module.exports = function(grunt) {
         'Do a pr build for a given plugin slug.',
         function (pluginSlug) {
             builderInit.initPluginSlug(pluginSlug);
-            grunt.run.task([
+            grunt.task.run([
                 'setNotifications:init:pr:green',
                 'gitcheckout:master',
                 'setNotifications:gitcheckout:master',
@@ -1098,7 +1098,7 @@ module.exports = function(grunt) {
         'For building a microzip interim release for testing.',
         function (pluginSlug) {
             builderInit.initPluginSlug(pluginSlug);
-            grunt.run.task([
+            grunt.task.run([
                 'setNotifications:init:microzip:yellow',
                 'gitcheckout:master',
                 'setNotifications:gitcheckout:master',
@@ -1135,7 +1135,7 @@ module.exports = function(grunt) {
         'Deploy to wp.org',
         function (pluginSlug) {
             builderInit.initPluginSlug(pluginSlug);
-            grunt.run.task([
+            grunt.task.run([
                 'setNotifications:init:wpdeploy:green',
                 'gitcheckout:master',
                 'setNotifications:gitcheckout:master',
@@ -1177,7 +1177,7 @@ module.exports = function(grunt) {
         'Same as wpdeploy except this does not actually send to wp.org but just builds a zip for testing.',
         function (pluginSlug) {
             builderInit.initPluginSlug(pluginSlug);
-            grunt.run.task([
+            grunt.task.run([
                 'setNotifications:init:wpdeploy_ziponly:green',
                 'gitcheckout:master',
                 'setNotifications:gitcheckout:master',
@@ -1217,7 +1217,7 @@ module.exports = function(grunt) {
         'testingcssmin',
         function (pluginSlug) {
             builderInit.initPluginSlug(pluginSlug);
-            grunt.run.task(['setPluginParams', 'gitcheckout:testingSetup', 'cssmin:minify']);
+            grunt.task.run(['setPluginParams', 'gitcheckout:testingSetup', 'cssmin:minify']);
         });
 
 
@@ -1226,7 +1226,7 @@ module.exports = function(grunt) {
         'build pot file only',
         function (pluginSlug) {
             builderInit.initPluginSlug(pluginSlug);
-            grunt.run.task([
+            grunt.task.run([
                 'setNotifications:init:pot_only:yellow',
                 'gitcheckout:master',
                 'setNotifications:gitcheckout:master',
