@@ -88,7 +88,8 @@ module.exports = {
     hipChatPostTopic: function (roomInfo, newTopic, done) {
         var authToken = grunt.config.get('hipchat_notifier.options.authToken'),
             hipchat_client = this.hip_client,
-            hipchat = new hipchat_client(authToken);
+            hipchat = new hipchat_client(authToken),
+            notificationsObject = this;
         //SET new topic with hipchat
         hipchat.api.rooms.topic(
             {
@@ -101,7 +102,7 @@ module.exports = {
                     throw err;
                 }
                 grunt.log.ok('Topic changed for hipchat');
-                this.hipChatPostTopic();
+                notificationsObject.hipChatNotifyTopicChanged();
                 done();
             });
     },
