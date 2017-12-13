@@ -15,7 +15,7 @@ module.exports = {
     setPluginParams: function (task) {
         var pluginSlug = grunt.config.get('currentSlug'),
             src = 'buildsrc/' + pluginSlug + '/info.json',
-            params = grunt.file.exists(src) ? grunt.file.readJson(src) : null,
+            params = grunt.file.exists(src) ? grunt.file.readJSON(src) : null,
             gitinfo = grunt.config.get('gitinfo');
 
         if (params === null) {
