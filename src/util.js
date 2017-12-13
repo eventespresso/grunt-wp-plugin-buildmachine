@@ -26,5 +26,9 @@ module.exports = {
             grunt.fail.warn( 'Something went wrong with setting the version' );
             cb();
         }
+    },
+    getInstalledDirs: function()
+    {
+        return grunt.file.expand({filter: 'isDirectory', cwd: 'buildsrc'}, ['*']);
     }
 };

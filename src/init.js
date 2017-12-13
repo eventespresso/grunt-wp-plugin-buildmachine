@@ -102,7 +102,7 @@ module.exports = {
     },
     queueNewShellTasksForBuilder: function(originRepoAddress, remotesToRegister) {
         var pluginSlug = grunt.config.get('currentSlug'),
-            existingDirs = this.getInstalledDirs(),
+            existingDirs = this.utils.getInstalledDirs(),
             dirExists = existingDirs.indexOf(pluginSlug) > -1,
             destination = 'buildsrc/' + pluginSlug,
             shellConfig = grunt.config.get('shell'),
@@ -177,9 +177,5 @@ module.exports = {
             'setPluginSlugFromTemp',
             'shell:temp_remove'
         ]);
-    },
-    getInstalledDirs: function()
-    {
-        return grunt.file.expand({filter: 'isDirectory', cwd: 'buildsrc'}, ['*']);
     }
 };
