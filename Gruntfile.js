@@ -604,7 +604,7 @@ module.exports = function(grunt) {
                     treeIsh: 'release_prep',
                     format: 'zip',
                     prefix: '<%= pluginParams.slug %>/',
-                    output: '../../builds/<%= currentSlug %>/<%= pluginParams.slug %>.zip'
+                    output: '../../builds/<%= pluginParams.slug %>.zip'
                 }
             },
             prRelease: {
@@ -614,7 +614,7 @@ module.exports = function(grunt) {
                     treeIsh: 'release_prep',
                     format: 'zip',
                     prefix: '<%= pluginParams.slug %>/',
-                    output: '../../builds/<%= currentSlug %>/<%= pluginParams.slug %>.zip'
+                    output: '../../builds/<%= pluginParams.slug %>.zip'
                 }
             },
             wpRelease: {
