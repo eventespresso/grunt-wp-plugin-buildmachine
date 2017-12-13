@@ -1,9 +1,13 @@
 /**
  * Module for notifications
  **/
-var HipChatClient = require('hipchat-client');
+var HipChatClient = require('hipchat-client'),
+    grunt = {};
 module.exports = {
     hip_client: HipChatClient,
+    setGrunt : function (gruntObject) {
+        grunt = gruntObject;
+    },
     getHipChatRoomInfo: function (slackInfo) {
         return {
             id: grunt.config.get('privateParams.hipchat_creds.roomID'),

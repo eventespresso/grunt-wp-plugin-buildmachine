@@ -1,7 +1,11 @@
 /**
  * Utils module, some utility helper functions
  **/
+var grunt = {};
 module.exports = {
+    setGrunt: function (gruntObject) {
+        grunt = gruntObject;
+    },
     rmPrepareFolders: function (folders_to_remove) {
         var folders = [];
         if (typeof folders_to_remove === 'undefined') {

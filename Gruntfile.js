@@ -39,6 +39,11 @@ var builderInit = require('./src/init'),
 
 module.exports = function(grunt) {
     builderInit.setGrunt(grunt);
+    notifications.setGrunt(grunt);
+    remoteSyncTasks.setGrunt(grunt);
+    transform.setGrunt(grunt);
+    utils.setGrunt(grunt);
+    
     var defaultPluginParams = {
         "versionFile" : "",
         "versionType" : "rc",

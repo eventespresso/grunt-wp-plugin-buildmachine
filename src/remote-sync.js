@@ -1,7 +1,11 @@
 /**
  * Module for remote sync handling
  **/
+var grunt = {};
 module.exports = {
+    setGrunt: function (gruntObject) {
+        grunt = gruntObject;
+    },
     setupRemoteSyncProps: function () {
         var eeParams = grunt.config.get('pluginParams'),
             remotes = pluginParams.remoteNamesToPushTo,
