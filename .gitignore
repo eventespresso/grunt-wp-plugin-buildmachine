@@ -1,8 +1,6 @@
-src/
 node_modules/
-build/
 aws.json
 hipchat.json
 private.json
 slack.json
-checkout/
+buildmap.json
