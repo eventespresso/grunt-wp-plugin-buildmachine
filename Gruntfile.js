@@ -757,7 +757,7 @@ module.exports = function(grunt) {
         makepot: {
             dopot : {
                 options: {
-                    cwd: 'pot_builds',
+                    cwd: 'potbuilds',
                     domainPath: 'languages/',
                     include: ['.*'],
                     potFilename: '<%= pluginParams.textDomain %>.pot',
