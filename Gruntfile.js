@@ -31,9 +31,9 @@ var builderInit = require('./src/init'),
     transform = require('./src/transform'),
     utils = require('./src/util'),
     shareBuildObject = {
-        notify: 'Archive folder has been made available and can be retrieved from <a href="<%= privateParams.build_creds.archiveBaseUrl %><%= pluginParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.build_creds.archiveUser %>.  Password: <%= privateParams.build_creds.archivePass %>.',
+        notify: 'Archive folder has been made available and can be retrieved from <a href="<%= privateParams.build_creds.archiveBaseUrl %>/<%= pluginParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.build_creds.archiveUser %>.  Password: <%= privateParams.build_creds.archivePass %>.',
         slacknotify: "Archive folder has been made available and can be retrieved from <%= privateParams.build_creds.archiveBaseUrl %>/<%= pluginParams.slug %>.zip.  *Username:* <%= privateParams.build_creds.archiveUser %>.  *Password:* <%= privateParams.build_creds.archivePass %>.",
-        command: 'mv buildsrc/<%= currentSlug %>/<%= pluginParams.slug %>.zip <%= privateParams.build_creds.archiveBasePath %>'
+        command: 'mv builds/<%= pluginParams.slug %>.zip <%= privateParams.build_creds.archiveBasePath %>'
     };
 
 
@@ -750,8 +750,8 @@ module.exports = function(grunt) {
         },
 
         makepot_notifications : {
-            notify: 'Built POT File.  File is available by <a href="<%= privateParams.build_creds.archiveBaseUrl %><%= pluginParams.textDomain %>.pot">clicking here</a>  Username: <%= privateParams.build_creds.archiveUser %>.  Password: <%= privateParams.build_creds.archivePass %>.',
-            slacknotify: "Built POT File.  File is available here: <%= privateParams.build_creds.archiveBaseUrl %><%= pluginParams.textDomain %>.pot  *Username:* <%= privateParams.build_creds.archiveUser %>.  *Password:* <%= privateParams.build_creds.archivePass %>."
+            notify: 'Built POT File.  File is available by <a href="<%= privateParams.build_creds.archiveBaseUrl %>/<%= pluginParams.textDomain %>.pot">clicking here</a>  Username: <%= privateParams.build_creds.archiveUser %>.  Password: <%= privateParams.build_creds.archivePass %>.',
+            slacknotify: "Built POT File.  File is available here: <%= privateParams.build_creds.archiveBaseUrl %>/<%= pluginParams.textDomain %>.pot  *Username:* <%= privateParams.build_creds.archiveUser %>.  *Password:* <%= privateParams.build_creds.archivePass %>."
         },
 
         makepot: {
