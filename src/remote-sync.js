@@ -31,7 +31,7 @@ module.exports = {
                 commandsToRun.push('git push ' + el + ' <%= pluginParams.branch %>');
             });
             return commandsToRun;
-        }(pluginParams.remoteNamesToPushTo)).join('&&');
+        }(eeParams.remoteNamesToPushTo)).join('&&');
 
         grunt.config.set('remoteSyncNotify', remoteSync.notify);
         grunt.config.set('remoteSyncCommand', remoteSync.command);
