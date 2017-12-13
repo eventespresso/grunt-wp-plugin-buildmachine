@@ -64,18 +64,28 @@ module.exports = {
         if (validate && ! grunt.file.exists(src)) {
             grunt.fail.warn('There is no builder repo setup for ' + pluginSlug + '.  Please doublecheck your spelling, or you may need to run builder:init to get that repo setup first.');
         }
+        grunt.log.ok('Slug for build set to ' + pluginSlug);
         grunt.config.set('currentSlug', pluginSlug);
     },
     initializeFromMap: function() {
         var buildMap = grunt.config.get('buildMap'),
-            init = this;
+            init = this,
+            generatedMap = {};
         grunt.verbose.writeln(console.log(buildMap));
         buildMap.map.forEach(function(remotes) {
-            init.initializeSrc(remotes);
+            init.initializeSrc(remotes, generatedMap);
         });
+        grunt.registerTask(
+            'writeGeneratedMapFile',
+            'Write a map of all initialized things to the generated map of origin_repo_address: directoryname',
+            function () {
+                grunt.file.write('installedReposMap.json', JSON.stringify(generatedMap));
+            }
+        );
+        grunt.task.run('writeGeneratedMapFile');
         grunt.log.oklns('Finished initializing all remotes in the buildmap.json file');
     },
-    initializeSrc: function(remotes) {
+    initializeSrc: function(remotes, generatedMap) {
         if (typeof remotes.origin === 'undefined') {
             grunt.fail.warn('Cannot build because there is no origin defined for the remotes.');
             return;
@@ -96,11 +106,11 @@ module.exports = {
             'queueShellTasksForBuilder_' + encryptedSlug,
             'Queue Shell tasks for builder.',
             function () {
-               initObject.queueNewShellTasksForBuilder(remotes.origin, remotes);
+               initObject.queueNewShellTasksForBuilder(remotes.origin, remotes, generatedMap);
             });
         grunt.task.run(tasksToRun);
     },
-    queueNewShellTasksForBuilder: function(originRepoAddress, remotesToRegister) {
+    queueNewShellTasksForBuilder: function(originRepoAddress, remotesToRegister, generatedMap) {
         var pluginSlug = grunt.config.get('currentSlug'),
             existingDirs = this.utils.getInstalledDirs(),
             dirExists = existingDirs.indexOf(pluginSlug) > -1,
@@ -123,6 +133,10 @@ module.exports = {
                 'yes | git clone ' + originRepoAddress + ' ' + pluginSlug
             ].join('&&')
         };
+        /**
+         * add to generatedMap
+         */
+        generatedMap[pluginSlug] = originRepoAddress;
         grunt.verbose.writeln(console.log(remotesToRegister));
         //prep commands for doing the remote registrations
         remoteRegistrationCommand.push('cd ' + destination);
