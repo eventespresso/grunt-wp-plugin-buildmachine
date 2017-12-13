@@ -32,7 +32,7 @@ var builderInit = require('./src/init'),
     utils = require('./src/util'),
     shareBuildObject = {
         notify: 'Archive folder has been made available and can be retrieved from <a href="<%= privateParams.build_creds.archiveBaseUrl %><%= pluginParams.slug %>.zip">clicking here</a>.  Username: <%= privateParams.build_creds.archiveUser %>.  Password: <%= privateParams.build_creds.archivePass %>.',
-        slacknotify: "Archive folder has been made available and can be retrieved from <%= privateParams.build_creds.archiveBaseUrl %><%= pluginParams.slug %>.zip.  *Username:* <%= privateParams.build_creds.archiveUser %>.  *Password:* <%= privateParams.build_creds.archivePass %>.",
+        slacknotify: "Archive folder has been made available and can be retrieved from <%= privateParams.build_creds.archiveBaseUrl %>/<%= pluginParams.slug %>.zip.  *Username:* <%= privateParams.build_creds.archiveUser %>.  *Password:* <%= privateParams.build_creds.archivePass %>.",
         command: 'mv buildsrc/<%= currentSlug %>/<%= pluginParams.slug %>.zip <%= privateParams.build_creds.archiveBasePath %>'
     };
 
