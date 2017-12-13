@@ -43,7 +43,7 @@ module.exports = function(grunt) {
     remoteSyncTasks.setGrunt(grunt);
     transform.setGrunt(grunt);
     utils.setGrunt(grunt);
-    
+
     var defaultPluginParams = {
         "versionFile" : "",
         "versionType" : "rc",
@@ -798,11 +798,7 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask( 'compressPhp', 'Maybe compress php files', function compressPhp() {
-        var params = grunt.config.get( 'pluginParams' );
-
-        if ( params.compressPhpPath ) {
-            grunt.task.run( 'shell:compress_php', 'setNotifications:shell:compress_php' );
-        }
+        transform.compressPhp();
     });
 
     //deciding whether to do sandbox and github pushes dependent on params set in the repo info.json file.
