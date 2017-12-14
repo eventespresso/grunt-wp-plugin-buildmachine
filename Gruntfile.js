@@ -270,7 +270,7 @@ module.exports = function(grunt) {
                 notify: 'Moving contents of wp-assets into correct directory.',
                 command: [
                     'rm -rf wpbuilds/<%= currentSlug %>/wp-org-assets',
-                    'mkdir wpbuilds/<%= currentSlug %>/wp-org-assets',
+                    'mkdir -p wpbuilds/<%= currentSlug %>/wp-org-assets',
                     'cp -r buildsrc/<%= currentSlug %>/wp-assets/* wpbuilds/<%= currentSlug %>/wp-org-assets'
                 ].join(';')
             },
@@ -278,7 +278,7 @@ module.exports = function(grunt) {
                 notify: 'Copying contents of plugin into wp-org build directory to prep for deploy to wordpress.org.',
                 command: [
                     'rm -rf wpbuilds/<%= currentSlug %>/wp-org',
-                    'mkdir wpbuilds/<%= currentSlug %>/wp-org',
+                    'mkdir -p wpbuilds/<%= currentSlug %>/wp-org',
                     'cp -r buildsrc/<%= currentSlug %>/* wpbuilds/<%= currentSlug %>/wp-org',
                     'cd wpbuilds/<%= currentSlug %>/wp-org',
                     'find . -depth -name node_modules -type d -exec rm -r "{}" \\;'
