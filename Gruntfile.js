@@ -294,7 +294,7 @@ module.exports = function(grunt) {
             shareBuildWP : {
                 notify: 'Archive folder for WP deploy has been made available and can be retrieved from <a href="<%= privateParams.build_creds.archiveBaseUrl %><%= pluginParams.wpOrgSlug %>-wp.zip">clicking here</a>.  Username: <%= privateParams.build_creds.archiveUser %>.  Password: <%= privateParams.build_creds.archivePass %>.',
                 slacknotify: "Archive folder for WP deploy has been made available and can be retrieved from <%= privateParams.build_creds.archiveBaseUrl %><%= pluginParams.wpOrgSlug %>-wp.zip  *Username:* <%= privateParams.build_creds.archiveUser %>.  *Password:* <%= privateParams.build_creds.archivePass %>.",
-                command: 'mv builds/<%= currentSlug %>/<%= pluginParams.wpOrgSlug %>-wp.zip <%= privateParams.build_creds.archiveBasePath %>'
+                command: 'mv builds/<%= pluginParams.wpOrgSlug %>-wp.zip <%= privateParams.build_creds.archiveBasePath %>'
             },
             sharePOTBuild : {
                 notify: 'POT Build moved for retrieval.',
