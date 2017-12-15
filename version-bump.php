@@ -6,6 +6,7 @@
 $type = getenv( 'EE_VERSION_BUMP_TYPE' );
 $file = getenv( 'EE_VERSION_FILE' );
 $info_json_file = getenv( 'EE_INFO_JSON' );
+$info_json = $info_json_file ? json_decode(file_get_contents($info_json_file)) : '';
 
 //get version file contents.
 $version_file = file_get_contents( $file );
@@ -23,7 +24,6 @@ if ( empty( $orig_version ) ) {
 $version_split = explode( '.', $orig_version);
 $plugin_name = $orig_plugin_name = '';
 $plugin_uri = $orig_plugin_uri = '';
-$info_json = '';
 $do_info_json = false;
 
 switch( $type ) {
@@ -62,8 +62,8 @@ switch( $type ) {
 		preg_match( '/^[ \t\/*#@]*Plugin Name:.*$/mi', $version_file, $name_matches );
 		$orig_plugin_uri = isset( $uri_matches[0] ) ? trim( $uri_matches[0] ) : '';
 		$orig_plugin_name = isset( $name_matches[0] ) ? trim( $name_matches[0] ) : '';
-		$plugin_name = 'Plugin Name: Event Espresso 4 Decaf';
-		$plugin_uri = 'Plugin URI: https://eventespresso.com/pricing/?ee_ver=ee4&utm_source=ee4_decaf_plugin_admin&utm_medium=link&utm_campaign=wordpress_plugins_page&utm_content=support_link';
+		$plugin_name = 'Plugin Name: ' . $info_json->wpOrgPluginName;
+		$plugin_uri = 'Plugin URI: ' . $info_json->wpOrgPluginUrl;
 		break;
 
 	case 'rc' :

@@ -1,0 +1,44 @@
+{
+  "versionFile": "main-plugin-file-containing-plugin-header-and-version.php",
+  "slug": "slug-you-use-for-your-plugin",
+  "textDomain": "wp-text-domain-for-plugin",
+  "wpOrgSlug": "slug-for-plugin-on-wp-org",
+  "wpOrgMainFileSlug": "main-file-slug-to-end-up-with-for-wp-org",
+  "wpOrgUser": "user_registered_for_plugin_on_wp_org",
+  "wpOrgRelease": "4.9.53.p",
+  "wpOrgPluginName" : "Name of Plugin for WpOrg Release",
+  "wpOrgPluginUrl" : "Url of Plugin for WpOrg Release",
+  "name": "Name of Plugin",
+  "jsBuildDirectory": "core/libraries/rest_api/assets/js",
+  "releaseFilesRemove": [
+    "src/tests/**",
+    "src/acceptance_tests/**",
+    "src/docs/**",
+    "src/info.json",
+    "src/circle.yml",
+    "src/readme.txt",
+    "src/wp-assets/**",
+    "src/.travis.yml",
+    "src/ISSUE_TEMPLATE.md",
+    "src/PULL_REQUEST_TEMPLATE.md"
+  ],
+  "decafFilesRemove": [
+    "src/tests/**",
+    "src/acceptance_tests/**",
+    "src/docs/**",
+    "src/info.json",
+    "src/circle.yml",
+    "src/.travis.yml",
+    "src/caffeinated",
+    "src/wp-assets/**",
+    "src/ISSUE_TEMPLATE.md",
+    "src/PULL_REQUEST_TEMPLATE.md"
+  ],
+  "github": true,
+  "awsbucket": "",
+  "awsregion": "",
+  "remoteNamesToPushTo": [
+    "demoee",
+    "ee4mhub"
+  ]
+}
