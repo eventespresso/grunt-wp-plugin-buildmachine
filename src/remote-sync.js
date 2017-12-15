@@ -19,7 +19,7 @@ module.exports = {
         remoteSync.notify = (function (r) {
             var notifyString = "Pushed master branch to the following repo locations (remote names): ";
             remotes.forEach(function (el) {
-                notifyString += el;
+                notifyString += ' ' + el;
             });
             return notifyString;
         }(remotes));
