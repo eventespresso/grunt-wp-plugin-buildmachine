@@ -49,7 +49,6 @@ module.exports = function(grunt) {
         "versionType" : "rc",
         "slug" : "",
         "textDomain" : "",
-        "srcBuildFolderName" : "",
         "wpOrgSlug" : "",
         "wpOrgMainFileSlug" : "",
         "wpOrgUser" : "",
@@ -840,7 +839,7 @@ module.exports = function(grunt) {
         'Testing gitinfo task and also verifies repo is setup for given plugin slug.',
         function (pluginSlug) {
             builderInit.initPluginSlug(pluginSlug);
-            grunt.task.run(['gitcheckout:alpha', 'gitinfo', 'maybeRun']);
+            grunt.task.run(['gitcheckout:master', 'gitinfo', 'maybeRun']);
     });
 
     grunt.registerTask(
