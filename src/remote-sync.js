@@ -25,9 +25,9 @@ module.exports = {
         }(remotes));
         remoteSync.command = (function (remotes) {
             var commandsToRun = [];
+            commandsToRun.push('cd buildsrc/<%= currentSlug %>');
+            commandsToRun.push('unset GIT_DIR');
             remotes.forEach(function (el) {
-                commandsToRun.push('cd buildsrc/<%= currentSlug %>');
-                commandsToRun.push('unset GIT_DIR');
                 commandsToRun.push('git push ' + el + ' <%= pluginParams.branch %>');
             });
             return commandsToRun;
