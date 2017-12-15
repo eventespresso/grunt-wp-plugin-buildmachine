@@ -1,7 +1,9 @@
 {
   "build_creds" : {
     "archiveUser": "htpasswduserforarchivebuilds",
-    "archivePass": "htpasswdpassforarchivebuilds"
+    "archivePass": "htpasswdpassforarchivebuilds",
+    "archiveBaseUrl" : "http://urlpointingtoyourbuildpath.com",
+    "archiveBasePath" : "~/www/build/"
   },
   "slack_creds" : {
     "authToken" : "xxxx-xxxxxxxxxxx-xxxxxxxxxxxx-xxxxxxxxxx-xxxxxxxx",
