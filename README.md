@@ -1,6 +1,6 @@
 # WordPress Plugin Buildmachine for Grunt
 
-This library is a grunt package that provides a "build machine" for WordPress plugins.  The Event Espresso team has used variations of this library for our entire plugin/add-on library for the last 3 years. Once configured, the following tasks can be done by this library:
+This library is a grunt package that provides a "build machine" for WordPress plugins.  The Event Espresso team has used variations of this library for our entire plugin/add-on library for the last ~3-4 years. Once configured, the following tasks can be done by this library:
 
 * Version bump your plugin (minor, major). By "version bump", this automatically changes the versions listed in your main plugin file (plugin header, and anywhere else the version is mentioned in that file). Currently this is not semver, you can customize version recognition in the `version-bump.php` file.
 * Build various release zips of your plugin and also tags those releases.
