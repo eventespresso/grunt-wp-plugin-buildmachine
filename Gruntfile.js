@@ -138,6 +138,19 @@ module.exports = function(grunt) {
                     stdin: false
                 }
             },
+            //replace $VID:$ in all php files with the current version
+            vid_version_replace: {
+                notify: 'Replacing $VID:$ with latest version string.',
+                command: [
+                    'cd buildsrc/<%= currentSlug %>/',
+                    'find . -name "*.php" | xargs sed -i \'\' -e \'s/\\$VID:\\$/<%= new_version %>/g\''
+                ].join('&&'),
+                options: {
+                    stdout: true,
+                    stderr: false,
+                    stdin: false
+                }
+            },
             //run any npm tasks
             npm_run: {
                 notify: 'Ran build on js build directory.',
@@ -431,7 +444,13 @@ module.exports = function(grunt) {
                     message: 'Bumping version to <%= new_version %> and prepped for release'
                 }
             },
-
+            version_bump: {
+                notify: 'Committing version bump without last commit message.',
+                options: {
+                    cwd: 'buildsrc/<%= currentSlug %>',
+                    message: 'Bumping version to <%= new_version %>'
+                }
+            },
             releaseSansFiles: {
                 notify: 'Commited release minus folders/files not included with production bump.',
                 options: {
@@ -447,12 +466,25 @@ module.exports = function(grunt) {
                     message: 'Prepping wp release minus folders/files not included with wp org releases.'
                 }
             },
-
             prRelease: {
                 notify: 'Commited release version change for pr.',
                 options: {
                     cwd: 'buildsrc/<%= currentSlug %>',
                     message: 'Changed version to <%= new_version %> and prepped for pre release'
+                }
+            },
+            compress_php: {
+                notify: 'Committed changes from compressing php files.',
+                options: {
+                    cwd: 'buildsrc/<%= currentSlug %>',
+                    message: 'Compressed php files.'
+                }
+            },
+            vid_version_replace: {
+                notify: 'Committed $VID:$ string replacement.',
+                options: {
+                    cwd: 'buildsrc/<%= currentSlug %>',
+                    message: 'Replaced $VID:$ in all php files with <%= new_version %>.'
                 }
             }
         },
@@ -800,6 +832,10 @@ module.exports = function(grunt) {
         transform.compressPhp();
     });
 
+    grunt.registerTask( 'vidVersionReplace', 'Replace $VID:$ string with new version string.', function vidVersionReplace() {
+        transform.vidVersionReplace();
+    });
+
     //deciding whether to do sandbox and github pushes dependent on params set in the repo info.json file.
     grunt.registerTask( 'SandboxGithub', 'Do sandbox and github pushes?', function SandboxGithub() {
         remoteSyncTasks.allRemotesPush(this);
@@ -921,14 +957,15 @@ module.exports = function(grunt) {
                 'gitadd:version',
                 'setNotifications:gitadd:version',
                 'gitcommit:release',
-                'setNotifications:gitcommit:release',
+                'setNotifications:gitcommit:version_bump',
                 'gitcheckout:release',
                 'setNotifications:gitcheckout:release',
                 'gittag:releaseAll',
                 'setNotifications:gittag:releaseAll',
+                'compressPhp',
+                'vidVersionReplace',
                 'shell:remove_folders_release',
                 'setNotifications:shell:remove_folders_release',
-                'compressPhp',
                 'maybeRunNpm',
                 'gitadd:version',
                 'setNotifications:gitadd:version',
@@ -979,15 +1016,16 @@ module.exports = function(grunt) {
                 'setNotifications:shell:bump_major',
                 'gitadd:version',
                 'setNotifications:gitadd:version',
-                'gitcommit:release',
-                'setNotifications:gitcommit:release',
+                'gitcommit:version_bump',
+                'setNotifications:gitcommit:version_bump',
                 'gitcheckout:release',
                 'setNotifications:gitcheckout:release',
                 'gittag:releaseAll',
                 'setNotifications:gittag:releaseAll',
+                'compressPhp',
+                'vidVersionReplace',
                 'shell:remove_folders_release',
                 'setNotifications:shell:remove_folders_release',
-                'compressPhp',
                 'gitadd:version',
                 'gitcommit:release',
                 'setNotifications:gitcommit:release',
@@ -1039,9 +1077,12 @@ module.exports = function(grunt) {
                 'setNotifications:gitcheckout:release',
                 'shell:prVersion',
                 'setNotifications:shell:prVersion',
+                'gitadd:version',
+                'gitcommit:version_bump',
+                'compressPhp',
+                'vidVersionReplace',
                 'shell:remove_folders_release',
                 'setNotifications:shell:remove_folders_release',
-                'compressPhp',
                 'gitadd:version',
                 'setNotifications:gitadd:version',
                 'gitcommit:prRelease',
@@ -1074,9 +1115,12 @@ module.exports = function(grunt) {
                 'setNotifications:gitcheckout:release',
                 'shell:prVersion',
                 'setNotifications:shell:prVersion',
+                'gitadd:version',
+                'gitcommit:version_bump',
+                'compressPhp',
+                'vidVersionReplace',
                 'shell:remove_folders_release',
                 'setNotifications:shell:remove_folders_release',
-                'compressPhp',
                 'gitadd:version',
                 'setNotifications:gitadd:version',
                 'gitcommit:prRelease',
@@ -1109,9 +1153,12 @@ module.exports = function(grunt) {
                 'setNotifications:gitcheckout:release',
                 'shell:microZipVersion',
                 'setNotifications:shell:microZipVersion',
+                'gitadd:version',
+                'gitcommit:version_bump',
+                'compressPhp',
+                'vidVersionReplace',
                 'shell:remove_folders_release',
                 'setNotifications:shell:remove_folders_release',
-                'compressPhp',
                 'maybeRunNpm',
                 'gitadd:version',
                 'gitcommit:release',
@@ -1148,9 +1195,12 @@ module.exports = function(grunt) {
                 'setNotifications:shell:checkoutTag',
                 'shell:decafVersion',
                 'setNotifications:shell:decafVersion',
+                'gitadd:version',
+                'gitcommit:version_bump',
+                'compressPhp',
+                'vidVersionReplace',
                 'shell:remove_folders_decaf',
                 'setNotifications:shell:remove_folders_decaf',
-                'compressPhp',
                 'maybeRunNpm',
                 /*'shell:renameMainFile',
                  'setNotifications:shell:renameMainFile',/**/
@@ -1190,9 +1240,12 @@ module.exports = function(grunt) {
                 'setNotifications:shell:checkoutTag',
                 'shell:decafVersion',
                 'setNotifications:shell:decafVersion',
+                'gitadd:version',
+                'gitcommit:version_bump',
+                'compressPhp',
+                'vidVersionReplace',
                 'shell:remove_folders_decaf',
                 'setNotifications:shell:remove_folders_decaf',
-                'compressPhp',
                 'maybeRunNpm',
                 /*'shell:renameMainFile',
                  'setNotifications:shell:renameMainFile',/**/
