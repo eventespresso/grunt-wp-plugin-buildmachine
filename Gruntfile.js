@@ -956,7 +956,7 @@ module.exports = function(grunt) {
                 'setNotifications:shell:bump_minor',
                 'gitadd:version',
                 'setNotifications:gitadd:version',
-                'gitcommit:release',
+                'gitcommit:version_bump',
                 'setNotifications:gitcommit:version_bump',
                 'gitcheckout:release',
                 'setNotifications:gitcheckout:release',
