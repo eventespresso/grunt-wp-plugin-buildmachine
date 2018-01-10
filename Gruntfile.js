@@ -1091,6 +1091,7 @@ module.exports = function(grunt) {
                 'setNotifications:gitarchive:prRelease',
                 'shell:shareBuildpr',
                 'setNotifications:shell:shareBuildpr',
+                'gitcheckout:master',
                 'setNotifications:end',
                 'hipchat_notifier:notify_team',
                 'slack_api:notify_build'
@@ -1129,6 +1130,7 @@ module.exports = function(grunt) {
                 'setNotifications:gitarchive:prRelease',
                 'shell:shareBuildpr',
                 'setNotifications:shell:shareBuildpr',
+                'gitcheckout:master',
                 'setNotifications:end',
                 'hipchat_notifier:notify_team',
                 'slack_api:notify_build'
@@ -1211,6 +1213,7 @@ module.exports = function(grunt) {
                 'setNotifications:gitarchive:wpRelease',
                 'shell:shareBuildWP',
                 'setNotifications:shell:shareBuildWP',
+                'gitcheckout:master',
                 'wp_deploy:deploy',
                 'setNotifications:wp_deploy:deploy',
                 'setNotifications:end',
@@ -1255,6 +1258,7 @@ module.exports = function(grunt) {
                 'setNotifications:gitarchive:wpRelease',
                 'shell:shareBuildWP',
                 'setNotifications:shell:shareBuildWP',
+                'gitcheckout:master',
                 'setNotifications:end',
                 'hipchat_notifier:notify_team',
                 'slack_api:notify_build'
