@@ -5,3 +5,4 @@ private.json
 slack.json
 buildmap.json
 installedReposMap.json
+/package-lock.json

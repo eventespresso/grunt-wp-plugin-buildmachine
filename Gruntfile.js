@@ -770,7 +770,7 @@ module.exports = function(grunt) {
                 notify: 'Deployed to WordPress.org!',
                 options: {
                     plugin_slug: '<%= pluginParams.wpOrgSlug %>',
-                    plugin_file_slug : '<%= pluginParams.wpOrgMainFileSlug %>',
+                    plugin_main_file : '<%= pluginParams.wpOrgMainFileSlug %>.php',
                     svn_user: '<%= pluginParams.wpOrgUser %>',
                     build_dir: 'wpbuilds/<%= currentSlug %>/wp-org',
                     assets_dir: 'wpbuilds/<%= currentSlug %>/wp-org-assets',
