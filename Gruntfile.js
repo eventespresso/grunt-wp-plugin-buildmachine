@@ -374,6 +374,19 @@ module.exports = function(grunt) {
                     stdin: false
                 }
             },
+            gitPushAllTags: {
+                notify: "Pushing all tags to github",
+                command: [
+                    'cd buildsrc/<%= currentSlug %>',
+                    'unset GIT_DIR',
+                    'git push github --tags'
+                ].join('&&'),
+                options: {
+                    stdout: false,
+                    stderr: false,
+                    stdin: false
+                }
+            },
             potCheckout: {
                 notify: "Checking out master in the pot assembly directory",
                 command: [
@@ -985,7 +998,7 @@ module.exports = function(grunt) {
                 'setNotifications:gitcommit:version',
                 'gitpush:release',
                 'setNotifications:gitpush:release',
-                'setTagPush',
+                'gitPushAllTags',
                 'updateRemotes',
                 'shell:shareBuild',
                 'setNotifications:shell:shareBuild',
@@ -1042,7 +1055,7 @@ module.exports = function(grunt) {
                 'setNotifications:gitcommit:version',
                 'gitpush:release',
                 'setNotifications:gitpush:release',
-                'setTagPush',
+                'gitPushAllTags',
                 'updateRemotes',
                 'shell:shareBuild',
                 'setNotifications:shell:shareBuild',
