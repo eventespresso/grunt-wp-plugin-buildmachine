@@ -497,7 +497,8 @@ module.exports = function(grunt) {
                 notify: 'Committed $VID:$ string replacement.',
                 options: {
                     cwd: 'buildsrc/<%= currentSlug %>',
-                    message: 'Replaced $VID:$ in all php files with <%= new_version %>.'
+                    message: 'Replaced $VID:$ in all php files with <%= new_version %>.',
+                    allowEmpty: true
                 }
             }
         },
