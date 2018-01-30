@@ -789,7 +789,7 @@ module.exports = function(grunt) {
                     build_dir: 'wpbuilds/<%= currentSlug %>/wp-org',
                     assets_dir: 'wpbuilds/<%= currentSlug %>/wp-org-assets',
                     checkout_dir: 'checkout/',
-                    max_buffer: 1200*1024
+                    max_buffer: 2048*1024
                 }
             }
         },
