@@ -2,9 +2,11 @@
   "name": "event-espresso-build-machine",
   "version": "0.1.0",
   "devDependencies": {
+    "deep-extend": "^0.5.0",
     "grunt": "^1.0.1",
     "grunt-aws-s3": "^2.0.0",
     "grunt-contrib-cssmin": "^2.2.1",
+    "grunt-git": "^1.0.9",
     "grunt-gitinfo": "^0.1.8",
     "grunt-hipchat-notifier": "^0.3.0",
     "grunt-shell": "^2.1.0",

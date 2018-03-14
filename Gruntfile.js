@@ -28,6 +28,7 @@
 var builderInit = require('./src/init'),
     notifications = require('./src/notifications'),
     remoteSyncTasks = require('./src/remote-sync'),
+    deepExtend = require('deep-extend'),
     transform = require('./src/transform'),
     utils = require('./src/util'),
     shareBuildObject = {
@@ -87,6 +88,12 @@ module.exports = function(grunt) {
         "aws_creds" : {
             "accessKeyId" : "",
             "secretAccessKey": ""
+        },
+        "version_meta" : {
+            "pre_release" : "beta",
+            "decaf" : "decaf",
+            "rc" : "rc",
+            "release" : "p"
         }
     };
 
@@ -97,8 +104,8 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON( 'package.json' ),
         pluginParams: defaultPluginParams,
-        privateParams: grunt.file.exists('private.json') ? grunt.file.readJSON('private.json') : defaultPrivateParams,
-        buildMap: grunt.file.exists('buildmap.json') ? grunt.file.readJSON('buildmap.json') : defaultBuildMap,
+        privateParams: grunt.file.exists('private.json') ? deepExtend(defaultPrivateParams, grunt.file.readJSON('private.json')) : defaultPrivateParams,
+        buildMap: grunt.file.exists('buildmap.json') ? deepExtend(defaultBuildMap, grunt.file.readJSON('buildmap.json')) : defaultBuildMap,
         currentSlug: '',
         new_version: '',
         rc_version: null,
@@ -171,6 +178,10 @@ module.exports = function(grunt) {
                     'export EE_VERSION_BUMP_TYPE="<%=pluginParams.versionType %>"',
                     'export EE_VERSION_FILE="buildsrc/<%= currentSlug %>/<%= pluginParams.versionFile %>"',
                     'export EE_INFO_JSON="buildsrc/<%= currentSlug %>/info.json"',
+                    'export EE_VERSION_META_PR="<%= privateParams.version_meta.pre_release"',
+                    'export EE_VERSION_META_DECAF="<%= privateParams.version_meta.decaf"',
+                    'export EE_VERSION_META_RC="<%= privateParams.version_meta.rc"',
+                    'export EE_VERSION_META_RELEASE="<%= privateParams.version_meta.release"',
                     'php version-bump.php'
                 ].join('&&'),
                 options: {
@@ -186,6 +197,10 @@ module.exports = function(grunt) {
                     'export EE_VERSION_BUMP_TYPE="minor"',
                     'export EE_VERSION_FILE="buildsrc/<%= currentSlug %>/<%= pluginParams.versionFile %>"',
                     'export EE_INFO_JSON="buildsrc/<%= currentSlug %>/info.json"',
+                    'export EE_VERSION_META_PR="<%= privateParams.version_meta.pre_release"',
+                    'export EE_VERSION_META_DECAF="<%= privateParams.version_meta.decaf"',
+                    'export EE_VERSION_META_RC="<%= privateParams.version_meta.rc"',
+                    'export EE_VERSION_META_RELEASE="<%= privateParams.version_meta.release"',
                     'php version-bump.php'
                 ].join('&&'),
                 options: {
@@ -201,6 +216,10 @@ module.exports = function(grunt) {
                     'export EE_VERSION_BUMP_TYPE="major"',
                     'export EE_VERSION_FILE="buildsrc/<%= currentSlug %>/<%= pluginParams.versionFile %>"',
                     'export EE_INFO_JSON="buildsrc/<%= currentSlug %>/info.json"',
+                    'export EE_VERSION_META_PR="<%= privateParams.version_meta.pre_release"',
+                    'export EE_VERSION_META_DECAF="<%= privateParams.version_meta.decaf"',
+                    'export EE_VERSION_META_RC="<%= privateParams.version_meta.rc"',
+                    'export EE_VERSION_META_RELEASE="<%= privateParams.version_meta.release"',
                     'php version-bump.php'
                 ].join('&&'),
                 options: {
@@ -217,6 +236,10 @@ module.exports = function(grunt) {
                     'export EE_VERSION_FILE="buildsrc/<%= currentSlug %>/<%= pluginParams.versionFile %>"',
                     'export EE_README_FILE="buildsrc/<%= currentSlug %>/readme.txt"',
                     'export EE_INFO_JSON="buildsrc/<%= currentSlug %>/info.json"',
+                    'export EE_VERSION_META_PR="<%= privateParams.version_meta.pre_release"',
+                    'export EE_VERSION_META_DECAF="<%= privateParams.version_meta.decaf"',
+                    'export EE_VERSION_META_RC="<%= privateParams.version_meta.rc"',
+                    'export EE_VERSION_META_RELEASE="<%= privateParams.version_meta.release"',
                     'php version-bump.php'
                 ].join('&&'),
                 options: {
@@ -232,6 +255,10 @@ module.exports = function(grunt) {
                     'export EE_VERSION_BUMP_TYPE="pre_release"',
                     'export EE_VERSION_FILE="buildsrc/<%= currentSlug %>/<%= pluginParams.versionFile %>"',
                     'export EE_INFO_JSON="buildsrc/<%= currentSlug %>/info.json"',
+                    'export EE_VERSION_META_PR="<%= privateParams.version_meta.pre_release"',
+                    'export EE_VERSION_META_DECAF="<%= privateParams.version_meta.decaf"',
+                    'export EE_VERSION_META_RC="<%= privateParams.version_meta.rc"',
+                    'export EE_VERSION_META_RELEASE="<%= privateParams.version_meta.release"',
                     'php version-bump.php'
                 ].join('&&'),
                 options: {
@@ -247,6 +274,10 @@ module.exports = function(grunt) {
                     'export EE_VERSION_BUMP_TYPE="micro_zip"',
                     'export EE_VERSION_FILE="buildsrc/<%= currentSlug %>/<%= pluginParams.versionFile %>"',
                     'export EE_INFO_JSON="buildsrc/<%= currentSlug %>/info.json"',
+                    'export EE_VERSION_META_PR="<%= privateParams.version_meta.pre_release"',
+                    'export EE_VERSION_META_DECAF="<%= privateParams.version_meta.decaf"',
+                    'export EE_VERSION_META_RC="<%= privateParams.version_meta.rc"',
+                    'export EE_VERSION_META_RELEASE="<%= privateParams.version_meta.release"',
                     'php version-bump.php'
                 ].join('&&'),
                 options: {

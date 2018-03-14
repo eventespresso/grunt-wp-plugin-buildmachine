@@ -6,6 +6,12 @@
 $type = getenv( 'EE_VERSION_BUMP_TYPE' );
 $file = getenv( 'EE_VERSION_FILE' );
 $info_json_file = getenv( 'EE_INFO_JSON' );
+$version_strings = array(
+    'pr' => getenv('EE_VERSION_META_PR'),
+    'decaf' => getenv('EE_VERSION_META_DECAF'),
+    'rc' => getenv('EE_VERSION_META_RC'),
+    'release' => getenv('EE_VERSION_META_RELEASE')
+);
 $info_json = $info_json_file ? json_decode(file_get_contents($info_json_file)) : '';
 
 //get version file contents.
@@ -29,7 +35,7 @@ $do_info_json = false;
 switch( $type ) {
 	case 'pre_release' :
 		//we're not bumping just replacing whatever string is in the version string with 'beta', since pre-releases are ONLY built on top of rc/alpha/beta builds, then we just replace the second from last array index
-		$version_split[3] = 'beta';
+		$version_split[3] = $version_strings['pr'];
 		break;
 
 	case 'micro_zip' :
@@ -45,12 +51,12 @@ switch( $type ) {
 		} else {
 			$version_split[2] = $version_split[2] - 1;
 		}
-		$version_split[3] = 'p';
+		$version_split[3] = $version_strings['release'];
 		break;
 
 	case 'decaf' :
 		//we're not bumping, just replacing whatever string is in the version string with 'decaf', and dropping the last version numbers.  Since decaf is built on top of checked out tags, we'll just replace the second from last array index.
-		$version_split[3] = 'decaf';
+		$version_split[3] = $version_strings['decaf'];
 
 		//IF there is a micro version, then we need to make sure we remove.
 		if ( isset( $version_split[4] ) ) {
@@ -92,7 +98,7 @@ switch( $type ) {
 
 	case 'minor' :
 		if ( count( $version_split ) == 5 ) {
-			$version_split[3] = 'p';  //we don't bump any versions here becasue it should already have been bumped in prepping rc version.
+			$version_split[3] = $version_strings['release'];  //we don't bump any versions here becasue it should already have been bumped in prepping rc version.
 			unset( $version_split[4] );
 		} else {
 			$index = count( $version_split ) - 2;
@@ -116,7 +122,7 @@ switch( $type ) {
 			}
 			$version_split[1] = $last_num;
 			$version_split[2] = '0';
-			$version_split[3] = 'p';
+			$version_split[3] = $version_strings['release'];
 			unset( $version_split[4] );
 		} else {
 			$index = count( $version_split ) - 3;

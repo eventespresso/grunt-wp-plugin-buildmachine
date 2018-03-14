@@ -20,5 +20,11 @@
   "aws_creds" : {
     "accessKeyId" : "xxxxxxxxxxxxxxxxxxxxxxxx",
     "secretAccessKey": "xxxxxxxxxxxxxxxxxxxxx"
+  },
+  "version_meta" : {
+    "pre_release" : "beta",
+    "decaf" : "decaf",
+    "rc" : "rc",
+    "release" : "p"
   }
 }
