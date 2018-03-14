@@ -1,5 +1,5 @@
 /**
- * Event Espresso packager.
+ * WordPress Plugin Build-machine for Grunt.
  * To setup the following must be installed:
  * node.js
  * grunt-cli.
@@ -831,6 +831,23 @@ module.exports = function(grunt) {
     });
 
 
+    /**
+     * Should be queued to run after all other tasks have run and will notify any registered notification services with
+     * the prepped notification message for the build task.
+     */
+    grunt.registerTask('buildMachineNotifier', 'Notifies any registered notification mechanisms after build.', function() {
+        var privateParams = grunt.config.get('privateParams'),
+            hipChatCreds = privateParams.hipchat_creds || {},
+            slackCreds = privateParams.slack_creds || {};
+        if (hipChatCreds.authToken && hipChatCreds.roomID) {
+            grunt.task.run('hipchat_notifier:notify_team');
+        }
+        if (slackCreds.authToken && slackCreds.botToken && slackCreds.channels) {
+            grunt.task.run('slack_api:notify_build');
+        }
+    });
+
+
     //delayed setting of pluginParams (want to set after initial checkout).
     grunt.registerTask( 'setPluginParams', 'Delayed setting of pluginParams after initial checkout so correct info.json file is read', function () {
         builderInit.setPluginParams(this);
@@ -948,8 +965,7 @@ module.exports = function(grunt) {
                 'gitpush:bump',
                 'setNotifications:gitpush:bump',
                 'setNotifications:end',
-                'hipchat_notifier:notify_team',
-                'slack_api:notify_build'
+                'buildMachineNotifier'
             ]);
         });
 
@@ -1006,8 +1022,7 @@ module.exports = function(grunt) {
                 'shell:potCheckout',
                 'setNotifications:shell:potCheckout',
                 'setNotifications:end',
-                'hipchat_notifier:notify_team',
-                'slack_api:notify_build'
+                'buildMachineNotifier'
             ]);
         });
 
@@ -1063,8 +1078,7 @@ module.exports = function(grunt) {
                 'shell:potCheckout',
                 'setNotifications:shell:potCheckout',
                 'setNotifications:end',
-                'hipchat_notifier:notify_team',
-                'slack_api:notify_build'
+                'buildMachineNotifier'
             ]);
         });
 
@@ -1107,8 +1121,7 @@ module.exports = function(grunt) {
                 'setNotifications:shell:shareBuildpr',
                 'gitcheckout:master',
                 'setNotifications:end',
-                'hipchat_notifier:notify_team',
-                'slack_api:notify_build'
+                'buildMachineNotifier'
             ]);
     });
 
@@ -1146,8 +1159,7 @@ module.exports = function(grunt) {
                 'setNotifications:shell:shareBuildpr',
                 'gitcheckout:master',
                 'setNotifications:end',
-                'hipchat_notifier:notify_team',
-                'slack_api:notify_build'
+                'buildMachineNotifier'
             ]);
         });
 
@@ -1186,8 +1198,7 @@ module.exports = function(grunt) {
                 'shell:shareBuild',
                 'setNotifications:shell:shareBuild',
                 'setNotifications:end',
-                'hipchat_notifier:notify_team',
-                'slack_api:notify_build'
+                'buildMachineNotifier'
             ]);
         });
 
@@ -1231,8 +1242,7 @@ module.exports = function(grunt) {
                 'wp_deploy:deploy',
                 'setNotifications:wp_deploy:deploy',
                 'setNotifications:end',
-                'hipchat_notifier:notify_team',
-                'slack_api:notify_build'
+                'buildMachineNotifier'
             ]);
         });
 
@@ -1274,8 +1284,7 @@ module.exports = function(grunt) {
                 'setNotifications:shell:shareBuildWP',
                 'gitcheckout:master',
                 'setNotifications:end',
-                'hipchat_notifier:notify_team',
-                'slack_api:notify_build'
+                'buildMachineNotifier'
             ]);
         });
 
@@ -1309,8 +1318,7 @@ module.exports = function(grunt) {
                 'shell:sharePOTBuild',
                 'setNotifications:shell:sharePOTBuild',
                 'setNotifications:end',
-                'hipchat_notifier:notify_team',
-                'slack_api:notify_build'
+                'buildMachineNotifier'
             ])
         });
 
@@ -1335,8 +1343,7 @@ module.exports = function(grunt) {
                 'setPluginParams',
                 'GithubOnlyPush',
                 'setNotifications:end',
-                'hipchat_notifier:notify_team',
-                'slack_api:notify_build'
+                'buildMachineNotifier'
             ]);
     });
 }
