@@ -27,29 +27,40 @@ var HipChatClient = require('hipchat-client'),
         },
         getTopicMessage: function (roomInfo) {
             var newTopic = roomInfo.topic,
+                privateParams = grunt.config.get('privateParams'),
                 //let's parse and replace elements of the topic.
                 versions = {
                     rc: grunt.config.get('rc_version'),
                     minor: grunt.config.get('minor_version'),
                     major: grunt.config.get('major_version'),
                     versionType: grunt.config.get('pluginParams.versionType')
+                },
+                versionMeta = {
+                    pre_release: privateParams.version_meta.pre_release,
+                    decaf: privateParams.version_meta.decaf,
+                    rc: privateParams.version_meta.rc,
+                    release: privateParams.version_meta.release
+                },
+                regEx = {
+                    release: versionMeta.release !== ''
+                        ? new RegExp('REL:*.[0-9]\\.[0-9]\\.[0-9]+\\.' + privateParams.version_meta.release)
+                        : new RegExp('REL:*.[0-9]\\.[0-9]\\.[0-9]'),
+                    master: versionMeta.rc !== ''
+                        ? new RegExp('MASTR:*.[0-9]\\.[0-9]\\.[0-9]+\\.' + privateParams.version_meta.rc + '\\.[0-9]{3}', 'g')
+                        : new RegExp('MASTR:*.[0-9]\\.[0-9]\\.[0-9]+\\.[0-9]{3}', 'g')
                 };
             grunt.verbose.writeln(console.log(newTopic));
             if (versions.rc !== null) {
                 if (versions.versionType === 'rc') {
-                    newTopic = newTopic.replace(/MASTR:*.[0-9]\.[0-9]\.[0-9]+\.rc\.[0-9]{3}/g, 'MASTR: ' + versions.rc);
-                } else if (versions.versionType === 'alpha') {
-                    newTopic = newTopic.replace(/ALPHA:*.[0-9]\.[0-9]\.[0-9]+\.alpha\.[0-9]{3}/g, 'ALPHA: ' + versions.rc);
-                } else if (versions.versionType === 'beta') {
-                    newTopic = newTopic.replace(/BETA:*.[0-9]\.[0-9]\.[0-9]+\.beta\.[0-9]{3}/g, 'BETA: ' + versions.rc);
+                    newTopic = newTopic.replace(regEx.master, 'MASTR: ' + versions.rc);
                 }
             }
             if (versions.minor !== null) {
-                newTopic = newTopic.replace(/REL:*.[0-9]\.[0-9]\.[0-9]+\.p/, 'REL: ' + versions.minor);
+                newTopic = newTopic.replace(regEx.release, 'REL: ' + versions.minor);
             }
 
             if (versions.major !== null) {
-                newTopic = newTopic.replace(/REL:*.[0-9]\.[0-9]\.[0-9]+\.p/, 'REL: ' + versions.major);
+                newTopic = newTopic.replace(regEx.release, 'REL: ' + versions.major);
             }
             return newTopic;
         },
@@ -153,7 +164,7 @@ var HipChatClient = require('hipchat-client'),
                 /**
                  * Grab topic from slack instead of hipchat.
                  */
-                if (grunt.config.get('pluginParams.slug') === 'event-espresso-core-reg'
+                if (grunt.config.get('pluginParams.slug') === grunt.config.get('privateParams.parentPluginSlug')
                     && grunt.config.get('microZipBuild') !== true
                     && grunt.config.get('preReleaseBuild') !== true
                     && grunt.config.get('syncBranch') === 'master'

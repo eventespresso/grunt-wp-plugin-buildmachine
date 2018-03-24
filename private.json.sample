@@ -26,5 +26,6 @@
     "decaf" : "decaf",
     "rc" : "rc",
     "release" : "p"
-  }
+  },
+  "parentPluginSlug" : "plugin-slug-of-main-plugin"
 }

@@ -94,7 +94,8 @@ module.exports = function(grunt) {
             "decaf" : "decaf",
             "rc" : "rc",
             "release" : "p"
-        }
+        },
+        "parentPluginSlug":"event-espresso-core-reg"
     };
 
 
