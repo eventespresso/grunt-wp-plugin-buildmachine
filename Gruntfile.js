@@ -99,14 +99,15 @@ module.exports = function(grunt) {
     };
 
 
-    var defaultBuildMap = [];
+    var privateParams = grunt.file.exists('private.json') ? deepExtend(defaultPrivateParams, grunt.file.readJSON('private.json')) : defaultPrivateParams,
+        buildMap = grunt.file.exists('buildmap.json') ? grunt.file.readJSON('buildmap.json') : {};
 
     //project config.
     grunt.initConfig({
         pkg: grunt.file.readJSON( 'package.json' ),
         pluginParams: defaultPluginParams,
-        privateParams: grunt.file.exists('private.json') ? deepExtend(defaultPrivateParams, grunt.file.readJSON('private.json')) : defaultPrivateParams,
-        buildMap: grunt.file.exists('buildmap.json') ? deepExtend(defaultBuildMap, grunt.file.readJSON('buildmap.json')) : defaultBuildMap,
+        privateParams: privateParams,
+        buildMap: buildMap,
         currentSlug: '',
         new_version: '',
         rc_version: null,
