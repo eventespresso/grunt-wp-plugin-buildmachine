@@ -121,7 +121,9 @@ var HipChatClient = require('hipchat-client'),
                 task_notification = task_name + '.notify',
                 slack_task_notification = task_name + '.slacknotify',
                 msg = grunt.config.get('notificationMessage'),
-                slackmsg = grunt.config.get('slackNotificationMessage');
+                slackmsg = grunt.config.get('slackNotificationMessage'),
+                privateParams = grunt.config.get('privateParams'),
+                slackCreds = privateParams.slack_creds || {};
 
             if (task.args[0] === 'init') {
                 msg = '<b>GruntBOT activity Report for:</b><br>';
@@ -168,6 +170,7 @@ var HipChatClient = require('hipchat-client'),
                     && grunt.config.get('microZipBuild') !== true
                     && grunt.config.get('preReleaseBuild') !== true
                     && grunt.config.get('syncBranch') === 'master'
+                    && slackCreds.authToken && slackCreds.botToken && slackCreds.channels
                 ) {
                     grunt.task.run('slack_api:get_topic_info');
                 } else {
