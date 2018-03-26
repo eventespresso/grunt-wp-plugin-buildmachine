@@ -407,7 +407,7 @@ module.exports = function(grunt) {
                     stdin: false
                 }
             },
-            gitPushAllTags: {
+            gitHubPushAllTags: {
                 notify: "Pushing all tags to github",
                 command: [
                     'cd buildsrc/<%= currentSlug %>',
@@ -929,6 +929,13 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.registerTask( 'maybePushGithubTags', 'Will push all tags to github if the repo has the github flag set to true.', function maybePushGithubTags() {
+       var params = grunt.config.get('pluginParams');
+       if (params.github) {
+           grunt.task.run('shell:gitHubPushAllTags');
+       }
+    });
+
     /**
      * below are tasks that are typically used for running.
      * @todo need to move anything that isn't a task for running on its own into a protected js method instead.
@@ -1049,7 +1056,7 @@ module.exports = function(grunt) {
                 'setNotifications:gitcommit:version',
                 'gitpush:release',
                 'setNotifications:gitpush:release',
-                'shell:gitPushAllTags',
+                'maybePushGithubTags',
                 'updateRemotes',
                 'shell:shareBuild',
                 'setNotifications:shell:shareBuild',
@@ -1105,7 +1112,7 @@ module.exports = function(grunt) {
                 'setNotifications:gitcommit:version',
                 'gitpush:release',
                 'setNotifications:gitpush:release',
-                'shell:gitPushAllTags',
+                'maybePushGithubTags',
                 'updateRemotes',
                 'shell:shareBuild',
                 'setNotifications:shell:shareBuild',
