@@ -27,6 +27,14 @@ if ( empty( $orig_version ) ) {
 	exit();
 }
 
+//normalize version string to have the correct number of dots.
+if ($type !== 'rc') {
+    //make sure we have at least 3 periods if not we append a period
+    if (substr_count($orig_version, '.') !== 3) {
+        $orig_version .= '.';
+    }
+}
+
 $version_split = explode( '.', $orig_version);
 $plugin_name = $orig_plugin_name = '';
 $plugin_uri = $orig_plugin_uri = '';
