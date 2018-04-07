@@ -27,15 +27,17 @@ if ( empty( $orig_version ) ) {
 	exit();
 }
 
+$version_to_split = $orig_version;
+
 //normalize version string to have the correct number of dots.
 if ($type !== 'rc') {
     //make sure we have at least 3 periods if not we append a period
-    if (substr_count($orig_version, '.') < 3) {
-        $orig_version .= '.temp';
+    if (substr_count($version_to_split, '.') < 3) {
+        $version_to_split .= '.temp';
     }
 }
 
-$version_split = explode( '.', $orig_version);
+$version_split = explode( '.', $version_to_split);
 $plugin_name = $orig_plugin_name = '';
 $plugin_uri = $orig_plugin_uri = '';
 $do_info_json = false;
