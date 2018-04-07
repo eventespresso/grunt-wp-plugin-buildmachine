@@ -924,7 +924,8 @@ module.exports = function(grunt) {
     grunt.registerTask( 'maybeRunNpm', 'Used to determine whether to run the npm run buld task. Currently only runs if the jsBuildDirectory is set in the config.', function maybeRunNpm() {
         var params = grunt.config.get('pluginParams');
         grunt.verbose.writeln(params.jsBuildDirectory);
-        if (params.jsBuildDirectory && params.jsBuildDirectory !== '' ) {
+        grunt.verbose.writeln(params.jsBuildDirectory + 'package.json');
+        if (params.jsBuildDirectory && params.jsBuildDirectory !== '' && grunt.file.exists(params.jsBuildDirectory + 'package.json') ) {
             grunt.task.run('shell:npm_run');
         }
     });
