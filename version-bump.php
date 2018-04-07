@@ -30,7 +30,7 @@ if ( empty( $orig_version ) ) {
 $version_to_split = $orig_version;
 
 //normalize version string to have the correct number of dots.
-if ($type !== 'rc') {
+if ($type === 'rc') {
     //make sure we have at least 3 periods if not we append a period
     if (substr_count($version_to_split, '.') < 3) {
         $version_to_split .= '.temp';
