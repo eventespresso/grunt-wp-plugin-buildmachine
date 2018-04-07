@@ -31,7 +31,7 @@ if ( empty( $orig_version ) ) {
 if ($type !== 'rc') {
     //make sure we have at least 3 periods if not we append a period
     if (substr_count($orig_version, '.') < 3) {
-        $orig_version .= '.';
+        $orig_version .= '.temp';
     }
 }
 
