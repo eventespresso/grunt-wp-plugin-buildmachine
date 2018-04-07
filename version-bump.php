@@ -139,7 +139,7 @@ switch( $type ) {
 		break;
 }
 
-$new_version = implode( '.', $version_split );
+$new_version = rtrim('.', implode( '.', $version_split ));
 
 //update info_json so decaf release get built off of this tag.
 if ( $do_info_json && $info_json_file && ! empty( $new_version ) ) {
