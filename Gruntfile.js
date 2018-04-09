@@ -165,6 +165,7 @@ module.exports = function(grunt) {
                 notify: 'Ran build on js build directory.',
                 command: [
                     'cd buildsrc/<%= currentSlug %>/<%= pluginParams.jsBuildDirectory %>',
+                    'npm install',
                     'npm run build'
                 ].join('&&'),
                 options: {
