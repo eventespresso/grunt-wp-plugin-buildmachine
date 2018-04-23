@@ -17,7 +17,7 @@ module.exports = {
         }
 
         remoteSync.notify = (function (r) {
-            var notifyString = "Pushed master branch for " + pluginParams.name + " to the following repo locations (remote names): ";
+            var notifyString = "Pushed master branch for " + eeParams.name + " to the following repo locations (remote names): ";
             remotes.forEach(function (el) {
                 notifyString += ' ' + el;
             });
