@@ -179,7 +179,7 @@ module.exports = function(grunt) {
                 notify: 'Ran script for converting js pot to php file',
                 command: [
                     'cd buildsrc/<%= currentSlug %>/<%= pluginParams.jsBuildDirectory %>',
-                    'npx pot-to-php <%= pluginParams.wpi18nJsPotFilePath %> <%= pluginParams.wpi18nJsPotFilePath %>.php <%= pluginParams.textDomain =>'
+                    'npx pot-to-php <%= pluginParams.wpi18nJsPotFilePath %> <%= pluginParams.wpi18nJsPotFilePath %>.php <%= pluginParams.textDomain %>'
                 ].join('&&'),
                 options: {
                     stdout: true,
