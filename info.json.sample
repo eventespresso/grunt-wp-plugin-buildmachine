@@ -10,6 +10,7 @@
   "wpOrgPluginUrl" : "Url of Plugin for WpOrg Release",
   "name": "Name of Plugin",
   "jsBuildDirectory": "core/libraries/rest_api/assets/js",
+  "wpi18nJsPotFilePath": "path/to/js/potfile",
   "releaseFilesRemove": [
     "src/tests/**",
     "src/acceptance_tests/**",

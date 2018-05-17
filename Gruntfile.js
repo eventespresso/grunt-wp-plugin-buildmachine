@@ -63,6 +63,7 @@ module.exports = function(grunt) {
         "taskGroupName" : "",
         "compressPhpPath" : "",
         "jsBuildDirectory" : "",
+        "wpi18nJsPotFilePath": "",
         "remoteNamesToPushTo" : [] /* This should be an array of remote names in the src repo that can be pushed to in a task */
     };
 
@@ -167,6 +168,18 @@ module.exports = function(grunt) {
                     'cd buildsrc/<%= currentSlug %>/<%= pluginParams.jsBuildDirectory %>',
                     'npm install',
                     'npm run build'
+                ].join('&&'),
+                options: {
+                    stdout: true,
+                    stderr: false,
+                    stdin: false
+                }
+            },
+            npm_run_pot_to_php: {
+                notify: 'Ran script for converting js pot to php file',
+                command: [
+                    'cd buildsrc/<%= currentSlug %>/<%= pluginParams.jsBuildDirectory %>',
+                    'npx pot-to-php <%= pluginParams.wpi18nJsPotFilePath %> <%= pluginParams.wpi18nJsPotFilePath %>.php <%= pluginParams.textDomain %>'
                 ].join('&&'),
                 options: {
                     stdout: true,
@@ -929,6 +942,9 @@ module.exports = function(grunt) {
         grunt.verbose.writeln(packagePath);
         if (params.jsBuildDirectory && params.jsBuildDirectory !== '' && grunt.file.exists(packagePath) ) {
             grunt.task.run('shell:npm_run');
+            if (params.wpi18nJsPotFilePath && params.wpi18nJsPotFilePath !== '') {
+                grunt.task.run('shell:npm_run_pot_to_php');
+            }
         }
     });
 
