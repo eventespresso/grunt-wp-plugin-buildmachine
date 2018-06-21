@@ -153,7 +153,8 @@ module.exports = function(grunt) {
                 notify: 'Replacing $VID:$ with latest version string.',
                 command: [
                     'cd buildsrc/<%= currentSlug %>/',
-                    'find . -name "*.php" -print0 | xargs -0 sed -i \'s/\\$VID:\\$/<%= new_version %>/g\''
+                    'find . -name "*.php" -print0 | xargs -0 sed -i \'s/\\$VID:\\$/<%= new_version %>/g\'',
+                    'sed -i \'s/## \\[\\$VID:\\$\\]/## \\[\\$VID:\\$\\]\\n\\n## \\[4.9.64.p\\]/g\' CHANGELOG.md 2>/dev/null'
                 ].join('&&'),
                 options: {
                     stdout: true,
