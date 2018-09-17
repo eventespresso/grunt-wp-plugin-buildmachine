@@ -1212,7 +1212,6 @@ module.exports = function(grunt) {
                 'setNotifications:gitpull:master',
                 'gitinfo',
                 'setPluginParams',
-                'vidVersionReplace',
                 'gitcheckout:release',
                 'setNotifications:gitcheckout:release',
                 'shell:prVersion',
