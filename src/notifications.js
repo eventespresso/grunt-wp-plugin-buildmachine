@@ -8,19 +8,11 @@ var HipChatClient = require('hipchat-client'),
         setGrunt : function (gruntObject) {
             grunt = gruntObject;
         },
-        getHipChatRoomInfo: function (slackInfo) {
-            return {
-                id: grunt.config.get('privateParams.hipchat_creds.roomID'),
-                topic: slackInfo.channel.topic.value
-            };
-        },
         postNewTopic: function (slackInfo) {
-            var roomInfo = notifications.getHipChatRoomInfo(slackInfo),
-                newTopic = notifications.getTopicMessage(roomInfo);
+            var newTopic = notifications.getTopicMessage(roomInfo);
             grunt.verbose.writeln(console.log(roomInfo));
 
             notifications.slackPostTopic(newTopic);
-            notifications.hipChatPostTopic(roomInfo, newTopic);
 
             //SET new topic with slack
             grunt.config.set('slackTopic', newTopic);
@@ -64,25 +56,6 @@ var HipChatClient = require('hipchat-client'),
             }
             return newTopic;
         },
-        hipChatPostTopic: function (roomInfo, newTopic) {
-            var authToken = grunt.config.get('hipchat_notifier.options.authToken'),
-                hipchat_client = notifications.hip_client,
-                hipchat = new hipchat_client(authToken);
-            //SET new topic with hipchat
-            hipchat.api.rooms.topic(
-                {
-                    room_id: roomInfo.id,
-                    topic: newTopic || roomInfo.topic,
-                    from: 'gruntBOT'
-                },
-                function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-                    grunt.log.ok('Topic changed for hipchat');
-                    notifications.hipChatNotifyTopicChanged();
-                });
-        },
         slackPostTopic: function (newTopic) {
             grunt.config.set('slackTopic', newTopic);
             grunt.task.run('slack_api:change_topic');
@@ -104,13 +77,6 @@ var HipChatClient = require('hipchat-client'),
                 }
             ];
             grunt.config.set('slackNotificationMessage', msg);
-        },
-        hipChatNotifyTopicChanged: function () {
-            var msg = grunt.config.get('notificationMessage');
-            msg += '<li>HipChat topic changed for Main Chat room.</li>';
-            msg += '</ul>';
-            msg += '<br><strong>The notifications above are for ' + grunt.config.get('pluginParams.slug') + '.</strong>';
-            grunt.config.set('notificationMessage', msg);
         },
         setNotifications: function (task) {
             //grab what notification we're running.
