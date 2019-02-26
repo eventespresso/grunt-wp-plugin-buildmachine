@@ -57,7 +57,6 @@ module.exports = {
         }
 
         if (doNotify) {
-            grunt.task.run('hipchat_notifier:notify_main_chat');
             grunt.task.run('slack_api:notify_main');
         }
     },
@@ -94,7 +93,6 @@ module.exports = {
         }
 
         if ( doNotify ) {
-            grunt.task.run( 'hipchat_notifier:notify_main_chat' );
             grunt.task.run( 'slack_api:notify_main' );
         }
     }
