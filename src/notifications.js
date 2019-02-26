@@ -1,10 +1,8 @@
 /**
  * Module for notifications
  **/
-var HipChatClient = require('hipchat-client'),
-    grunt = {},
+    var grunt = {},
     notifications = {
-        hip_client: HipChatClient,
         setGrunt : function (gruntObject) {
             grunt = gruntObject;
         },
@@ -130,7 +128,7 @@ var HipChatClient = require('hipchat-client'),
                 return true;
             } else if (task.args[0] === 'end') {
                 /**
-                 * Grab topic from slack instead of hipchat.
+                 * Grab topic from slack.
                  */
                 if (grunt.config.get('pluginParams.slug') === grunt.config.get('privateParams.parentPluginSlug')
                     && grunt.config.get('microZipBuild') !== true

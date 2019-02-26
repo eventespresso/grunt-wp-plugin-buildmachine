@@ -82,10 +82,6 @@ module.exports = function(grunt) {
                 "main" : ""
             }
         },
-        "hipchat_creds" : {
-            "authToken": "",
-            "roomID" : ""
-        },
         "aws_creds" : {
             "accessKeyId" : "",
             "secretAccessKey": ""
@@ -753,32 +749,6 @@ module.exports = function(grunt) {
             }
         },
 
-        hipchat_notifier : {
-            options: {
-                authToken: '<%= privateParams.hipchat_creds.authToken %>',
-                roomId: '<%= privateParams.hipchat_creds.roomID %>'
-            },
-
-            notify_team: {
-                options: {
-                    message: '<%= notificationMessage %>',
-                    from: "GruntBot",
-                    color: "<%= notificationColor %>",
-                    message_format: "html"
-                }
-            },
-
-            notify_main_chat: {
-                options: {
-                    roomId: '424398',
-                    message: '<%= mainChatMessage %>',
-                    from: "GruntBot",
-                    color: "<%= mainChatColor %>",
-                    message_format: "html"
-                }
-            }
-        },
-
 
         slack_api : {
             options : {
@@ -878,7 +848,6 @@ module.exports = function(grunt) {
     //load plugins providing the task.
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-git');
-    grunt.loadNpmTasks('grunt-hipchat-notifier');
     grunt.loadNpmTasks('grunt-slack-api');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-gitinfo');
@@ -897,11 +866,7 @@ module.exports = function(grunt) {
      */
     grunt.registerTask('buildMachineNotifier', 'Notifies any registered notification mechanisms after build.', function() {
         var privateParams = grunt.config.get('privateParams'),
-            hipChatCreds = privateParams.hipchat_creds || {},
             slackCreds = privateParams.slack_creds || {};
-        if (hipChatCreds.authToken && hipChatCreds.roomID) {
-            grunt.task.run('hipchat_notifier:notify_team');
-        }
         if (slackCreds.authToken && slackCreds.botToken && slackCreds.channels) {
             grunt.task.run('slack_api:notify_build');
         }
