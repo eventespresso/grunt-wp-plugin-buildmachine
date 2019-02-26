@@ -1,14 +1,13 @@
 /**
  * Module for notifications
  **/
-    var grunt = {},
+var grunt = {},
     notifications = {
         setGrunt : function (gruntObject) {
             grunt = gruntObject;
         },
         postNewTopic: function (slackInfo) {
-            var newTopic = notifications.getTopicMessage(roomInfo);
-            grunt.verbose.writeln(console.log(roomInfo));
+            var newTopic = notifications.getTopicMessage({ topic: slackInfo.channel.topic.value } );
 
             notifications.slackPostTopic(newTopic);
 
