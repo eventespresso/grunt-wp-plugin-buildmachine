@@ -834,6 +834,7 @@ module.exports = function(grunt) {
                 options: {
                     cwd: 'potbuilds',
                     domainPath: 'languages/',
+                    exclude: ['tests/.*'],
                     include: ['.*'],
                     potFilename: '<%= pluginParams.textDomain %>.pot',
                     potHeaders: {
