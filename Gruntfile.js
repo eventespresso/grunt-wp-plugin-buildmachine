@@ -834,12 +834,15 @@ module.exports = function(grunt) {
                 options: {
                     cwd: 'potbuilds',
                     domainPath: 'languages/',
-                    exclude: ['tests/.*'],
-                    include: ['.*'],
+                    include: [],
+                    exclude: [
+                        'event-espresso-core-reg/tests/.*',
+                        'event-espresso-core-reg/vendor/.*',
+                        'event-espresso-core-reg/assets/.*'
+                    ],
                     potFilename: '<%= pluginParams.textDomain %>.pot',
                     potHeaders: {
                         poedit: true,
-                        'x-poedit-keywordslist': true
                     }
                 }
             }
@@ -1385,3 +1388,4 @@ module.exports = function(grunt) {
             ]);
     });
 }
+

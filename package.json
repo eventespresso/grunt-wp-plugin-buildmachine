@@ -13,7 +13,7 @@
     "grunt-slack-api": "^0.1.2",
     "grunt-templated-changelog": "^0.1.3",
     "grunt-wp-deploy": "^1.2.1",
-    "grunt-wp-i18n": "^1.0.1",
+    "grunt-wp-i18n": "^1.0.3",
     "hipchat-client": "^1.0.5"
   }
 }
