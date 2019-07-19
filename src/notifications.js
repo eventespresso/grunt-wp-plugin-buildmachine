@@ -32,11 +32,11 @@ var grunt = {},
                 },
                 regEx = {
                     release: versionMeta.release !== ''
-                        ? new RegExp('REL:*.[0-9]\\.[0-9]\\.[0-9]+\\.' + privateParams.version_meta.release)
-                        : new RegExp('REL:*.[0-9]\\.[0-9]\\.[0-9]'),
+                        ? new RegExp('REL:*.[0-9]+\\.[0-9]+\\.[0-9]+\\.' + privateParams.version_meta.release)
+                        : new RegExp('REL:*.[0-9]+\\.[0-9]+\\.[0-9]+'),
                     master: versionMeta.rc !== ''
-                        ? new RegExp('MASTR:*.[0-9]\\.[0-9]\\.[0-9]+\\.' + privateParams.version_meta.rc + '\\.[0-9]{3}', 'g')
-                        : new RegExp('MASTR:*.[0-9]\\.[0-9]\\.[0-9]+\\.[0-9]{3}', 'g')
+                        ? new RegExp('MASTR:*.[0-9]+\\.[0-9]+\\.[0-9]+\\.' + privateParams.version_meta.rc + '\\.[0-9]{3}', 'g')
+                        : new RegExp('MASTR:*.[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]{3}', 'g')
                 };
             grunt.verbose.writeln(console.log(newTopic));
             if (versions.rc !== null) {
