@@ -899,6 +899,26 @@ module.exports = function( grunt ) {
         },
     );
 
+    grunt.registerTask(
+        'testNotifications',
+        'Runs registered notification mechanisms with test messages.',
+        function() {
+            var privateParams = grunt.config.get( 'privateParams' ),
+                slackCreds = privateParams.slack_creds || {};
+            if (
+                slackCreds.authToken &&
+                slackCreds.botToken &&
+                slackCreds.channels
+            ) {
+                grunt.config.set(
+                    'slackNotificationMessage',
+                    { text: 'Testing Slack Notification Messages' }
+                );
+                grunt.task.run( 'slack_api:notify_build' );
+            }
+        },
+    );
+
     //delayed setting of pluginParams (want to set after initial checkout).
     grunt.registerTask(
         'setPluginParams',
