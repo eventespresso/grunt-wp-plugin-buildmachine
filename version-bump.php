@@ -55,7 +55,7 @@ switch ($type) {
                 $version_split[1] = 9;
                 $version_split[2] = 9;
             } else {
-                $verstion_split[1] = $version_split[1] - 1;
+                $version_split[1]--;
             }
         } else {
             $version_split[2]--;
