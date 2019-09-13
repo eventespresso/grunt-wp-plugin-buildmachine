@@ -789,7 +789,7 @@ module.exports = function( grunt ) {
             change_topic: {
                 options: {
 	                type: 'topic',
-                    token: '<%= privateParams.slack_creds.authToken %>',
+                    token: '<%= privateParams.slack_creds.botToken %>',
                     channel: '<%= privateParams.slack_creds.channels.general %>',
 	                text: '<%= slackTopic %>',
                 },
