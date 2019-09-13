@@ -85,7 +85,7 @@ module.exports = function( grunt ) {
             'botToken': '',
             'channels': {
                 'build': '',
-                'main': '',
+                'general': '',
             },
         },
         'aws_creds': {
@@ -768,7 +768,7 @@ module.exports = function( grunt ) {
 
             notify_build: {
                 options: {
-                    token: '<%= privateParams.slack_creds.authToken %>',
+                    token: '<%= privateParams.slack_creds.botToken %>',
                     channel: '<%= privateParams.slack_creds.channels.build %>',
 	                text: '<%= slackNotificationMessage %>',
                     username: 'ee-slack-bot',
@@ -777,7 +777,7 @@ module.exports = function( grunt ) {
 
             notify_main: {
                 options: {
-                    token: '<%= privateParams.slack_creds.authToken %>',
+                    token: '<%= privateParams.slack_creds.botToken %>',
                     channel: '<%= privateParams.slack_creds.channels.general %>',
 	                text: '<%= mainChatSlackMessage %>',
                     username: 'ee-slack-bot',
@@ -786,7 +786,7 @@ module.exports = function( grunt ) {
 
             change_topic: {
                 options: {
-                    token: '<%= privateParams.slack_creds.authToken %>',
+                    token: '<%= privateParams.slack_creds.botToken %>',
                     channel: '<%= privateParams.slack_creds.channels.general %>',
 	                topic: '<%= slackTopic %>',
 	                username: 'ee-slack-bot',
@@ -796,7 +796,7 @@ module.exports = function( grunt ) {
             get_topic_info: {
                 options: {
                     type: 'getChannelInfo',
-                    token: '<%= privateParams.slack_creds.authToken %>',
+                    token: '<%= privateParams.slack_creds.botToken %>',
                     channel: '<%= privateParams.slack_creds.channels.general %>',
                     callback: notifications.postNewTopic,
 	                username: 'ee-slack-bot',
