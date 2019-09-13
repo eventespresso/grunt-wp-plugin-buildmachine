@@ -10,7 +10,7 @@
     "botToken" : "xxxxx-xxxxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxx",
     "channels" : {
       "build" : "#buildnotifications",
-      "main" : "xxxxxxxxxxx"
+      "general" : "xxxxxxxxxxx"
     }
   },
   "hipchat_creds" : {
