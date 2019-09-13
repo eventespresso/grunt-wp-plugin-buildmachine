@@ -1074,7 +1074,7 @@ module.exports = function( grunt ) {
         'builder',
         'Main Builder tasks. Use "builder:init" for initializing the repositories from the buildmap.json file',
         function( command ) {
-            grunt.verbose.writeln( console.log( command ) );
+            grunt.verbose.writeln( 'Main Builder task: ' + command );
             if ( command === 'init' ) {
                 builderInit.initializeFromMap();
             }

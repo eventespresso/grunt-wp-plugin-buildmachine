@@ -50,7 +50,7 @@ notifications = {
                         'g'
                     )
             };
-        grunt.verbose.writeln( console.log( newTopic ) );
+        grunt.verbose.writeln( 'Current Topic: ' + newTopic );
         if ( versions.rc !== null ) {
             if ( versions.versionType === 'rc' ) {
                 newTopic = newTopic.replace(
@@ -72,7 +72,8 @@ notifications = {
                 'REL: ' + versions.major
             );
         }
-        return newTopic;
+	    grunt.verbose.writeln( 'New Topic: ' + newTopic );
+	    return newTopic;
     },
     slackPostTopic: function( newTopic ) {
         grunt.config.set( 'slackTopic', newTopic );
@@ -128,7 +129,7 @@ notifications = {
             grunt.log.ok(
                 'Messages initialized for notifications successfully.' );
 
-            grunt.verbose.writeln( console.log( task.args ) );
+            grunt.verbose.writeln( task.args );
 
             //set background color for chat client:
             if ( typeof task.args[ 2 ] !==
