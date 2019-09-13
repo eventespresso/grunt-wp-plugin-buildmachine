@@ -768,39 +768,38 @@ module.exports = function( grunt ) {
 
             notify_build: {
                 options: {
-                    token: '<%= privateParams.slack_creds.botToken %>',
+                    token: '<%= privateParams.slack_creds.authToken %>',
                     channel: '<%= privateParams.slack_creds.channels.build %>',
-                    attachments: [ '<%= slackNotificationMessage %>' ],
-                    username: 'EEBot',
-                    icon_emoji: ':coffee:',
+	                text: '<%= slackNotificationMessage %>',
+                    username: 'ee-slack-bot',
                 },
             },
 
             notify_main: {
                 options: {
-                    token: '<%= privateParams.slack_creds.botToken %>',
-                    channel: '<%= privateParams.slack_creds.channels.main %>',
-                    attachments: [ '<%= mainChatSlackMessage %>' ],
-                    username: 'EEBot',
-                    icon_emoji: ':coffee:',
+                    token: '<%= privateParams.slack_creds.authToken %>',
+                    channel: '<%= privateParams.slack_creds.channels.general %>',
+	                text: '<%= mainChatSlackMessage %>',
+                    username: 'ee-slack-bot',
                 },
             },
 
             change_topic: {
                 options: {
-                    token: '<%= privateParams.slack_creds.botToken %>',
-                    channel: '<%= privateParams.slack_creds.channels.main %>',
-                    text: '<%= slackTopic %>',
-                    type: 'topic',
+                    token: '<%= privateParams.slack_creds.authToken %>',
+                    channel: '<%= privateParams.slack_creds.channels.general %>',
+	                topic: '<%= slackTopic %>',
+	                username: 'ee-slack-bot',
                 },
             },
 
             get_topic_info: {
                 options: {
                     type: 'getChannelInfo',
-                    token: '<%= privateParams.slack_creds.botToken %>',
-                    channel: '<%= privateParams.slack_creds.channels.main %>',
+                    token: '<%= privateParams.slack_creds.authToken %>',
+                    channel: '<%= privateParams.slack_creds.channels.general %>',
                     callback: notifications.postNewTopic,
+	                username: 'ee-slack-bot',
                 },
             },
         },
@@ -915,6 +914,22 @@ module.exports = function( grunt ) {
                     { text: 'Testing Slack Notification Messages' }
                 );
                 grunt.task.run( 'slack_api:notify_build' );
+            }
+        },
+    );
+
+    grunt.registerTask(
+        'testPostTopic',
+        'Runs registered notification mechanisms with test messages.',
+        function() {
+            var privateParams = grunt.config.get( 'privateParams' ),
+                slackCreds = privateParams.slack_creds || {};
+            if (
+                slackCreds.authToken &&
+                slackCreds.botToken &&
+                slackCreds.channels
+            ) {
+	            grunt.task.run( 'slack_api:get_topic_info' );
             }
         },
     );
