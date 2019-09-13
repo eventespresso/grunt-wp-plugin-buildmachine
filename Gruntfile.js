@@ -769,7 +769,7 @@ module.exports = function( grunt ) {
             notify_build: {
                 options: {
                 	type: 'message',
-                    token: '<%= privateParams.slack_creds.authToken %>',
+                    token: '<%= privateParams.slack_creds.botToken %>',
                     channel: '<%= privateParams.slack_creds.channels.build %>',
 	                text: '<%= slackNotificationMessage %>',
                     username: 'ee-slack-bot',
@@ -779,7 +779,7 @@ module.exports = function( grunt ) {
             notify_main: {
                 options: {
 	                type: 'message',
-                    token: '<%= privateParams.slack_creds.authToken %>',
+                    token: '<%= privateParams.slack_creds.botToken %>',
                     channel: '<%= privateParams.slack_creds.channels.general %>',
 	                text: '<%= mainChatSlackMessage %>',
                     username: 'ee-slack-bot',
@@ -789,7 +789,7 @@ module.exports = function( grunt ) {
             change_topic: {
                 options: {
 	                type: 'topic',
-                    token: '<%= privateParams.slack_creds.authToken %>',
+                    token: '<%= privateParams.slack_creds.botToken %>',
                     channel: '<%= privateParams.slack_creds.channels.general %>',
 	                text: '<%= slackTopic %>',
 	                username: 'ee-slack-bot',
@@ -799,7 +799,7 @@ module.exports = function( grunt ) {
             get_topic_info: {
                 options: {
                     type: 'getChannelInfo',
-                    token: '<%= privateParams.slack_creds.authToken %>',
+                    token: '<%= privateParams.slack_creds.botToken %>',
                     channel: '<%= privateParams.slack_creds.channels.general %>',
                     callback: notifications.postNewTopic,
 	                username: 'ee-slack-bot',
