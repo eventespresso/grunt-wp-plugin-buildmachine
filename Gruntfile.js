@@ -792,6 +792,7 @@ module.exports = function( grunt ) {
                     token: '<%= privateParams.slack_creds.authToken %>',
                     channel: '<%= privateParams.slack_creds.channels.general %>',
 	                text: '<%= slackTopic %>',
+	                username: 'ee-slack-bot',
                 },
             },
 
