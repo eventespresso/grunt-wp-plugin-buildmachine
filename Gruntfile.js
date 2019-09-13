@@ -769,7 +769,7 @@ module.exports = function( grunt ) {
             notify_build: {
                 options: {
                 	type: 'message',
-                    token: '<%= privateParams.slack_creds.botToken %>',
+                    token: '<%= privateParams.slack_creds.authToken %>',
                     channel: '<%= privateParams.slack_creds.channels.build %>',
 	                text: '<%= slackNotificationMessage %>',
                     username: 'ee-slack-bot',
@@ -779,7 +779,7 @@ module.exports = function( grunt ) {
             notify_main: {
                 options: {
 	                type: 'message',
-                    token: '<%= privateParams.slack_creds.botToken %>',
+                    token: '<%= privateParams.slack_creds.authToken %>',
                     channel: '<%= privateParams.slack_creds.channels.general %>',
 	                text: '<%= mainChatSlackMessage %>',
                     username: 'ee-slack-bot',
