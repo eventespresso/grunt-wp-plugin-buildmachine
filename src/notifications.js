@@ -51,6 +51,7 @@ notifications = {
                     )
             };
         grunt.verbose.writeln( 'Current Topic: ' + newTopic );
+	    grunt.verbose.writeln( 'Versions: ' + JSON.stringify( versions ) );
         if ( versions.rc !== null ) {
             if ( versions.versionType === 'rc' ) {
                 newTopic = newTopic.replace(

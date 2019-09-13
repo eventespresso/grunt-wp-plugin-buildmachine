@@ -931,6 +931,7 @@ module.exports = function( grunt ) {
                 slackCreds.botToken &&
                 slackCreds.channels
             ) {
+	            grunt.config.set( 'rc_version', '1.2.3.rc.007' );
 	            grunt.task.run( 'slack_api:get_topic_info' );
             }
         },
