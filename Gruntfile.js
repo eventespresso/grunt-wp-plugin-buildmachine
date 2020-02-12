@@ -771,7 +771,7 @@ module.exports = function( grunt ) {
                 	type: 'message',
                     token: '<%= privateParams.slack_creds.authToken %>',
                     channel: '<%= privateParams.slack_creds.channels.build %>',
-	                text: '<%= slackNotificationMessage %>',
+	                attachments: [ '<%= slackNotificationMessage %>' ],
                     username: 'ee-slack-bot',
                 },
             },
